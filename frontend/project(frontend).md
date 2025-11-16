@@ -73,214 +73,308 @@ graph TD
 frontend/
 ├── public/                           # Статические файлы (доступны напрямую)
 │   ├── images/                       # Изображения и ассеты
-│   │   ├── logo.svg                  # Логотип приложения
-│   │   ├── favicon.ico               # Фавикон
-│   │   └── icons/                    # SVG иконки
-│   │       ├── book.svg
-│   │       ├── certificate.svg
-│   │       ├── user.svg
-│   │       └── settings.svg
+│   │   ├── logo/                     # Логотипы в разных размерах
+│   │   │   ├── logo-light.svg
+│   │   │   ├── logo-dark.svg
+│   │   │   └── logo-icon.svg
+│   │   ├── favicon/                  # Фавиконы для разных устройств
+│   │   │   ├── favicon.ico
+│   │   │   ├── apple-touch-icon.png
+│   │   │   └── manifest.json
+│   │   ├── illustrations/            # Иллюстрации для страниц
+│   │   │   ├── empty-state.svg
+│   │   │   ├── success.svg
+│   │   │   ├── error.svg
+│   │   │   └── onboarding.svg
+│   │   ├── avatars/                  # Аватары пользователей
+│   │   └── course-covers/            # Обложки курсов
 │   ├── fonts/                        # Шрифты
-│   │   ├── inter/
-│   │   └── roboto/
-│   └── videos/                       # Видео файлы для уроков
-│       ├── sample-lesson-1.mp4
-│       └── intro.mp4
+│   │   ├── inter/                    # Основной шрифт
+│   │   └── roboto-mono/              # Моноширинный шрифт для кода
+│   ├── videos/                       # Видео файлы для уроков
+│   │   ├── previews/                 # Превью видео
+│   │   └── sample/
+│   └── robots.txt                    # SEO инструкции для поисковиков
+│   └── sitemap.xml                   # Карта сайта (генерируется динамически)
 
-├── src/                              # Исходный код приложения
+├── src/
 │   ├── app/                          # Next.js App Router (основная логика страниц)
-│   │   ├── auth/                     # Страницы аутентификации
-│   │   │   ├── login/page.tsx        # Страница входа
-│   │   │   ├── register/page.tsx     # Страница регистрации
-│   │   │   ├── reset-password/page.tsx # Страница восстановления пароля
-│   │   │   └── verify-email/page.tsx # Страница подтверждения email
+│   │   ├── (auth)/                   # Группа маршрутов для аутентификации
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx          # Страница входа
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx          # Страница регистрации
+│   │   │   ├── reset-password/
+│   │   │   │   └── page.tsx          # Восстановление пароля
+│   │   │   └── layout.tsx            # Layout для аутентификации
 │   │   │
-│   │   ├── courses/                  # Страницы каталога курсов
-│   │   │   ├── page.tsx              # Главная страница каталога
-│   │   │   ├── [id]/page.tsx         # Страница предмета
-│   │   │   ├── [id]/topics/[topicId]/page.tsx # Страница темы
-│   │   │   └── search/page.tsx       # Страница поиска курсов
+│   │   ├── (main)/                   # Основная группа маршрутов
+│   │   │   ├── courses/              # Каталог курсов
+│   │   │   │   ├── page.tsx          # Главная страница каталога
+│   │   │   │   ├── [subjectId]/
+│   │   │   │   │   ├── page.tsx      # Страница предмета
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   ├── [subjectId]/topics/[topicId]/
+│   │   │   │   │   ├── page.tsx      # Страница темы
+│   │   │   │   │   └── components/   # Компоненты страницы темы
+│   │   │   │   └── search/
+│   │   │   │       └── page.tsx      # Поиск курсов
+│   │   │   │
+│   │   │   ├── lessons/              # Уроки
+│   │   │   │   ├── [lessonId]/
+│   │   │   │   │   ├── page.tsx      # Основной контент урока
+│   │   │   │   │   ├── materials/
+│   │   │   │   │   │   └── page.tsx  # Дополнительные материалы
+│   │   │   │   │   ├── quiz/
+│   │   │   │   │   │   └── page.tsx  # Тест по уроку
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   └── components/       # Общие компоненты для уроков
+│   │   │   │
+│   │   │   ├── dashboard/            # Личный кабинет
+│   │   │   │   ├── page.tsx          # Главная страница дашборда
+│   │   │   │   ├── progress/
+│   │   │   │   │   └── page.tsx      # Прогресс обучения
+│   │   │   │   ├── certificates/
+│   │   │   │   │   └── page.tsx      # Сертификаты
+│   │   │   │   └── achievements/     # Достижения
+│   │   │   │       └── page.tsx
+│   │   │   │
+│   │   │   ├── profile/              # Профиль пользователя
+│   │   │   │   ├── page.tsx          # Основная информация
+│   │   │   │   ├── settings/
+│   │   │   │   │   ├── page.tsx      # Настройки профиля
+│   │   │   │   │   ├── security/
+│   │   │   │   │   │   └── page.tsx  # Настройки безопасности
+│   │   │   │   │   └── notifications/
+│   │   │   │   │       └── page.tsx  # Уведомления
+│   │   │   │   └── components/
+│   │   │   │
+│   │   │   ├── admin/                # Административная панель
+│   │   │   │   ├── layout.tsx        # Layout админки
+│   │   │   │   ├── page.tsx          # Главная админки
+│   │   │   │   ├── users/
+│   │   │   │   │   └── page.tsx      # Управление пользователями
+│   │   │   │   ├── courses/
+│   │   │   │   │   ├── page.tsx      # Управление курсами
+│   │   │   │   │   └── editor/       # Редактор курса
+│   │   │   │   │       └── page.tsx
+│   │   │   │   ├── analytics/
+│   │   │   │   │   └── page.tsx      # Аналитика
+│   │   │   │   └── components/       # Компоненты админки
+│   │   │   │
+│   │   │   ├── layout.tsx            # Основной layout приложения
+│   │   │   ├── page.tsx              # Главная страница (landing)
+│   │   │   └── loading.tsx           # Скелетон загрузки
 │   │   │
-│   │   ├── lessons/                  # Страницы уроков
-│   │   │   ├── [id]/page.tsx         # Страница урока
-│   │   │   ├── [id]/materials/page.tsx # Материалы урока
-│   │   │   └── [id]/quiz/page.tsx    # Тест урока
+│   │   ├── (marketing)/              # Маркетинговые страницы
+│   │   │   ├── about/
+│   │   │   │   └── page.tsx          # О платформе
+│   │   │   ├── pricing/
+│   │   │   │   └── page.tsx          # Цены
+│   │   │   ├── blog/                 # Блог
+│   │   │   └── contact/
+│   │   │       └── page.tsx          # Контакты
 │   │   │
-│   │   ├── profile/                  # Страницы профиля
-│   │   │   ├── page.tsx              # Личный кабинет
-│   │   │   ├── settings/page.tsx     # Настройки профиля
-│   │   │   ├── progress/page.tsx     # Прогресс обучения
-│   │   │   └── certificates/page.tsx # Сертификаты
+│   │   ├── api/                      # API маршруты Next.js
+│   │   │   ├── auth/
+│   │   │   │   └── [...nextauth]/route.ts # NextAuth.js
+│   │   │   └── webhooks/
+│   │   │       └── route.ts          # Вебхуки
 │   │   │
-│   │   ├── admin/                    # Административная панель
-│   │   │   ├── page.tsx              # Главная админки
-│   │   │   ├── users/page.tsx        # Управление пользователями
-│   │   │   ├── courses/page.tsx      # Управление курсами
-│   │   │   ├── lessons/page.tsx      # Управление уроками
-│   │   │   └── analytics/page.tsx    # Аналитика
+│   │   ├── providers/                # Провайдеры контекста
+│   │   │   ├── theme-provider.tsx    # Тема (светлая/темная)
+│   │   │   ├── auth-provider.tsx     # Аутентификация
+│   │   │   ├── query-provider.tsx    # React Query
+│   │   │   └── index.tsx             # Все провайдеры вместе
 │   │   │
-│   │   ├── globals.css               # Глобальные стили
-│   │   ├── layout.tsx                # Корневой layout (шапка, подвал)
-│   │   ├── page.tsx                  # Главная страница (landing)
-│   │   └── providers.tsx             # Провайдеры (React Query, Auth, Theme и т.д.)
+│   │   ├── styles/                   # Стили страниц
+│   │   │   ├── globals.css           # Глобальные стили
+│   │   │   ├── theme.css             # Темизация
+│   │   │   └── animations.css        # CSS анимации
+│   │   │
+│   │   └── error.tsx                 # Глобальный обработчик ошибок
+│   │   └── not-found.tsx             # Страница 404
 │   │
 │   ├── components/                   # Переиспользуемые компоненты
-│   │   ├── ui/                       # UI-компоненты (ShadCN/ui или кастомные)
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── input.tsx
-│   │   │   ├── form.tsx
-│   │   │   ├── label.tsx
-│   │   │   ├── select.tsx
-│   │   │   ├── textarea.tsx
-│   │   │   ├── badge.tsx
-│   │   │   ├── skeleton.tsx
-│   │   │   ├── dialog.tsx
-│   │   │   ├── alert-dialog.tsx
-│   │   │   ├── toast.tsx
-│   │   │   ├── tooltip.tsx
-│   │   │   ├── dropdown-menu.tsx
-│   │   │   ├── tabs.tsx
-│   │   │   └── accordion.tsx
+│   │   ├── ui/                       # UI-компоненты (ShadCN/ui)
+│   │   │   ├── button/               # Кнопки разных типов
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── variants.ts       # Варианты кнопок
+│   │   │   │   └── animated-button.tsx # Анимированная кнопка
+│   │   │   ├── card/                 # Карточки
+│   │   │   │   ├── course-card.tsx
+│   │   │   │   ├── lesson-card.tsx
+│   │   │   │   └── stat-card.tsx
+│   │   │   ├── input/                # Инпуты
+│   │   │   │   ├── search-input.tsx
+│   │   │   │   └── password-input.tsx
+│   │   │   ├── navigation/           # Навигационные компоненты
+│   │   │   │   ├── sidebar.tsx       # Боковая панель
+│   │   │   │   ├── top-nav.tsx       # Верхняя навигация
+│   │   │   │   └── mobile-nav.tsx    # Мобильное меню
+│   │   │   ├── feedback/             # Компоненты обратной связи
+│   │   │   │   ├── toast.tsx         # Уведомления
+│   │   │   │   ├── alert.tsx         # Алерты
+│   │   │   │   └── loading-spinner.tsx # Спиннер загрузки
+│   │   │   └── data-display/         # Отображение данных
+│   │   │       ├── progress-bar.tsx
+│   │   │       ├── rating.tsx
+│   │   │       └── chart/
+│   │   │           ├── line-chart.tsx
+│   │   │           └── pie-chart.tsx
 │   │   │
-│   │   ├── layout/                   # Глобальные элементы layout
-│   │   │   ├── site-header.tsx       # Шапка сайта
-│   │   │   ├── site-footer.tsx       # Подвал сайта
-│   │   │   ├── sidebar.tsx           # Боковая панель
-│   │   │   ├── breadcrumb.tsx        " Хлебные крошки
-│   │   │   └── navigation.tsx        # Навигация
+│   │   ├── layout/                   # Макеты и контейнеры
+│   │   │   ├── main-layout.tsx       # Основной макет
+│   │   │   ├── auth-layout.tsx       # Макет для аутентификации
+│   │   │   ├── dashboard-layout.tsx  # Макет для дашборда
+│   │   │   ├── container.tsx         # Контейнер с отступами
+│   │   │   └── hero-section.tsx      # Герой секция для landing
+│   │   │
+│   │   ├── course/                   # Компоненты для курсов
+│   │   │   ├── course-preview.tsx
+│   │   │   ├── topic-list.tsx
+│   │   │   ├── lesson-grid.tsx
+│   │   │   ├── course-progress.tsx
+│   │   │   └── course-header.tsx
+│   │   │
+│   │   ├── lesson/                   # Компоненты для уроков
+│   │   │   ├── video-player.tsx      # Плеер с поддержкой HLS
+│   │   │   ├── content-editor.tsx    # Редактор контента (для админа)
+│   │   │   ├── material-list.tsx
+│   │   │   ├── quiz-player.tsx       # Прохождение теста
+│   │   │   └── lesson-timer.tsx
 │   │   │
 │   │   ├── auth/                     # Компоненты аутентификации
-│   │   │   ├── auth-wrapper.tsx
-│   │   │   ├── login-form.tsx
-│   │   │   ├── register-form.tsx
-│   │   │   ├── reset-password-form.tsx
-│   │   │   ├── social-auth-buttons.tsx
-│   │   │   └── auth-guard.tsx
+│   │   │   ├── auth-form.tsx
+│   │   │   ├── social-login.tsx
+│   │   │   └── auth-modal.tsx        # Модальное окно для аутентификации
 │   │   │
-│   │   ├── courses/                  # Компоненты курсов
-│   │   │   ├── course-card.tsx
-│   │   │   ├── course-list.tsx
-│   │   │   ├── course-progress.tsx
-│   │   │   ├── course-rating.tsx
-│   │   │   ├── course-sidebar.tsx
-│   │   │   └── search-filters.tsx
-│   │   │
-│   │   ├── lessons/                  # Компоненты уроков
-│   │   │   ├── lesson-player.tsx
-│   │   │   ├── lesson-sidebar.tsx
-│   │   │   ├── lesson-materials.tsx
-│   │   │   ├── video-player.tsx
-│   │   │   ├── document-viewer.tsx
-│   │   │   └── lesson-progress.tsx
-│   │   │
-│   │   ├── quizzes/                  # Компоненты тестов
-│   │   │   ├── quiz-question.tsx
-│   │   │   ├── quiz-options.tsx
-│   │   │   ├── quiz-result.tsx
-│   │   │   ├── quiz-progress.tsx
-│   │   │   └── quiz-timer.tsx
-│   │   │
-│   │   ├── profile/                  # Компоненты профиля
-│   │   │   ├── profile-header.tsx
-│   │   │   ├── profile-stats.tsx
-│   │   │   ├── certificate-card.tsx
-│   │   │   ├── progress-chart.tsx
-│   │   │   └── settings-form.tsx
+│   │   ├── dashboard/                # Компоненты дашборда
+│   │   │   ├── stats-overview.tsx
+│   │   │   ├── recent-activity.tsx
+│   │   │   ├── learning-path.tsx
+│   │   │   └── certificate-preview.tsx
 │   │   │
 │   │   ├── admin/                    # Компоненты админки
-│   │   │   ├── admin-layout.tsx
-│   │   │   ├── user-table.tsx
-│   │   │   ├── course-editor.tsx
-│   │   │   ├── lesson-editor.tsx
-│   │   │   └── analytics-dashboard.tsx
+│   │   │   ├── data-table.tsx        # Таблица с пагинацией
+│   │   │   ├── form-builder.tsx      # Конструктор форм
+│   │   │   ├── user-management.tsx
+│   │   │   └── course-builder.tsx
 │   │   │
-│   │   └── icons/                    # SVG-иконки
-│   │       ├── course-icon.tsx
-│   │       ├── lesson-icon.tsx
-│   │       ├── quiz-icon.tsx
-│   │       ├── certificate-icon.tsx
-│   │       └── user-icon.tsx
+│   │   ├── common/                   # Общие компоненты
+│   │   │   ├── header.tsx            # Шапка сайта
+│   │   │   ├── footer.tsx            # Подвал сайта
+│   │   │   ├── breadcrumb.tsx        # Хлебные крошки
+│   │   │   ├── search-bar.tsx
+│   │   │   └── dark-mode-toggle.tsx  # Переключатель темы
+│   │   │
+│   │   └── animations/               # Анимационные компоненты
+│   │       ├── fade-in.tsx           # Плавное появление
+│   │       ├── slide-in.tsx          # Появление с эффектом слайда
+│   │       └── staggered-list.tsx    # Последовательное появление списка
 │   │
-│   ├── api/                          # Работа с API: запросы, хуки, типы
-│   │   ├── hooks/                    # Кастомные хуки для запросов
-│   │   │   ├── useAuth.ts            # Хук аутентификации
-│   │   │   ├── useCourses.ts         # Хуки для работы с курсами
-│   │   │   ├── useLessons.ts         # Хуки для работы с уроками
-│   │   │   ├── useQuizzes.ts         # Хуки для работы с тестами
-│   │   │   ├── useProgress.ts        # Хуки для прогресса
-│   │   │   ├── useCertificates.ts    # Хуки для сертификатов
-│   │   │   ├── useUsers.ts           # Хуки для пользователей
-│   │   │   └── useAdmin.ts           # Хуки для админки
-│   │   │
-│   │   ├── requests/                 # Функции для отправки запросов
-│   │   │   ├── auth.ts               # Аутентификация
-│   │   │   ├── courses.ts            # Курсы
-│   │   │   ├── lessons.ts            # Уроки
-│   │   │   ├── quizzes.ts            # Тесты
-│   │   │   ├── progress.ts           # Прогресс
-│   │   │   ├── certificates.ts       # Сертификаты
-│   │   │   ├── users.ts              # Пользователи
-│   │   │   └── admin.ts              # Админка
-│   │   │
-│   │   ├── types/                    # Типы ответов и запросов API
-│   │   │   ├── auth.ts               # Типы аутентификации
-│   │   │   ├── course.ts             # Типы курсов
-│   │   │   ├── lesson.ts             # Типы уроков
-│   │   │   ├── quiz.ts               # Типы тестов
-│   │   │   ├── progress.ts           # Типы прогресса
-│   │   │   ├── certificate.ts        # Типы сертификатов
-│   │   │   ├── user.ts               # Типы пользователей
-│   │   │   └── index.ts              # Экспорт всех типов
-│   │   │
-│   │   └── instance.ts               # Axios-инстанс с настройками
-│   │       # (базовый URL, interceptors, обработка ошибок)
+│   ├── hooks/                        # Кастомные хуки
+│   │   ├── auth/                     # Хуки аутентификации
+│   │   │   ├── use-auth.ts
+│   │   │   ├── use-session.ts
+│   │   │   └── use-protected-route.ts
+│   │   ├── data/                     # Хуки для данных
+│   │   │   ├── use-courses.ts
+│   │   │   ├── use-lessons.ts
+│   │   │   ├── use-progress.ts
+│   │   │   └── use-certificates.ts
+│   │   ├── ui/                       # UI хуки
+│   │   │   ├── use-toast.ts
+│   │   │   ├── use-mobile.ts         # Определение мобильного устройства
+│   │   │   ├── use-scroll.ts         # Хук прокрутки
+│   │   │   └── use-theme.ts          # Управление темой
+│   │   └── utils/                    # Утилитарные хуки
+│   │       ├── use-debounce.ts
+│   │       ├── use-local-storage.ts
+│   │       └── use-outside-click.ts
 │   │
-│   ├── lib/                          # Вспомогательные утилиты
-│   │   ├── utils.ts                  # Общие функции (форматирование, валидация)
-│   │   ├── api.ts                    # API утилиты
-│   │   ├── validation.ts             # Схемы валидации Zod
-│   │   ├── constants.ts              # Константы приложения
-│   │   ├── helpers.ts                # Вспомогательные функции
-│   │   ├── storage.ts                # Работа с localStorage/sessionStorage
-│   │   └── date.ts                   # Утилиты для работы с датами
+│   ├── lib/                          # Библиотеки и утилиты
+│   │   ├── api/                      # API клиент
+│   │   │   ├── client.ts             # Axios инстанс
+│   │   │   ├── endpoints.ts          # URL эндпоинтов
+│   │   │   └── interceptors.ts       # Обработка ошибок и токенов
+│   │   ├── auth/                     # Аутентификация
+│   │   │   ├── jwt.ts                # Работа с JWT
+│   │   │   └── session.ts            # Управление сессией
+│   │   ├── validation/               # Валидация
+│   │   │   ├── schemas.ts            # Zod схемы
+│   │   │   └── validators.ts         # Функции валидации
+│   │   ├── utils/                    # Утилиты
+│   │   │   ├── date.ts               # Работа с датами
+│   │   │   ├── format.ts             # Форматирование данных
+│   │   │   ├── storage.ts            # Работа с localStorage
+│   │   │   └── string.ts             # Строковые операции
+│   │   ├── constants/                # Константы
+│   │   │   ├── routes.ts             # Роуты приложения
+│   │   │   ├── roles.ts              # Роли пользователей
+│   │   │   └── colors.ts             # Цветовая палитра
+│   │   └── services/                 # Сервисы
+│   │       ├── course-service.ts
+│   │       ├── lesson-service.ts
+│   │       └── user-service.ts
 │   │
-│   ├── types/                        # Глобальные типы приложения
-│   │   ├── user.ts                   # Типы пользователей
-│   │   ├── course.ts                 # Типы курсов
-│   │   ├── lesson.ts                 # Типы уроков
-│   │   ├── quiz.ts                   # Типы тестов
-│   │   ├── progress.ts               # Типы прогресса
-│   │   ├── certificate.ts            # Типы сертификатов
-│   │   ├── api.ts                    # Общие API типы
+│   ├── types/                        # TypeScript типы
+│   │   ├── api/                      # Типы API
+│   │   │   ├── auth.ts
+│   │   │   ├── course.ts
+│   │   │   ├── lesson.ts
+│   │   │   ├── quiz.ts
+│   │   │   └── user.ts
+│   │   ├── app/                      # Типы приложения
+│   │   │   ├── theme.ts
+│   │   │   ├── layout.ts
+│   │   │   └── navigation.ts
 │   │   └── index.ts                  # Экспорт всех типов
 │   │
-│   ├── data/                         # Статические данные для UI
-│   │   ├── subjects.ts               # Список предметов
-│   │   ├── topics.ts                 # Список тем
-│   │   ├── faq.ts                    # Вопросы и ответы
-│   │   ├── navigation.ts             # Навигационные данные
-│   │   └── index.ts                  # Экспорт всех данных
+│   ├── config/                       # Конфигурации
+│   │   ├── site.ts                   # Конфигурация сайта
+│   │   ├── seo.ts                    # SEO настройки
+│   │   └── features.ts               # Фичи приложения
 │   │
-│   ├── hooks/                        # Глобальные хуки приложения
-│   │   ├── useLocalStorage.ts        # Хук для localStorage
-│   │   ├── useDebounce.ts            # Хук для debounce
-│   │   ├── useOutsideClick.ts        # Хук для клика вне элемента
-│   │   ├── useIntersectionObserver.ts # Хук для наблюдения за элементами
-│   │   └── index.ts                  # Экспорт всех хуков
+│   ├── styles/                       # Глобальные стили
+│   │   ├── base/                     # Базовые стили
+│   │   │   ├── reset.css             # CSS reset
+│   │   │   └── typography.css        # Типографика
+│   │   ├── components/               # Стили компонентов
+│   │   ├── utilities/                # Утилитарные классы
+│   │   └── animations/               # CSS Keyframes
 │   │
-│   └── middleware.ts                 # Next.js Middleware
-│       # (аутентификация, редиректы, обработка ролей)
+│   ├── utils/                        # Вспомогательные функции
+│   │   ├── cn.ts                     # Объединение классов (clsx + tailwind-merge)
+│   │   ├── generate-id.ts            # Генерация ID
+│   │   └── platform.ts               # Определение платформы
+│   │
+│   └── middleware.ts                 # Next.js Middleware (аутентификация, редиректы)
+│
+├── .github/                          # GitHub конфигурация
+│   └── workflows/                    # CI/CD пайплайны
+│       ├── deploy.yml                # Деплой на Vercel
+│       └── test.yml                  # Запуск тестов
+│
+├── .vscode/                          # VSCode настройки
+│   ├── extensions.json               # Рекомендуемые расширения
+│   ├── settings.json                 # Настройки редактора
+│   └── launch.json                   # Конфигурация отладки
+│
+├── tests/                            # Тесты
+│   ├── unit/                         # Юнит-тесты
+│   ├── integration/                  # Интеграционные тесты
+│   └── e2e/                          # End-to-end тесты
 │
 ├── .env.local                        # Локальные переменные окружения
 ├── .env.example                      # Пример файла окружения
 ├── next.config.ts                    # Конфигурация Next.js
-├── package.json
 ├── tailwind.config.ts                # Конфигурация Tailwind CSS
 ├── tsconfig.json                     # Конфигурация TypeScript
 ├── postcss.config.mjs                # Конфигурация PostCSS
 ├── eslint.config.mjs                 # Конфигурация ESLint
 ├── prettier.config.mjs               # Конфигурация Prettier
+├── vercel.json                       # Конфигурация Vercel
 └── README.md                         # Документация проекта
 ```
 
@@ -290,7 +384,7 @@ frontend/
 - **login/page.tsx**: Страница входа с формой аутентификации
 - **register/page.tsx**: Страница регистрации нового пользователя
 - **reset-password/page.tsx**: Форма восстановления пароля
-- **verify-email/page.tsx**: Страница подтверждения email адреса
+- **verify-email/page.tsx**: TODO: Страница подтверждения email адреса (требует backend реализации)
 
 ### 2. Каталог курсов (`src/app/courses/`)
 - **page.tsx**: Главная страница каталога со списком всех предметов
@@ -505,3 +599,11 @@ JWT_SECRET=your-super-secret-jwt-key
 6. **Адаптивность** под образовательную платформу с учетом всех специфических модулей
 
 Структура готова к реализации и может быть легко расширена при необходимости добавления новых функциональных возможностей.
+
+8. Рекомендации по использованию:
+@basecn/ui для основных UI компонентов - минималистичный дизайн, хорошая производительность
+@magicui для анимаций - плавные переходы, оптимизированная производительность
+Кастомные компоненты для специфичных нужд образовательной платформы
+Context API для управления состоянием между компонентами
+React Query для серверного состояния и кэширования
+Zustand для локального состояния управления
