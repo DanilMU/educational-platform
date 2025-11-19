@@ -5,7 +5,9 @@
  * OpenAPI spec version: 0.0.1
  */
 
+export * from './answer';
 export * from './authResponse';
+export * from './certificate';
 export * from './completeSubjectDto';
 export * from './createAnswerDto';
 export * from './createCertificateDto';
@@ -18,11 +20,21 @@ export * from './createSubjectDto';
 export * from './createTopicDto';
 export * from './createUserDto';
 export * from './createUserDtoRole';
-export * from './getMeDto';
-export * from './getMeDtoRole';
+export * from './filesControllerUploadFile200';
+export * from './filesControllerUploadFileBody';
+export * from './lesson';
 export * from './loginRequest';
+export * from './progress';
+export * from './enrolled-subject';
+export * from './question';
+export * from './questionType';
+export * from './quiz';
 export * from './registerRequest';
+export * from './subject';
+export * from './subjectDescription';
 export * from './submitQuizDto';
+export * from './topic';
+export * from './topicParentId';
 export * from './updateAnswerDto';
 export * from './updateLessonDto';
 export * from './updateProgressDto';
@@ -33,4 +45,12 @@ export * from './updateSubjectDto';
 export * from './updateTopicDto';
 export * from './updateUserDto';
 export * from './updateUserDtoRole';
+export * from './user';
 export * from './userAnswerDto';
+export * from './userAvatarUrl';
+export * from './userCity';
+export * from './userDob';
+export * from './userFirstName';
+export * from './userLastName';
+export * from './userPhone';
+export * from './userRole';

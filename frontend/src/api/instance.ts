@@ -2,7 +2,7 @@ import axios, { type CreateAxiosDefaults } from 'axios'
 import { refresh } from './requests'
 
 import { errorCatch } from '../lib/utils'
-import { getAccessToken, removeToken } from '../lib/cookies'
+import { getAccessToken, removeTokens } from '../lib/cookies'
 
 const options: CreateAxiosDefaults = {
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -48,7 +48,7 @@ instance.interceptors.response.use(
                     errorCatch(error) === 'jwt expired' ||
                     errorCatch(error) === 'Не удалось получить куки авторизации'
                 ) 
-                    removeToken()
+                    removeTokens()
             }
         }
 

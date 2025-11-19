@@ -8,4 +8,6 @@
 export interface AuthResponse {
   /** Access token used for authorization */
   accessToken: string;
+  /** Refresh token used for refreshing access token */
+  refreshToken: string;
 }

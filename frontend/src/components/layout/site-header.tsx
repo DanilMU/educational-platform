@@ -17,12 +17,12 @@ export function SiteHeader() {
 				<div className='flex items-center gap-x-2'>
 					<Image
 						src='/images/logo.svg'
-						alt='CheckoutPlus'
+						alt='Образовательная платформа'
 						width={300}
 						height={300 }
 					/>
 					{/*<span className='text-xl font-semibold text-gray-800'>
-						CheckoutPlus
+						Образовательная платформа
 					</span>*/}
 				</div>
 

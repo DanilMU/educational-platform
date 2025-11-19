@@ -12,6 +12,7 @@ import type {
 
 import type {
   AuthResponse,
+  Certificate,
   CompleteSubjectDto,
   CreateCertificateDto,
   CreateLessonDto,
@@ -20,16 +21,23 @@ import type {
   CreateSubjectDto,
   CreateTopicDto,
   CreateUserDto,
-  GetMeDto,
+  FilesControllerUploadFile200,
+  FilesControllerUploadFileBody,
+  Lesson,
   LoginRequest,
+  Progress,
+  Quiz,
   RegisterRequest,
+  Subject,
   SubmitQuizDto,
+  Topic,
   UpdateLessonDto,
   UpdateProgressDto,
   UpdateQuizDto,
   UpdateSubjectDto,
   UpdateTopicDto,
-  UpdateUserDto
+  UpdateUserDto,
+  User
 } from './types';
 
 export const appControllerGetHello = <TData = AxiosResponse<void>>(
@@ -90,7 +98,10 @@ export const authControllerLogout = <TData = AxiosResponse<void>>(
     );
   }
 
-export const usersControllerCreate = <TData = AxiosResponse<GetMeDto>>(
+/**
+ * @summary Создать нового пользователя (только для админов)
+ */
+export const usersControllerCreate = <TData = AxiosResponse<User>>(
     createUserDto: CreateUserDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -99,7 +110,10 @@ export const usersControllerCreate = <TData = AxiosResponse<GetMeDto>>(
     );
   }
 
-export const usersControllerGetAllUsers = <TData = AxiosResponse<GetMeDto[]>>(
+/**
+ * @summary Получить всех пользователей (только для админов)
+ */
+export const usersControllerGetAllUsers = <TData = AxiosResponse<User[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -107,7 +121,10 @@ export const usersControllerGetAllUsers = <TData = AxiosResponse<GetMeDto[]>>(
     );
   }
 
-export const usersControllerUpdate = <TData = AxiosResponse<GetMeDto>>(
+/**
+ * @summary Обновить пользователя по ID (только для админов)
+ */
+export const usersControllerUpdate = <TData = AxiosResponse<User>>(
     id: string,
     updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -117,7 +134,10 @@ export const usersControllerUpdate = <TData = AxiosResponse<GetMeDto>>(
     );
   }
 
-export const usersControllerGetMe = <TData = AxiosResponse<GetMeDto>>(
+/**
+ * @summary Получить информацию о текущем пользователе
+ */
+export const usersControllerGetMe = <TData = AxiosResponse<User>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -125,7 +145,10 @@ export const usersControllerGetMe = <TData = AxiosResponse<GetMeDto>>(
     );
   }
 
-export const usersControllerUpdateMe = <TData = AxiosResponse<GetMeDto>>(
+/**
+ * @summary Обновить информацию о текущем пользователе
+ */
+export const usersControllerUpdateMe = <TData = AxiosResponse<User>>(
     updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.patch(
@@ -134,7 +157,10 @@ export const usersControllerUpdateMe = <TData = AxiosResponse<GetMeDto>>(
     );
   }
 
-export const subjectsControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать новый предмет (курс) (только для админов/модераторов)
+ */
+export const subjectsControllerCreate = <TData = AxiosResponse<Subject>>(
     createSubjectDto: CreateSubjectDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -143,7 +169,10 @@ export const subjectsControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const subjectsControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить все предметы (курсы)
+ */
+export const subjectsControllerFindAll = <TData = AxiosResponse<Subject[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -151,7 +180,10 @@ export const subjectsControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const subjectsControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти предмет (курс) по ID
+ */
+export const subjectsControllerFindOne = <TData = AxiosResponse<Subject>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -159,7 +191,10 @@ export const subjectsControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const subjectsControllerUpdate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Обновить предмет (курс) (только для админов/модераторов)
+ */
+export const subjectsControllerUpdate = <TData = AxiosResponse<Subject>>(
     id: string,
     updateSubjectDto: UpdateSubjectDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -169,6 +204,9 @@ export const subjectsControllerUpdate = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Удалить предмет (курс) (только для админов/модераторов)
+ */
 export const subjectsControllerRemove = <TData = AxiosResponse<void>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -177,7 +215,10 @@ export const subjectsControllerRemove = <TData = AxiosResponse<void>>(
     );
   }
 
-export const topicsControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать новую тему (только для админов/модераторов)
+ */
+export const topicsControllerCreate = <TData = AxiosResponse<Topic>>(
     createTopicDto: CreateTopicDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -186,7 +227,10 @@ export const topicsControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const topicsControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить все темы
+ */
+export const topicsControllerFindAll = <TData = AxiosResponse<Topic[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -194,7 +238,10 @@ export const topicsControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const topicsControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти тему по ID
+ */
+export const topicsControllerFindOne = <TData = AxiosResponse<Topic>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -202,7 +249,10 @@ export const topicsControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const topicsControllerUpdate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Обновить тему (только для админов/модераторов)
+ */
+export const topicsControllerUpdate = <TData = AxiosResponse<Topic>>(
     id: string,
     updateTopicDto: UpdateTopicDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -212,6 +262,9 @@ export const topicsControllerUpdate = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Удалить тему (только для админов/модераторов)
+ */
 export const topicsControllerRemove = <TData = AxiosResponse<void>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -220,7 +273,10 @@ export const topicsControllerRemove = <TData = AxiosResponse<void>>(
     );
   }
 
-export const lessonsControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать новый урок
+ */
+export const lessonsControllerCreate = <TData = AxiosResponse<Lesson>>(
     createLessonDto: CreateLessonDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -229,7 +285,10 @@ export const lessonsControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const lessonsControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить все уроки
+ */
+export const lessonsControllerFindAll = <TData = AxiosResponse<Lesson[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -237,7 +296,10 @@ export const lessonsControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const lessonsControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти урок по ID
+ */
+export const lessonsControllerFindOne = <TData = AxiosResponse<Lesson>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -245,7 +307,10 @@ export const lessonsControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const lessonsControllerUpdate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Обновить урок
+ */
+export const lessonsControllerUpdate = <TData = AxiosResponse<Lesson>>(
     id: string,
     updateLessonDto: UpdateLessonDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -255,6 +320,9 @@ export const lessonsControllerUpdate = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Удалить урок
+ */
 export const lessonsControllerRemove = <TData = AxiosResponse<void>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -263,7 +331,10 @@ export const lessonsControllerRemove = <TData = AxiosResponse<void>>(
     );
   }
 
-export const quizzesControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать новый тест (только для админов/модераторов)
+ */
+export const quizzesControllerCreate = <TData = AxiosResponse<Quiz>>(
     createQuizDto: CreateQuizDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -272,7 +343,10 @@ export const quizzesControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const quizzesControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить все тесты
+ */
+export const quizzesControllerFindAll = <TData = AxiosResponse<Quiz[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -280,7 +354,10 @@ export const quizzesControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const quizzesControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти тест по ID
+ */
+export const quizzesControllerFindOne = <TData = AxiosResponse<Quiz>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -288,7 +365,10 @@ export const quizzesControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const quizzesControllerUpdate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Обновить тест (только для админов/модераторов)
+ */
+export const quizzesControllerUpdate = <TData = AxiosResponse<Quiz>>(
     id: string,
     updateQuizDto: UpdateQuizDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -298,6 +378,9 @@ export const quizzesControllerUpdate = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Удалить тест (только для админов/модераторов)
+ */
 export const quizzesControllerRemove = <TData = AxiosResponse<void>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -306,6 +389,9 @@ export const quizzesControllerRemove = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Отправить ответы на тест
+ */
 export const quizzesControllerSubmit = <TData = AxiosResponse<void>>(
     id: string,
     submitQuizDto: SubmitQuizDto, options?: AxiosRequestConfig
@@ -316,7 +402,10 @@ export const quizzesControllerSubmit = <TData = AxiosResponse<void>>(
     );
   }
 
-export const progressControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать запись о прогрессе (только для админов/модераторов)
+ */
+export const progressControllerCreate = <TData = AxiosResponse<Progress>>(
     createProgressDto: CreateProgressDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -325,7 +414,10 @@ export const progressControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const progressControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить весь прогресс для текущего пользователя
+ */
+export const progressControllerFindAll = <TData = AxiosResponse<Progress[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -333,7 +425,10 @@ export const progressControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const progressControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить прогресс по конкретному уроку для текущего пользователя
+ */
+export const progressControllerFindOne = <TData = AxiosResponse<Progress>>(
     lessonId: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -341,7 +436,10 @@ export const progressControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const progressControllerUpdate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Обновить прогресс по уроку (только для админов/модераторов)
+ */
+export const progressControllerUpdate = <TData = AxiosResponse<Progress>>(
     lessonId: string,
     updateProgressDto: UpdateProgressDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -351,6 +449,9 @@ export const progressControllerUpdate = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Удалить прогресс по уроку (только для админов/модераторов)
+ */
 export const progressControllerRemove = <TData = AxiosResponse<void>>(
     lessonId: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -359,6 +460,9 @@ export const progressControllerRemove = <TData = AxiosResponse<void>>(
     );
   }
 
+/**
+ * @summary Завершить все уроки по предмету (только для админов/модераторов)
+ */
 export const progressControllerCompleteSubject = <TData = AxiosResponse<void>>(
     completeSubjectDto: CompleteSubjectDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -368,7 +472,10 @@ export const progressControllerCompleteSubject = <TData = AxiosResponse<void>>(
     );
   }
 
-export const certificatesControllerCreate = <TData = AxiosResponse<void>>(
+/**
+ * @summary Создать новый сертификат
+ */
+export const certificatesControllerCreate = <TData = AxiosResponse<Certificate>>(
     createCertificateDto: CreateCertificateDto, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -377,7 +484,10 @@ export const certificatesControllerCreate = <TData = AxiosResponse<void>>(
     );
   }
 
-export const certificatesControllerFindAll = <TData = AxiosResponse<void>>(
+/**
+ * @summary Получить все сертификаты (только для админов)
+ */
+export const certificatesControllerFindAll = <TData = AxiosResponse<Certificate[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -385,7 +495,10 @@ export const certificatesControllerFindAll = <TData = AxiosResponse<void>>(
     );
   }
 
-export const certificatesControllerFindByUser = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти сертификаты по ID пользователя
+ */
+export const certificatesControllerFindByUser = <TData = AxiosResponse<Certificate[]>>(
     userId: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -393,7 +506,10 @@ export const certificatesControllerFindByUser = <TData = AxiosResponse<void>>(
     );
   }
 
-export const certificatesControllerFindOne = <TData = AxiosResponse<void>>(
+/**
+ * @summary Найти сертификат по ID
+ */
+export const certificatesControllerFindOne = <TData = AxiosResponse<Certificate>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -401,19 +517,32 @@ export const certificatesControllerFindOne = <TData = AxiosResponse<void>>(
     );
   }
 
-export const certificatesControllerDownload = <TData = AxiosResponse<void>>(
+/**
+ * @summary Скачать сертификат в формате PDF
+ */
+export const certificatesControllerDownload = <TData = AxiosResponse<Blob>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
-      `/certificates/${id}/download`,options
+      `/certificates/${id}/download`,{
+        responseType: 'blob',
+    ...options,}
     );
   }
 
-export const filesControllerUploadFile = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
+/**
+ * @summary Загрузить файл
+ */
+export const filesControllerUploadFile = <TData = AxiosResponse<FilesControllerUploadFile200>>(
+    filesControllerUploadFileBody: FilesControllerUploadFileBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {const formData = new FormData();
+if(filesControllerUploadFileBody.file !== undefined) {
+ formData.append(`file`, filesControllerUploadFileBody.file)
+ }
+
     return axios.post(
-      `/files/upload`,undefined,options
+      `/files/upload`,
+      formData,options
     );
   }
 
@@ -422,41 +551,41 @@ export type AuthControllerRegisterResult = AxiosResponse<AuthResponse>
 export type AuthControllerLoginResult = AxiosResponse<AuthResponse>
 export type AuthControllerRefreshResult = AxiosResponse<AuthResponse>
 export type AuthControllerLogoutResult = AxiosResponse<void>
-export type UsersControllerCreateResult = AxiosResponse<GetMeDto>
-export type UsersControllerGetAllUsersResult = AxiosResponse<GetMeDto[]>
-export type UsersControllerUpdateResult = AxiosResponse<GetMeDto>
-export type UsersControllerGetMeResult = AxiosResponse<GetMeDto>
-export type UsersControllerUpdateMeResult = AxiosResponse<GetMeDto>
-export type SubjectsControllerCreateResult = AxiosResponse<void>
-export type SubjectsControllerFindAllResult = AxiosResponse<void>
-export type SubjectsControllerFindOneResult = AxiosResponse<void>
-export type SubjectsControllerUpdateResult = AxiosResponse<void>
+export type UsersControllerCreateResult = AxiosResponse<User>
+export type UsersControllerGetAllUsersResult = AxiosResponse<User[]>
+export type UsersControllerUpdateResult = AxiosResponse<User>
+export type UsersControllerGetMeResult = AxiosResponse<User>
+export type UsersControllerUpdateMeResult = AxiosResponse<User>
+export type SubjectsControllerCreateResult = AxiosResponse<Subject>
+export type SubjectsControllerFindAllResult = AxiosResponse<Subject[]>
+export type SubjectsControllerFindOneResult = AxiosResponse<Subject>
+export type SubjectsControllerUpdateResult = AxiosResponse<Subject>
 export type SubjectsControllerRemoveResult = AxiosResponse<void>
-export type TopicsControllerCreateResult = AxiosResponse<void>
-export type TopicsControllerFindAllResult = AxiosResponse<void>
-export type TopicsControllerFindOneResult = AxiosResponse<void>
-export type TopicsControllerUpdateResult = AxiosResponse<void>
+export type TopicsControllerCreateResult = AxiosResponse<Topic>
+export type TopicsControllerFindAllResult = AxiosResponse<Topic[]>
+export type TopicsControllerFindOneResult = AxiosResponse<Topic>
+export type TopicsControllerUpdateResult = AxiosResponse<Topic>
 export type TopicsControllerRemoveResult = AxiosResponse<void>
-export type LessonsControllerCreateResult = AxiosResponse<void>
-export type LessonsControllerFindAllResult = AxiosResponse<void>
-export type LessonsControllerFindOneResult = AxiosResponse<void>
-export type LessonsControllerUpdateResult = AxiosResponse<void>
+export type LessonsControllerCreateResult = AxiosResponse<Lesson>
+export type LessonsControllerFindAllResult = AxiosResponse<Lesson[]>
+export type LessonsControllerFindOneResult = AxiosResponse<Lesson>
+export type LessonsControllerUpdateResult = AxiosResponse<Lesson>
 export type LessonsControllerRemoveResult = AxiosResponse<void>
-export type QuizzesControllerCreateResult = AxiosResponse<void>
-export type QuizzesControllerFindAllResult = AxiosResponse<void>
-export type QuizzesControllerFindOneResult = AxiosResponse<void>
-export type QuizzesControllerUpdateResult = AxiosResponse<void>
+export type QuizzesControllerCreateResult = AxiosResponse<Quiz>
+export type QuizzesControllerFindAllResult = AxiosResponse<Quiz[]>
+export type QuizzesControllerFindOneResult = AxiosResponse<Quiz>
+export type QuizzesControllerUpdateResult = AxiosResponse<Quiz>
 export type QuizzesControllerRemoveResult = AxiosResponse<void>
 export type QuizzesControllerSubmitResult = AxiosResponse<void>
-export type ProgressControllerCreateResult = AxiosResponse<void>
-export type ProgressControllerFindAllResult = AxiosResponse<void>
-export type ProgressControllerFindOneResult = AxiosResponse<void>
-export type ProgressControllerUpdateResult = AxiosResponse<void>
+export type ProgressControllerCreateResult = AxiosResponse<Progress>
+export type ProgressControllerFindAllResult = AxiosResponse<Progress[]>
+export type ProgressControllerFindOneResult = AxiosResponse<Progress>
+export type ProgressControllerUpdateResult = AxiosResponse<Progress>
 export type ProgressControllerRemoveResult = AxiosResponse<void>
 export type ProgressControllerCompleteSubjectResult = AxiosResponse<void>
-export type CertificatesControllerCreateResult = AxiosResponse<void>
-export type CertificatesControllerFindAllResult = AxiosResponse<void>
-export type CertificatesControllerFindByUserResult = AxiosResponse<void>
-export type CertificatesControllerFindOneResult = AxiosResponse<void>
-export type CertificatesControllerDownloadResult = AxiosResponse<void>
-export type FilesControllerUploadFileResult = AxiosResponse<void>
+export type CertificatesControllerCreateResult = AxiosResponse<Certificate>
+export type CertificatesControllerFindAllResult = AxiosResponse<Certificate[]>
+export type CertificatesControllerFindByUserResult = AxiosResponse<Certificate[]>
+export type CertificatesControllerFindOneResult = AxiosResponse<Certificate>
+export type CertificatesControllerDownloadResult = AxiosResponse<Blob>
+export type FilesControllerUploadFileResult = AxiosResponse<FilesControllerUploadFile200>

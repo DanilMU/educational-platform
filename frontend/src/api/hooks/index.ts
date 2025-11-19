@@ -1,2 +1,5 @@
 export * from './useRegisterMutation'
 export * from './useLoginMutation'
+export * from './useGetEnrolledSubjectsQuery'
+export * from './useGetProfileQuery'
+export * from './useGetUserProgressQuery'

@@ -1,14 +1,14 @@
-import { Link } from 'lucide-react';
-import Image from 'next/image';
-import type { ReactNode } from 'react';
+import Link from 'next/link'
+import Image from 'next/image'
+import type { ReactNode } from 'react'
 
 interface AuthWrapperProps {
-	title: string;
-	description: string;
-	bottomText?: string;
-	bottomTextLink?: string;
-	bottomLinkHref?: string;
-	children: ReactNode;
+	title: string
+	description: string
+	bottomText?: string
+	bottomTextLink?: string
+	bottomLinkHref?: string
+	children: ReactNode
 }
 
 export function AuthWrapper({
@@ -17,30 +17,29 @@ export function AuthWrapper({
 	bottomText,
 	bottomTextLink,
 	bottomLinkHref,
-	children
+	children,
 }: AuthWrapperProps) {
 	return (
 		<div className='flex min-h-screen'>
-			<div className='relative hidden overflow-hidden bg-gradient-to-br from-[#FFF4EC] via-[#FFEBDD] to-[#FFDAB3] lg:flex lg:w-1/2'>
-				<div className='absolute inset-0 bg-gradient-to-br from-[#FFF4EC]/90 via-[#FFEBDD]/90 to-[#FFDAB3]/90' />
+			<div className='relative hidden overflow-hidden bg-gradient-to-br from-blue-400 via-blue-600 to-blue-800 lg:flex lg:w-1/2'>
+				<div className='absolute inset-0 bg-gradient-to-br from-blue-400/90 via-blue-600/90 to-blue-800/90' />
 
 				<div className='relative z-10 flex h-full w-full flex-col items-center justify-center p-12'>
+					{/* Замените на реальный логотип. Текущий является временным решением. */}
 					<Image
 						src='/images/logo/logo3.svg'
 						alt='Auth'
-						width={250}
-						height={250}
+						width={150}
+						height={150}
 					/>
 				</div>
 			</div>
 
-			<div className='flex w-full items-center justify-center bg-gray-50 p-8 lg:w-1/2'>
+			<div className='flex w-full items-center justify-center bg-white p-8 lg:w-1/2'>
 				<div className='mx-auto w-full max-w-md'>
 					<div className='text-center lg:text-left'>
 						<h1 className='text-3xl font-bold'>{title}</h1>
-						<p className='text-muted-foreground mt-2'>
-							{description}
-						</p>
+						<p className='text-muted-foreground mt-2'>{description}</p>
 					</div>
 
 					<div className='my-5 p-0'>{children}</div>
@@ -50,7 +49,7 @@ export function AuthWrapper({
 							{bottomText}{' '}
 							<Link
 								href={bottomLinkHref}
-								className='font-medium text-orange-500'
+								className='font-medium text-blue-600 hover:underline'
 							>
 								{bottomTextLink}
 							</Link>
@@ -59,5 +58,5 @@ export function AuthWrapper({
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

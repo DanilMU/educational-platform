@@ -60,11 +60,18 @@ async function completeSubjectAndCertificate() {
 					`Сертификат создан для предмета: ${subject.title}`,
 					certificate.id
 				);
-			} catch (certError: any) {
-				console.log(
-					`Не удалось создать сертификат для предмета: ${subject.title}`,
-					certError.message
-				);
+			} catch (certError) {
+				if (certError instanceof Error) {
+					console.log(
+						`Не удалось создать сертификат для предмета: ${subject.title}`,
+						certError.message
+					);
+				} else {
+					console.log(
+						`Не удалось создать сертификат для предмета: ${subject.title}`,
+						certError
+					);
+				}
 			}
 		}
 
@@ -81,6 +88,13 @@ async function completeSubjectAndCertificate() {
 	}
 }
 
-completeSubjectAndCertificate();
+async function main() {
+	try {
+		await completeSubjectAndCertificate();
+	} catch (error) {
+		console.error('Произошла критическая ошибка в скрипте:', error);
+		process.exit(1);
+	}
+}
 
-completeSubjectAndCertificate();
+main();

@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import { getAccessToken } from "../lib/cookies";
+import { useState } from "react";
+import { getAccessToken, removeTokens } from "../lib/cookies";
 
 export function useAuth() {
-    const [isAuthorized, setIsAuthorized] = useState(false)
+    const [isAuthorized, setIsAuthorized] = useState(() => {
+        const token = getAccessToken();
+        return Boolean(token && typeof token !== 'undefined');
+    });
 
-    useEffect(() => {
-        const token = getAccessToken()
+    const logout = () => {
+        removeTokens();
+        setIsAuthorized(false);
+    }
 
-        setIsAuthorized(Boolean(token && typeof token !== 'undefined'))
-    }, [])
-
-    return { isAuthorized }
+    return { isAuthorized, logout }
 }

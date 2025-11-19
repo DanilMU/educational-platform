@@ -11,7 +11,7 @@ export const getAccessToken = () => {
     return accessToken ?? null
 }
 
-export const savetoken = (accessToken: string) => {
+export const saveToken = (accessToken: string) => {
     Cookies.set(EnumTokens.ACCESS_TOKEN, accessToken, {
         domain: process.env.NEXT_PUBLIC_COOKIES_DOMAIN,
         sameSite: 'strict',
@@ -19,6 +19,15 @@ export const savetoken = (accessToken: string) => {
     })
 }
 
-export const removeToken = () => {
+export const saveRefreshToken = (refreshToken: string) => {
+    Cookies.set(EnumTokens.REFRESH_TOKEN, refreshToken, {
+        domain: process.env.NEXT_PUBLIC_COOKIES_DOMAIN,
+        sameSite: 'strict',
+        expires: 1
+    })
+}
+
+export const removeTokens = () => {
     Cookies.remove(EnumTokens.ACCESS_TOKEN)
+    Cookies.remove(EnumTokens.REFRESH_TOKEN)
 }

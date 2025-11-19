@@ -48,7 +48,8 @@ export class ProgressDto {
 
 	@ApiProperty({
 		example: '2025-11-15T10:00:00.000Z',
-		description: 'The date and time when the progress record was last updated'
+		description:
+			'The date and time when the progress record was last updated'
 	})
 	@IsDate()
 	updatedAt!: Date;

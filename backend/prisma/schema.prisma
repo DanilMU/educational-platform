@@ -15,6 +15,10 @@ model User {
   email        String         @unique
   password     String
   role         Role           @default(STUDENT)
+  avatarUrl    String?
+  phone        String?
+  dob          String? // Date of Birth
+  city         String?
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
   progress     UserProgress[]

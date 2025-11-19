@@ -140,7 +140,7 @@ export class AuthService {
 
 		this.setCookie(res, refreshToken, refreshTokenExpires);
 
-		return { accessToken };
+		return { accessToken, refreshToken };
 	}
 
 	private async generateTokens(user: User) {

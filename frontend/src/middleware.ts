@@ -1,8 +1,7 @@
-import { login, refresh } from './api/requests/auth';
 import { NextRequest, NextResponse } from "next/server";
 import { EnumTokens } from "./lib/cookies";
 
-const protectedRoutes = ['/dashboard']
+const protectedRoutes = ['/dashboard', '/(main)/dashboard']
 
 const authRoutes = ['/auth/register', '/auth/login']
 
@@ -34,5 +33,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/dashboard', '/auth/:path*'],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)', '/(main)/dashboard(.*)', '/auth/:path*'],
 };

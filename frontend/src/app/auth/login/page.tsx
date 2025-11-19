@@ -6,6 +6,6 @@ export const metadata: Metadata = {
     title: 'Авторизация'
 }
 
-export default function LoignPage() {
+export default function LoginPage() {
     return <LoginForm />
 }

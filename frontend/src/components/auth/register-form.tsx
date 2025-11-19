@@ -3,18 +3,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
-
-
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '../ui/button'
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage
+	FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
 
@@ -23,25 +24,33 @@ import { useRegisterMutation } from '@/src/api/hooks'
 
 const registerSchema = z.object({
 	name: z.string().min(1, { message: 'Имя обязательно' }),
-	email: z.email({ message: 'Введите корректный адрес электронной почты' }),
+	email: z.string().email({ message: 'Введите корректный адрес электронной почты' }),
 	password: z
 		.string()
 		.min(6, { message: 'Пароль должен содержать хотя бы 6 символов' })
-		.max(128, { message: 'Пароль должен содержать не более 128 символов' })
+		.max(128, { message: 'Пароль должен содержать не более 128 символов' }),
 })
 
 type RegisterFormValues = z.infer<typeof registerSchema>
 
 export function RegisterForm() {
-	const { mutate, isPending } = useRegisterMutation()
+	const router = useRouter()
+	const queryClient = useQueryClient()
+	const { mutate, isPending } = useRegisterMutation({
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['profile'] })
+			router.push('/dashboard')
+		},
+	})
+	const [showPassword, setShowPassword] = useState(false)
 
-	const form = useForm<RegisterFormValues>({ 
+	const form = useForm<RegisterFormValues>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
 			name: '',
 			email: '',
-			password: ''
-		}
+			password: '',
+		},
 	})
 
 	const onSubmit = (values: RegisterFormValues) => {
@@ -51,16 +60,13 @@ export function RegisterForm() {
 	return (
 		<AuthWrapper
 			title='Регистрация'
-			description='Заполните форму, чтобы создать аккаунт'
+			description='Заполните форму ниже, чтобы создать аккаунт'
 			bottomText='Уже есть аккаунт?'
-			bottomTextLink='Войти'
+			bottomTextLink='Войти'
 			bottomLinkHref='/auth/login'
 		>
 			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className='space-y-4'
-				>
+				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
 					<FormField
 						control={form.control}
 						name='name'
@@ -69,9 +75,10 @@ export function RegisterForm() {
 								<FormLabel>Имя</FormLabel>
 								<FormControl>
 									<Input
-										placeholder='Ваше имя'
+										placeholder='Тайлер Дерден'
 										disabled={isPending}
 										{...field}
+										className='bg-gray-100'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -87,9 +94,10 @@ export function RegisterForm() {
 								<FormLabel>Почта</FormLabel>
 								<FormControl>
 									<Input
-										placeholder='name@example.com'
+										placeholder='tyler.derden@fightclub.com'
 										disabled={isPending}
 										{...field}
+										className='bg-gray-100'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -104,12 +112,26 @@ export function RegisterForm() {
 							<FormItem>
 								<FormLabel>Пароль</FormLabel>
 								<FormControl>
-									<Input
-										type='password'
-										placeholder='123456'
-										disabled={isPending}
-										{...field}
-									/>
+									<div className='relative'>
+										<Input
+											type={showPassword ? 'text' : 'password'}
+											placeholder='••••••••'
+											disabled={isPending}
+											{...field}
+											className='bg-gray-100'
+										/>
+										<button
+											type='button'
+											onClick={() => setShowPassword(!showPassword)}
+											className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400'
+										>
+											{showPassword ? (
+												<EyeOff className='h-5 w-5' />
+											) : (
+												<Eye className='h-5 w-5' />
+											)}
+										</button>
+									</div>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -119,10 +141,10 @@ export function RegisterForm() {
 					<Button
 						type='submit'
 						size='lg'
-						className='w-full'
+						className='w-full bg-blue-600 text-white hover:bg-blue-700'
 						disabled={isPending}
 					>
-						Продолжить
+						Создать аккаунт
 					</Button>
 				</form>
 			</Form>

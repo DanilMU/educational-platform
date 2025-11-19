@@ -1,0 +1,84 @@
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import {
+	LayoutDashboard,
+	BookOpenText,
+	User,
+	ShieldQuestion,
+} from 'lucide-react'
+import { cn } from '@/src/lib/utils'
+import { useGetProfileQuery } from '@/src/api/hooks'
+
+const navLinks = [
+	{
+		href: '/dashboard',
+		icon: LayoutDashboard,
+		label: 'Дашборд',
+	},
+	{
+		href: '/subjects',
+		icon: BookOpenText,
+		label: 'Курсы',
+	},
+	{
+		href: '/profile',
+		icon: User,
+		label: 'Профиль',
+	},
+	{
+		href: '/admin',
+		icon: ShieldQuestion,
+		label: 'Админка',
+		adminOnly: true, // This link will only be shown to admins
+	},
+]
+
+export function DashboardSidebar() {
+	const pathname = usePathname()
+	const { data: profile } = useGetProfileQuery()
+
+	const isAdmin = profile?.role === 'ADMIN'
+
+	return (
+		<aside className='flex w-64 flex-col justify-between bg-gradient-to-br from-blue-800 via-blue-900 to-blue-950 p-6 text-white'>
+			<div>
+				<div className='mb-8 flex items-center space-x-2'>
+					<Image
+						src='/images/logo/logo3.svg' // Placeholder logo
+						alt='Образовательная Платформа'
+						width={32}
+						height={32}
+					/>
+					<span className='text-xl font-bold'>Образовательная Платформа</span>
+				</div>
+				<nav className='space-y-4'>
+					{navLinks.map((link) => {
+						if (link.adminOnly && !isAdmin) {
+							return null
+						}
+						const isActive = pathname === link.href
+						return (
+							<Link
+								key={link.href}
+								href={link.href}
+								className={cn(
+									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-700',
+									isActive ? 'bg-blue-700' : ''
+								)}
+							>
+								<link.icon className='h-5 w-5' />
+								<span>{link.label}</span>
+							</Link>
+						)
+					})}
+				</nav>
+			</div>
+			<div className='text-sm text-gray-400'>
+				&copy; {new Date().getFullYear()} Платформа
+			</div>
+		</aside>
+	)
+}
