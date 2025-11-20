@@ -13,6 +13,7 @@ import type {
 import type {
   AuthResponse,
   Certificate,
+  ChangePasswordDto,
   CompleteSubjectDto,
   CreateCertificateDto,
   CreateLessonDto,
@@ -23,6 +24,7 @@ import type {
   CreateUserDto,
   FilesControllerUploadFile200,
   FilesControllerUploadFileBody,
+  GetMeDto,
   Lesson,
   LoginRequest,
   Progress,
@@ -137,7 +139,7 @@ export const usersControllerUpdate = <TData = AxiosResponse<User>>(
 /**
  * @summary Получить информацию о текущем пользователе
  */
-export const usersControllerGetMe = <TData = AxiosResponse<User>>(
+export const usersControllerGetMe = <TData = AxiosResponse<GetMeDto>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -154,6 +156,18 @@ export const usersControllerUpdateMe = <TData = AxiosResponse<User>>(
     return axios.patch(
       `/users/@me`,
       updateUserDto,options
+    );
+  }
+
+/**
+ * @summary Изменить пароль текущего пользователя
+ */
+export const usersControllerChangePassword = <TData = AxiosResponse<void>>(
+    changePasswordDto: ChangePasswordDto, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/users/@me/password`,
+      changePasswordDto,options
     );
   }
 
@@ -554,8 +568,9 @@ export type AuthControllerLogoutResult = AxiosResponse<void>
 export type UsersControllerCreateResult = AxiosResponse<User>
 export type UsersControllerGetAllUsersResult = AxiosResponse<User[]>
 export type UsersControllerUpdateResult = AxiosResponse<User>
-export type UsersControllerGetMeResult = AxiosResponse<User>
+export type UsersControllerGetMeResult = AxiosResponse<GetMeDto>
 export type UsersControllerUpdateMeResult = AxiosResponse<User>
+export type UsersControllerChangePasswordResult = AxiosResponse<void>
 export type SubjectsControllerCreateResult = AxiosResponse<Subject>
 export type SubjectsControllerFindAllResult = AxiosResponse<Subject[]>
 export type SubjectsControllerFindOneResult = AxiosResponse<Subject>

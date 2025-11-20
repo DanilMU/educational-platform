@@ -15,6 +15,12 @@ export interface CreateUserDto {
   firstName?: string;
   /** Last name of the user */
   lastName?: string;
+  /** Phone number of the user */
+  phone?: string;
+  /** Date of birth of the user */
+  dob?: string;
+  /** City of the user */
+  city?: string;
   /** The role of the user */
   role?: CreateUserDtoRole;
 }

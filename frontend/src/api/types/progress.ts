@@ -19,15 +19,5 @@ export interface Progress {
   /** Дата создания записи */
   createdAt: string;
   /** Дата последнего обновления записи */
- updatedAt: string;
-}
-
-export interface UserProgress {
-  // Define the structure for user progress stats
- // This is a placeholder - the actual structure depends on what the backend returns
-  totalSubjects: number;
- completedSubjects: number;
-  totalLessons: number;
- completedLessons: number;
-  // Add other fields as needed based on the actual API response
+  updatedAt: string;
 }

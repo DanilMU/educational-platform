@@ -9,12 +9,24 @@ import type { GetMeDtoRole } from './getMeDtoRole';
 export interface GetMeDto {
   /** User ID */
   id: string;
-  /** Email address of the user */
-  email: string;
   /** First name of the user */
   firstName: string;
   /** Last name of the user */
   lastName: string;
+  /** Email address of the user */
+  email: string;
   /** User role */
   role: GetMeDtoRole;
+  /** Avatar URL */
+  avatarUrl: string;
+  /** Phone number */
+  phone: string;
+  /** Date of birth */
+  dob: string;
+  /** City */
+  city: string;
+  /** Creation date */
+  createdAt: string;
+  /** Update date */
+  updatedAt: string;
 }
