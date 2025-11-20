@@ -22,7 +22,12 @@ import { Role, User as UserModel } from '@prisma/client';
 import { Authorized, Protected, Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
-import { CreateUserDto, GetMeDto, UpdateUserDto } from './dto';
+import {
+	ChangePasswordDto,
+	CreateUserDto,
+	GetMeDto,
+	UpdateUserDto
+} from './dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -74,7 +79,7 @@ export class UsersController {
 	@ApiOperation({ summary: 'Получить информацию о текущем пользователе' })
 	@ApiOkResponse({
 		description: 'Информация о текущем пользователе.',
-		type: User
+		type: GetMeDto
 	})
 	public getMe(@Authorized() user: UserModel): GetMeDto {
 		return this.usersService.getMe(user);
@@ -108,5 +113,23 @@ export class UsersController {
 		@Body() dto: UpdateUserDto
 	): Promise<UserModel> {
 		return this.usersService.updateMe(user.id, dto);
+	}
+
+	@Protected()
+	@Patch('@me/password')
+	@ApiOperation({ summary: 'Изменить пароль текущего пользователя' })
+	@ApiBody({ type: ChangePasswordDto })
+	@ApiOkResponse({
+		description: 'Пароль успешно изменен.'
+	})
+	public async changePassword(
+		@Authorized() user: UserModel,
+		@Body() dto: ChangePasswordDto
+	): Promise<{ message: string }> {
+		return await this.usersService.changePassword(
+			user.id,
+			dto.currentPassword,
+			dto.newPassword
+		);
 	}
 }

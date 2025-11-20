@@ -17,4 +17,10 @@ export interface UpdateUserDto {
   lastName?: string;
   /** The role of the user */
   role?: UpdateUserDtoRole;
+ /** Phone number of the user */
+  phone?: string;
+  /** Date of birth of the user */
+  dob?: string;
+  /** City of the user */
+  city?: string;
 }

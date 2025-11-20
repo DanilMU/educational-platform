@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { Button } from '@/src/components/ui/button'
-import { Pencil } from 'lucide-react'
+import { Pencil, MapPin, Mail, Phone, Calendar } from 'lucide-react'
 import { useGetProfileQuery } from '@/src/api/hooks'
 
 import { User } from '@/src/api/types/user';
@@ -18,7 +18,7 @@ function extractStringValue(value: string | { [key: string]: unknown } | undefin
 	return '';
 }
 
-export function ProfileSummaryCard() {
+export function ProfileCard() {
 	const { data: profile, isLoading, error } = useGetProfileQuery();
 
 	if (isLoading) {
@@ -31,6 +31,12 @@ export function ProfileSummaryCard() {
 						<div className='h-4 bg-gray-200 rounded w-32 animate-pulse' />
 						<div className='h-4 bg-gray-200 rounded w-40 animate-pulse' />
 					</div>
+				</div>
+				<div className='mt-6 grid grid-cols-2 gap-4'>
+					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
+					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
+					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
+					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
 				</div>
 			</div>
 		);
@@ -51,8 +57,12 @@ export function ProfileSummaryCard() {
 
 	// Обработка значений с учетом их возможной структуры объекта
 	const avatarUrl = extractStringValue(profile?.avatarUrl);
-	const phone = extractStringValue(profile?.phone);
-	const city = extractStringValue(profile?.city);
+	const phone = profile?.phone || '';
+	const city = profile?.city || '';
+	const dob = profile?.dob || '';
+
+	// Проверяем роль пользователя
+	const isStudent = profile?.role === 'STUDENT';
 
 	return (
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
@@ -65,18 +75,45 @@ export function ProfileSummaryCard() {
 					<h2 className='text-xl font-semibold'>{fullName}</h2>
 					<p className='text-muted-foreground text-sm'>{profile?.role || 'Роль'}</p>
 					<p className='text-muted-foreground text-sm'>{profile?.email || 'Email'}</p>
-					{phone && (
-						<p className='text-muted-foreground text-sm'>{phone}</p>
-					)}
-					{city && (
-						<p className='text-muted-foreground text-sm'>{city}</p>
-					)}
 				</div>
 			</div>
-			<Button variant='outline' className='mt-4'>
+			
+			<div className='mt-6 grid grid-cols-2 gap-4'>
+				{phone && (
+					<div className='flex items-center'>
+						<Phone className='mr-2 h-4 w-4 text-muted-foreground' />
+						<span>{phone}</span>
+					</div>
+				)}
+				{city && (
+					<div className='flex items-center'>
+						<MapPin className='mr-2 h-4 w-4 text-muted-foreground' />
+						<span>{city}</span>
+					</div>
+				)}
+				{dob && (
+					<div className='flex items-center'>
+						<Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
+						<span>{dob}</span>
+					</div>
+				)}
+			</div>
+			
+			<Button variant='outline' className='mt-6'>
 				<Pencil className='mr-2 h-4 w-4' />
 				Редактировать профиль
 			</Button>
+			
+			{/* Панель администратора не отображается для STUDENT пользователя */}
+			{!isStudent && (
+				<div className='mt-6 pt-6 border-t border-gray-200'>
+					<h3 className='font-medium mb-2'>Административные функции</h3>
+					<div className='flex space-x-2'>
+						<Button variant='outline' size='sm'>Управление пользователями</Button>
+						<Button variant='outline' size='sm'>Настройки системы</Button>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

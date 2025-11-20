@@ -34,11 +34,25 @@ type LoginFormValues = z.infer<typeof loginSchema>
 export function LoginForm() {
 	const router = useRouter()
 	const queryClient = useQueryClient()
+	const [error, setError] = useState<string | null>(null)
 	const { mutate, isPending } = useLoginMutation({
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['profile'] })
 			router.push('/dashboard')
-		},
+	},
+		onError: (error: unknown) => {
+			// Показываем сообщение об ошибке при неудачной аутентификации
+			if (error && typeof error === 'object' && 'response' in error) {
+				const err = error as { response?: { data?: { message?: string } } };
+				if (err.response?.data?.message) {
+					setError(err.response.data.message)
+				} else {
+					setError('Неверный email или пароль')
+				}
+			} else {
+				setError('Произошла ошибка при входе в систему')
+			}
+	}
 	})
 	const [showPassword, setShowPassword] = useState(false)
 
@@ -51,6 +65,7 @@ export function LoginForm() {
 	})
 
 	const onSubmit = (values: LoginFormValues) => {
+		setError(null) // Сбрасываем ошибку при новой попытке входа
 		mutate(values)
 	}
 
@@ -132,6 +147,12 @@ export function LoginForm() {
 					>
 						Войти
 					</Button>
+					
+					{error && (
+						<div className="text-red-600 text-sm mt-2 text-center">
+							{error}
+						</div>
+					)}
 				</form>
 			</Form>
 

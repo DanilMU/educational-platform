@@ -14,19 +14,14 @@ import { useGetProfileQuery } from '@/src/api/hooks'
 
 const navLinks = [
 	{
-		href: '/dashboard',
+	href: '/dashboard',
 		icon: LayoutDashboard,
-		label: 'Дашборд',
+		label: 'Профиль',
 	},
 	{
 		href: '/subjects',
 		icon: BookOpenText,
 		label: 'Курсы',
-	},
-	{
-		href: '/profile',
-		icon: User,
-		label: 'Профиль',
 	},
 	{
 		href: '/admin',

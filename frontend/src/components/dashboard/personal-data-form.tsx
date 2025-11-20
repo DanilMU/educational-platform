@@ -15,7 +15,8 @@ import {
 	FormMessage,
 } from '@/src/components/ui/form'
 import { Input } from '@/src/components/ui/input'
-import { useGetProfileQuery } from '@/src/api/hooks'
+import { useGetProfileQuery, useUpdateProfileMutation } from '@/src/api/hooks'
+import { UpdateUserDto } from '@/src/api/types/updateUserDto'
 
 const personalDataSchema = z.object({
 	firstName: z.string().min(1, 'Имя обязательно'),
@@ -29,7 +30,8 @@ const personalDataSchema = z.object({
 type PersonalDataFormValues = z.infer<typeof personalDataSchema>
 
 export function PersonalDataForm() {
-	const { data: profile } = useGetProfileQuery()
+	const { data: profile, refetch } = useGetProfileQuery()
+	const updateProfileMutation = useUpdateProfileMutation()
 
 	const form = useForm<PersonalDataFormValues>({
 		resolver: zodResolver(personalDataSchema),
@@ -51,7 +53,7 @@ export function PersonalDataForm() {
 			// Try common property names that might contain the actual string value
 			const obj = value as { [key: string]: unknown };
 			return (obj.value as string) || (obj.data as string) || (obj.name as string) || (obj.number as string) || (obj.date as string) || '';
-		}
+	}
 		return '';
 	};
 
@@ -65,12 +67,29 @@ export function PersonalDataForm() {
 				dob: extractStringValue(profile.dob),
 				city: extractStringValue(profile.city),
 			})
-		}
+	}
 	}, [profile, form])
 
 	const onSubmit = (values: PersonalDataFormValues) => {
-		console.log(values)
-		// Here you would typically send data to an API
+		// Подготовим данные для отправки, учитывая структуру, в которой они хранятся в бэкенде
+		const updateData: UpdateUserDto = {
+			firstName: values.firstName,
+			lastName: values.lastName,
+			email: values.email,
+			phone: values.phone,
+			dob: values.dob,
+			city: values.city,
+		};
+
+		updateProfileMutation.mutate(updateData, {
+			onSuccess: () => {
+				console.log('Профиль успешно обновлён');
+				refetch(); // Обновляем данные профиля после успешного обновления
+			},
+			onError: (error) => {
+				console.error('Ошибка при обновлении профиля:', error);
+			}
+		});
 	}
 
 	return (
@@ -162,7 +181,9 @@ export function PersonalDataForm() {
 							)}
 						/>
 					</div>
-					<Button type='submit'>Сохранить изменения</Button>
+					<Button type='submit' disabled={updateProfileMutation.isPending}>
+						{updateProfileMutation.isPending ? 'Сохранение...' : 'Сохранить изменения'}
+					</Button>
 				</form>
 			</Form>
 		</div>

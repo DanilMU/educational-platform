@@ -8,9 +8,6 @@ import type { UserFirstName } from './userFirstName';
 import type { UserLastName } from './userLastName';
 import type { UserRole } from './userRole';
 import type { UserAvatarUrl } from './userAvatarUrl';
-import type { UserPhone } from './userPhone';
-import type { UserDob } from './userDob';
-import type { UserCity } from './userCity';
 
 export interface User {
   /** Уникальный идентификатор пользователя */
@@ -26,13 +23,13 @@ export interface User {
   /** URL аватара */
   avatarUrl?: UserAvatarUrl;
   /** Номер телефона */
-  phone?: UserPhone;
+  phone?: string;
   /** Дата рождения */
-  dob?: UserDob;
+  dob?: string;
   /** Город */
-  city?: UserCity;
+  city?: string;
   /** Дата создания записи */
   createdAt: string;
   /** Дата последнего обновления записи */
-  updatedAt: string;
+ updatedAt: string;
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EnumTokens } from "./lib/cookies";
 
-const protectedRoutes = ['/dashboard', '/(main)/dashboard']
+const protectedRoutes = ['/dashboard']
 
 const authRoutes = ['/auth/register', '/auth/login']
 
@@ -33,5 +33,14 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)', '/(main)/dashboard(.*)', '/auth/:path*'],
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    ],
 };

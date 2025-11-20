@@ -8,17 +8,17 @@ export class GetMeDto {
 	})
 	public id!: string;
 
+	@ApiProperty({ example: 'John', description: 'First name of the user' })
+	public firstName?: string;
+
+	@ApiProperty({ example: 'Doe', description: 'Last name of the user' })
+	public lastName?: string;
+
 	@ApiProperty({
 		example: 'john@example.com',
 		description: 'Email address of the user'
 	})
 	public email!: string;
-
-	@ApiProperty({ example: 'John', description: 'First name of the user' })
-	public firstName!: string;
-
-	@ApiProperty({ example: 'Doe', description: 'Last name of the user' })
-	public lastName!: string;
 
 	@ApiProperty({
 		enum: Role,
@@ -26,4 +26,31 @@ export class GetMeDto {
 		description: 'User role'
 	})
 	public role!: Role;
+
+	@ApiProperty({
+		example: 'https://example.com/avatar.jpg',
+		description: 'Avatar URL'
+	})
+	public avatarUrl?: string;
+
+	@ApiProperty({ example: '+79991234567', description: 'Phone number' })
+	public phone?: string;
+
+	@ApiProperty({ example: '1990-01-01', description: 'Date of birth' })
+	public dob?: string;
+
+	@ApiProperty({ example: 'Moscow', description: 'City' })
+	public city?: string;
+
+	@ApiProperty({
+		example: '2023-01-01T00:00:00.000Z',
+		description: 'Creation date'
+	})
+	public createdAt!: string;
+
+	@ApiProperty({
+		example: '2023-01-01T00:00:00.000Z',
+		description: 'Update date'
+	})
+	public updatedAt!: string;
 }

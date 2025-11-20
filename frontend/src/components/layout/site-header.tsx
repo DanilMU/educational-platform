@@ -16,14 +16,14 @@ export function SiteHeader() {
 			<div className='mx-auto flex max-w-7xl items-center justify-between'>
 				<div className='flex items-center gap-x-2'>
 					<Image
-						src='/images/logo.svg'
+						src='/images/logo/logo3.svg'
 						alt='Образовательная платформа'
-						width={300}
-						height={300 }
+						width={50}
+						height={50}
 					/>
-					{/*<span className='text-xl font-semibold text-gray-800'>
+					<span className='text-xl font-semibold text-gray-800'>
 						Образовательная платформа
-					</span>*/}
+					</span>
 				</div>
 
 				<div className='flex items-center gap-x-4'>

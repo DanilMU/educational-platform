@@ -1,11 +1,62 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { Button } from '@/src/components/ui/button'
 import { Checkbox } from '@/src/components/ui/checkbox'
 import { Switch } from '@/src/components/ui/switch'
 import { Label } from '@/src/components/ui/label'
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/src/components/ui/form'
+import { Input } from '@/src/components/ui/input'
+import z from 'zod'
+import { useGetProfileQuery, useUpdatePasswordMutation } from '@/src/api/hooks'
+
+const passwordChangeSchema = z.object({
+	currentPassword: z.string().min(6, 'Текущий пароль должен содержать не менее 6 символов'),
+	newPassword: z.string().min(6, 'Новый пароль должен содержать не менее 6 символов'),
+	confirmNewPassword: z.string().min(6, 'Подтверждение пароля должно содержать не менее 6 символов'),
+}).refine(data => data.newPassword === data.confirmNewPassword, {
+	message: 'Новый пароль и подтверждение пароля не совпадают',
+	path: ['confirmNewPassword'],
+})
+
+type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>
 
 export function SecuritySettings() {
+	const { data: profile } = useGetProfileQuery()
+	const updatePasswordMutation = useUpdatePasswordMutation()
+
+	const passwordForm = useForm<PasswordChangeFormValues>({
+		resolver: zodResolver(passwordChangeSchema),
+		defaultValues: {
+			currentPassword: '',
+			newPassword: '',
+			confirmNewPassword: '',
+	},
+	})
+
+	const handlePasswordChange = (values: PasswordChangeFormValues) => {
+	updatePasswordMutation.mutate({
+			currentPassword: values.currentPassword,
+			newPassword: values.newPassword
+		}, {
+			onSuccess: () => {
+				console.log('Пароль успешно изменён');
+				passwordForm.reset();
+			},
+			onError: (error) => {
+				console.error('Ошибка при изменении пароля:', error);
+			}
+		});
+	}
+
 	return (
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
 			<h2 className='mb-4 text-xl font-semibold'>Настройки безопасности</h2>
@@ -37,10 +88,58 @@ export function SecuritySettings() {
 						</p>
 					</div>
 				</div>
-				<Button variant='outline' className='w-full'>
-					Изменить пароль
-				</Button>
-				<Button variant='destructive' className='w-full'>
+				
+				<div className='pt-4 border-t border-gray-200'>
+					<h3 className='mb-3 font-medium'>Изменить пароль</h3>
+					<Form {...passwordForm}>
+						<form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className='space-y-4'>
+							<FormField
+								control={passwordForm.control}
+								name='currentPassword'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Текущий пароль</FormLabel>
+										<FormControl>
+											<Input type='password' className='bg-gray-100' {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={passwordForm.control}
+								name='newPassword'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Новый пароль</FormLabel>
+										<FormControl>
+											<Input type='password' className='bg-gray-100' {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={passwordForm.control}
+								name='confirmNewPassword'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Подтвердите новый пароль</FormLabel>
+										<FormControl>
+											<Input type='password' className='bg-gray-100' {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<Button type='submit' disabled={updatePasswordMutation.isPending} className='w-full'>
+								{updatePasswordMutation.isPending ? 'Смена пароля...' : 'Сменить пароль'}
+							</Button>
+						</form>
+					</Form>
+				</div>
+				
+				<Button variant='outline' className='w-full text-red-600 border-red-600 hover:bg-red-50'>
 					Удалить аккаунт
 				</Button>
 			</div>
