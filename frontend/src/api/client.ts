@@ -404,6 +404,17 @@ export const quizzesControllerRemove = <TData = AxiosResponse<void>>(
   }
 
 /**
+ * @summary Найти тест по ID урока
+ */
+export const quizzesControllerFindByLessonId = <TData = AxiosResponse<Quiz>>(
+    lessonId: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/quizzes/lesson/${lessonId}`,options
+    );
+  }
+
+/**
  * @summary Отправить ответы на тест
  */
 export const quizzesControllerSubmit = <TData = AxiosResponse<void>>(
@@ -591,6 +602,7 @@ export type QuizzesControllerFindAllResult = AxiosResponse<Quiz[]>
 export type QuizzesControllerFindOneResult = AxiosResponse<Quiz>
 export type QuizzesControllerUpdateResult = AxiosResponse<Quiz>
 export type QuizzesControllerRemoveResult = AxiosResponse<void>
+export type QuizzesControllerFindByLessonIdResult = AxiosResponse<Quiz>
 export type QuizzesControllerSubmitResult = AxiosResponse<void>
 export type ProgressControllerCreateResult = AxiosResponse<Progress>
 export type ProgressControllerFindAllResult = AxiosResponse<Progress[]>

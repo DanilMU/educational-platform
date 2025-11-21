@@ -16,6 +16,7 @@ export class LessonsService {
 	}
 
 	findOne(id: string) {
+		console.log(`Searching for lesson with ID: ${id}`);
 		return this.prisma.lesson.findUnique({ where: { id } });
 	}
 

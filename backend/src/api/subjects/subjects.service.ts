@@ -16,7 +16,16 @@ export class SubjectsService {
 	}
 
 	findOne(id: string) {
-		return this.prisma.subject.findUnique({ where: { id } });
+		return this.prisma.subject.findUnique({
+			where: { id },
+			include: {
+				topics: {
+					include: {
+						lessons: true,
+					},
+				},
+			},
+		});
 	}
 
 	update(id: string, updateSubjectDto: UpdateSubjectDto) {

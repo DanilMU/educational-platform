@@ -17,6 +17,7 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
+	ApiResponse,
 	ApiTags
 } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
@@ -62,6 +63,15 @@ export class QuizzesController {
 	@ApiNotFoundResponse({ description: 'Тест не найден.' })
 	async findOne(@Param('id') id: string) {
 		return this.quizzesService.findOne(id);
+	}
+
+	@Get('lesson/:lessonId')
+	@UseGuards(JwtAuthGuard)
+	@ApiOperation({ summary: 'Найти тест по ID урока' })
+	@ApiResponse({ status: 200, description: 'Тест найден.', type: Quiz })
+	@ApiResponse({ status: 404, description: 'Тест не найден.' })
+	async findByLessonId(@Param('lessonId') lessonId: string) {
+		return this.quizzesService.findByLessonId(lessonId);
 	}
 
 	@Patch(':id')

@@ -31,6 +31,7 @@ export * from './progress';
 export * from './question';
 export * from './questionType';
 export * from './quiz';
+export * from './quizResultDto';
 export * from './registerRequest';
 export * from './subject';
 export * from './subjectDescription';

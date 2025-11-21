@@ -49,4 +49,16 @@ function CardFooter({ className, ...props }: ComponentProps<'div'>) {
 	)
 }
 
-export { Card, CardHeader, CardTitle, CardContent, CardFooter }
+function CardDescription({ className, ...props }: ComponentProps<'div'>) {
+	return (
+		<div
+			className={cn(
+				'text-sm text-gray-500',
+				className
+			)}
+			{...props}
+		/>
+	)
+}
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription }

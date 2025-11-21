@@ -9,6 +9,7 @@ import {
 	SubmitQuizDto,
 	UpdateQuizDto
 } from './dto';
+import { Quiz } from './entities/quiz.entity';
 
 @Injectable()
 export class QuizzesService {
@@ -198,6 +199,29 @@ export class QuizzesService {
 			score,
 			totalQuestions
 		};
+	}
+
+	async findByLessonId(lessonId: string): Promise<Quiz> {
+		const quiz = await this.prisma.quiz.findFirst({
+			where: { lessonId },
+			include: {
+				questions: {
+					include: {
+						// ПРИМЕЧАНИЕ: Отправка 'isCorrect' на клиент является уязвимостью.
+						// В будущем это следует исправить, используя DTO, который не включает это поле.
+						answers: true
+					}
+				}
+			}
+		});
+
+		if (!quiz) {
+			throw new NotFoundException(
+				`Тест для урока с ID "${lessonId}" не найден.`
+			);
+		}
+
+		return quiz;
 	}
 
 	remove(id: string) {

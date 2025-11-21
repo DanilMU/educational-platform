@@ -21,34 +21,42 @@ export function TopicAccordion({ topics }: TopicAccordionProps) {
 
 	return (
 		<Accordion type='multiple' className='w-full'>
-			{topics.map(topic => (
-				<AccordionItem key={topic.id} value={`topic-${topic.id}`}>
-					<AccordionTrigger className='text-lg font-semibold'>
-						{topic.title}
-					</AccordionTrigger>
-					<AccordionContent>
-						{topic.lessons && topic.lessons.length > 0 ? (
-							<ul className='space-y-2'>
-								{topic.lessons.map(lesson => (
-									<li key={lesson.id}>
-										<Link
-											href={`/lessons/${lesson.id}`}
-											className='flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-gray-100'
-										>
-											<FileText className='size-5 text-gray-500' />
-											<span className='text-gray-700'>{lesson.title}</span>
-										</Link>
-									</li>
-								))}
-							</ul>
-						) : (
-							<p className='text-sm text-gray-500'>
-								Уроки для этой темы еще не добавлены.
-							</p>
-						)}
-					</AccordionContent>
-				</AccordionItem>
-			))}
+			{topics.map(topic => {
+				const uniqueLessons = topic.lessons
+					? Array.from(
+							new Map(topic.lessons.map(lesson => [lesson.id, lesson])).values()
+						)
+					: []
+
+				return (
+					<AccordionItem key={topic.id} value={`topic-${topic.id}`}>
+						<AccordionTrigger className='text-lg font-semibold'>
+							{topic.title}
+						</AccordionTrigger>
+						<AccordionContent>
+							{uniqueLessons.length > 0 ? (
+								<ul className='space-y-2'>
+									{uniqueLessons.map(lesson => (
+										<li key={lesson.id}>
+											<Link
+												href={`/lessons/${lesson.id}`}
+												className='flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-gray-100'
+											>
+												<FileText className='size-5 text-gray-500' />
+												<span className='text-gray-700'>{lesson.title}</span>
+											</Link>
+										</li>
+									))}
+								</ul>
+							) : (
+								<p className='text-sm text-gray-500'>
+									Уроки для этой темы еще не добавлены.
+								</p>
+							)}
+						</AccordionContent>
+					</AccordionItem>
+				)
+			})}
 		</Accordion>
 	)
 }
