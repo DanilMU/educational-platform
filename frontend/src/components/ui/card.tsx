@@ -40,4 +40,13 @@ function CardContent({ className, ...props }: ComponentProps<'div'>) {
 	return <div className={cn('p-6 pt-0', className)} {...props} />
 }
 
-export { Card, CardHeader, CardTitle, CardContent }
+function CardFooter({ className, ...props }: ComponentProps<'div'>) {
+	return (
+		<div
+			className={cn('flex items-center p-6 pt-0', className)}
+			{...props}
+		/>
+	)
+}
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter }

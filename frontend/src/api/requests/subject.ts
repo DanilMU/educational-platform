@@ -14,3 +14,7 @@ export const getEnrolledSubjects = async () => {
 	progress: 0 // Default progress - would be calculated from actual user progress data
 	})) as EnrolledSubject[];
 }
+
+export const getSubjectById = async (id: string) => {
+	return await instance.get<Subject>(`/subjects/${id}`).then(res => res.data);
+}
