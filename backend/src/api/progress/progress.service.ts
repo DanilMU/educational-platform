@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
+import { NotificationsService } from '../notifications/notifications.service';
+
 import {
 	CompleteSubjectDto,
 	CreateProgressDto,
@@ -10,41 +12,46 @@ import {
 
 @Injectable()
 export class ProgressService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly notificationsService: NotificationsService
+	) {}
 
 	create(
 		userId: string,
 		createProgressDto: CreateProgressDto
 	): Promise<ProgressDto> {
-		const { lessonId, isCompleted } = createProgressDto;
+		const { lessonId, isCompleted, score, timeSpent } = createProgressDto;
 		return this.prisma.userProgress.create({
 			data: {
 				userId,
 				lessonId,
 				isCompleted,
-				completedAt: isCompleted ? new Date() : null
+				completedAt: isCompleted ? new Date() : null,
+				score,
+				timeSpent
 			}
-		});
+		}) as Promise<ProgressDto>;
 	}
 
 	findAll(userId: string): Promise<ProgressDto[]> {
 		return this.prisma.userProgress.findMany({
 			where: { userId }
-		});
+		}) as Promise<ProgressDto[]>;
 	}
 
 	async findOne(
 		userId: string,
 		lessonId: string
 	): Promise<ProgressDto | null> {
-		const progress = await this.prisma.userProgress.findUnique({
+		const progress = (await this.prisma.userProgress.findUnique({
 			where: {
 				userId_lessonId: {
 					userId,
 					lessonId
 				}
 			}
-		});
+		})) as ProgressDto | null;
 		return progress;
 	}
 
@@ -53,6 +60,7 @@ export class ProgressService {
 		lessonId: string,
 		updateProgressDto: UpdateProgressDto
 	): Promise<ProgressDto> {
+		const { isCompleted, score, timeSpent } = updateProgressDto;
 		return this.prisma.userProgress.update({
 			where: {
 				userId_lessonId: {
@@ -61,10 +69,12 @@ export class ProgressService {
 				}
 			},
 			data: {
-				isCompleted: updateProgressDto.isCompleted,
-				completedAt: updateProgressDto.isCompleted ? new Date() : null
+				isCompleted,
+				completedAt: isCompleted ? new Date() : null,
+				score,
+				timeSpent
 			}
-		});
+		}) as Promise<ProgressDto>;
 	}
 
 	async remove(userId: string, lessonId: string): Promise<ProgressDto> {
@@ -75,7 +85,7 @@ export class ProgressService {
 					lessonId
 				}
 			}
-		});
+		}) as Promise<ProgressDto>;
 	}
 
 	async completeAllLessonsInSubject(
@@ -87,7 +97,6 @@ export class ProgressService {
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId }
 		});
-
 		if (!user) {
 			throw new NotFoundException(`User with ID ${userId} not found`);
 		}
@@ -106,32 +115,32 @@ export class ProgressService {
 				}
 			}
 		});
-
 		if (!subject) {
 			throw new NotFoundException(
 				`Subject with ID ${subjectId} not found`
 			);
 		}
 
-		const lessonIds = subject.topics.flatMap(topic =>
-			topic.lessons.map(lesson => lesson.id)
+		const lessonIds = subject.topics.flatMap(
+			(topic: { lessons: { id: string }[] }) =>
+				topic.lessons.map((lesson: { id: string }) => lesson.id)
 		);
 
 		if (lessonIds.length === 0) {
 			return { count: 0 }; // No lessons to complete
 		}
 
-		const dataToCreate = lessonIds.map(lessonId => ({
+		const dataToCreate = lessonIds.map((lessonId: string) => ({
 			userId,
 			lessonId,
 			isCompleted: true,
 			completedAt: new Date()
 		}));
 
-		const result = await this.prisma.userProgress.createMany({
+		const result = (await this.prisma.userProgress.createMany({
 			data: dataToCreate,
 			skipDuplicates: true // Avoids errors if progress already exists
-		});
+		})) as { count: number };
 
 		return result;
 	}
@@ -139,17 +148,18 @@ export class ProgressService {
 		userId: string,
 		lessonId: string
 	): Promise<ProgressDto> {
-		const existingProgress = await this.prisma.userProgress.findUnique({
+		const existingProgress = (await this.prisma.userProgress.findUnique({
 			where: {
 				userId_lessonId: {
 					userId,
 					lessonId
 				}
 			}
-		});
+		})) as ProgressDto | null;
 
+		let progress: ProgressDto;
 		if (existingProgress) {
-			return this.prisma.userProgress.update({
+			progress = (await this.prisma.userProgress.update({
 				where: {
 					userId_lessonId: {
 						userId,
@@ -160,16 +170,39 @@ export class ProgressService {
 					isCompleted: true,
 					completedAt: new Date()
 				}
-			});
+			})) as unknown as ProgressDto;
 		} else {
-			return this.prisma.userProgress.create({
+			progress = (await this.prisma.userProgress.create({
 				data: {
 					userId,
 					lessonId,
 					isCompleted: true,
 					completedAt: new Date()
 				}
-			});
+			})) as unknown as ProgressDto;
 		}
+
+		// Отправляем уведомление о завершении урока
+		try {
+			await this.notificationsService.createNotification({
+				userId,
+				type: 'lesson-completed',
+				title: 'Урок завершен',
+				message: 'Вы успешно завершили урок',
+				data: {
+					lessonId,
+					completionDate: new Date()
+				},
+				isRead: false
+			});
+		} catch (error) {
+			// Логируем ошибку, но не прерываем основной процесс
+			console.error(
+				'Error sending lesson completion notification:',
+				error
+			);
+		}
+
+		return progress;
 	}
 }

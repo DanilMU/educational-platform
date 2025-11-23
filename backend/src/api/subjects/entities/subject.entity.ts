@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import { Topic } from 'src/api/topics/entities/topic.entity';
 
 export class Subject {

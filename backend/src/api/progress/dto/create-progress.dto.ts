@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import {
+	IsBoolean,
+	IsInt,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	Max,
+	Min
+} from 'class-validator';
 
 export class CreateProgressDto {
 	@ApiProperty({
@@ -17,4 +25,25 @@ export class CreateProgressDto {
 	@IsBoolean()
 	@IsNotEmpty()
 	isCompleted!: boolean;
+
+	@ApiProperty({
+		example: 85,
+		description: 'Score obtained in the quiz (if any)',
+		required: false
+	})
+	@IsInt()
+	@Min(0)
+	@Max(100)
+	@IsOptional()
+	score?: number;
+
+	@ApiProperty({
+		example: 25,
+		description: 'Time spent on the lesson in minutes',
+		required: false
+	})
+	@IsInt()
+	@Min(0)
+	@IsOptional()
+	timeSpent?: number;
 }

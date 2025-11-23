@@ -43,6 +43,12 @@ export class GetMeDto {
 	public city?: string;
 
 	@ApiProperty({
+		example: true,
+		description: 'Whether the user receives notifications'
+	})
+	public receiveNotifications!: boolean;
+
+	@ApiProperty({
 		example: '2023-01-01T00:00:00.000Z',
 		description: 'Creation date'
 	})

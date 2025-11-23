@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
+import { NotificationsService } from '../notifications/notifications.service';
 import { ProgressService } from '../progress/progress.service';
 
 import {
@@ -15,7 +16,8 @@ import { Quiz } from './entities/quiz.entity';
 export class QuizzesService {
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly progressService: ProgressService
+		private readonly progressService: ProgressService,
+		private readonly notificationsService: NotificationsService
 	) {}
 
 	create(createQuizDto: CreateQuizDto) {
@@ -68,21 +70,23 @@ export class QuizzesService {
 	}
 
 	async update(id: string, updateQuizDto: UpdateQuizDto) {
-		const { title, questions } = updateQuizDto;
+		const { questions, ...rest } = updateQuizDto;
 
 		return this.prisma.$transaction(async tx => {
-			if (title) {
+			if (Object.keys(rest).length > 0) {
 				await tx.quiz.update({
 					where: { id },
-					data: { title }
+					data: rest
 				});
 			}
 
 			if (questions) {
-				const existingQuestions = await tx.question.findMany({
+				const existingQuestions = (await tx.question.findMany({
 					where: { quizId: id }
-				});
-				const existingQuestionIds = existingQuestions.map(q => q.id);
+				})) as { id: string }[];
+				const existingQuestionIds = existingQuestions.map(
+					(q: { id: string }) => q.id
+				);
 				const incomingQuestionIds = questions
 					.map(q => q.id)
 					.filter(Boolean);
@@ -167,12 +171,19 @@ export class QuizzesService {
 		}
 
 		const correctAnswersMap = new Map<string, string[]>();
-		quiz.questions.forEach(question => {
-			const correctIds = question.answers
-				.filter(a => a.isCorrect)
-				.map(a => a.id);
-			correctAnswersMap.set(question.id, correctIds);
-		});
+		quiz.questions.forEach(
+			(question: {
+				id: string;
+				answers: { isCorrect: boolean; id: string }[];
+			}) => {
+				const correctIds = question.answers
+					.filter(
+						(a: { isCorrect: boolean; id: string }) => a.isCorrect
+					)
+					.map((a: { id: string }) => a.id);
+				correctAnswersMap.set(question.id, correctIds);
+			}
+		);
 
 		let score = 0;
 		for (const userAnswer of submitQuizDto.answers) {
@@ -188,6 +199,33 @@ export class QuizzesService {
 		}
 
 		const totalQuestions = quiz.questions.length;
+		const result = {
+			score,
+			totalQuestions
+		};
+
+		// Отправляем уведомление о результатах теста
+		try {
+			await this.notificationsService.createNotification({
+				userId,
+				type: 'quiz-result',
+				title: 'Результаты теста',
+				message: `Вы набрали ${score} из ${totalQuestions} баллов`,
+				data: {
+					quizId,
+					score,
+					totalQuestions,
+					passed:
+						score >=
+						Math.ceil(totalQuestions * (quiz.passingScore / 100))
+				},
+				isRead: false
+			});
+		} catch (error) {
+			// Логируем ошибку, но не прерываем основной процесс
+			console.error('Error sending quiz result notification:', error);
+		}
+
 		if (score > 0 && score === totalQuestions) {
 			await this.progressService.markLessonAsCompleted(
 				userId,
@@ -195,10 +233,7 @@ export class QuizzesService {
 			);
 		}
 
-		return {
-			score,
-			totalQuestions
-		};
+		return result;
 	}
 
 	async findByLessonId(lessonId: string): Promise<Quiz> {
@@ -221,10 +256,22 @@ export class QuizzesService {
 			);
 		}
 
-		return quiz;
+		return {
+			...quiz,
+			timeLimit: quiz.timeLimit ?? undefined
+		} as Quiz;
 	}
 
-	remove(id: string) {
-		return this.prisma.quiz.delete({ where: { id } });
+	remove(id: string): Promise<Quiz> {
+		return this.prisma.quiz.delete({
+			where: { id },
+			include: {
+				questions: {
+					include: {
+						answers: true
+					}
+				}
+			}
+		}) as Promise<Quiz>;
 	}
 }

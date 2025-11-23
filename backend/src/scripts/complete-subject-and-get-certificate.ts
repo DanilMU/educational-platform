@@ -97,4 +97,7 @@ async function main() {
 	}
 }
 
-main();
+main().catch(error => {
+	console.error('Необработанная ошибка в main:', error);
+	process.exit(1);
+});

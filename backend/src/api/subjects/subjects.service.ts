@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { LearningPathService } from '../learning-path/learning-path.service';
 
 import { CreateSubjectDto, UpdateSubjectDto } from './dto';
 
 @Injectable()
 export class SubjectsService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly learningPathService: LearningPathService
+	) {}
 
 	create(createSubjectDto: CreateSubjectDto) {
 		return this.prisma.subject.create({ data: createSubjectDto });
@@ -21,10 +25,10 @@ export class SubjectsService {
 			include: {
 				topics: {
 					include: {
-						lessons: true,
-					},
-				},
-			},
+						lessons: true
+					}
+				}
+			}
 		});
 	}
 
@@ -37,5 +41,9 @@ export class SubjectsService {
 
 	remove(id: string) {
 		return this.prisma.subject.delete({ where: { id } });
+	}
+
+	getLearningPath(id: string) {
+		return this.learningPathService.getLearningPath(id);
 	}
 }

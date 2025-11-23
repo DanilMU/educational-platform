@@ -274,7 +274,7 @@ export class CertificatesService {
 			fs.writeFileSync(filePath, pdfBytes);
 
 			return Buffer.from(pdfBytes);
-		} catch (error: any) {
+		} catch (error: unknown) {
 			console.error('Error generating PDF:', error);
 			const errorMessage =
 				error instanceof Error ? error.message : 'Unknown error';

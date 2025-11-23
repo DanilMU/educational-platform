@@ -24,6 +24,8 @@ import { Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { CreateLessonDto, UpdateLessonDto } from './dto';
+import { LessonDescriptionDto } from './dto/lesson-description.dto';
+import { PrerequisitesDto } from './dto/prerequisites.dto';
 import { Lesson } from './entities/lesson.entity';
 import { LessonsService } from './lessons.service';
 
@@ -85,5 +87,34 @@ export class LessonsController {
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
 	remove(@Param('id') id: string) {
 		return this.lessonsService.remove(id);
+	}
+
+	@Get(':id/description')
+	@ApiOperation({
+		summary:
+			'Получить детальное описание урока с целями обучения и требованиями'
+	})
+	@ApiParam({ name: 'id', description: 'ID урока', type: String })
+	@ApiOkResponse({
+		description: 'Детальное описание урока.',
+		type: LessonDescriptionDto
+	})
+	@ApiNotFoundResponse({ description: 'Урок не найден.' })
+	getLessonDescription(@Param('id') id: string) {
+		return this.lessonsService.getLessonDescription(id);
+	}
+
+	@Get(':id/prerequisites')
+	@ApiOperation({
+		summary: 'Получить список уроков, которые нужно пройти перед текущим'
+	})
+	@ApiParam({ name: 'id', description: 'ID урока', type: String })
+	@ApiOkResponse({
+		description: 'Список уроков, которые нужно пройти перед текущим.',
+		type: PrerequisitesDto
+	})
+	@ApiNotFoundResponse({ description: 'Урок не найден.' })
+	getLessonPrerequisites(@Param('id') id: string) {
+		return this.lessonsService.getLessonPrerequisites(id);
 	}
 }

@@ -9,22 +9,22 @@ datasource db {
 
 // Пользовательская модель
 model User {
-  id           String         @id @default(cuid())
-  firstName    String?
-  lastName     String?
-  email        String         @unique
-  password     String
-  role         Role           @default(STUDENT)
-  avatarUrl    String?
-  phone        String?
-  dob          String? // Date of Birth
-  city         String?
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  progress     UserProgress[]
-  certificates Certificate[]
-
-  @@map("users")
+	id                     String          @id @default(cuid())
+	firstName              String?
+	lastName               String?
+	email                  String          @unique
+	password               String
+	role                   Role
+	avatarUrl              String?
+	phone                  String?
+	dob                    String?
+	city                   String?
+	receiveNotifications   Boolean         @default(true)
+	createdAt              DateTime        @default(now())
+	updatedAt              DateTime        @updatedAt
+	progress               UserProgress[]
+	certificates           Certificate[]
+	notifications          Notification[]
 }
 
 // Роли пользователей
@@ -38,7 +38,7 @@ enum Role {
 model Subject {
   id           String        @id @default(cuid())
   title        String
-  description  String?
+  description String?
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   topics       Topic[]
@@ -57,7 +57,7 @@ model Topic {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  parentId  String?
+  parentId String?
   parent    Topic?   @relation("TopicHierarchy", fields: [parentId], references: [id])
   children  Topic[]  @relation("TopicHierarchy")
 
@@ -66,15 +66,23 @@ model Topic {
 
 // Модель урока
 model Lesson {
-  id        String         @id @default(cuid())
-  title     String
-  content   String
-  topicId   String
-  topic     Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  quiz      Quiz?
-  progress  UserProgress[]
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
+  id                 String         @id @default(cuid())
+  title              String
+  content            String
+  topicId            String
+  topic              Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  quiz               Quiz?
+  progress           UserProgress[]
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  // Новые поля для улучшенного процесса обучения
+  estimatedTime      Int? // Ориентировочное время прохождения (в минутах)
+ difficulty         Int? // Сложность урока (1-5)
+ learningObjectives String? // Цели обучения
+  prerequisites      String? // Требования для прохождения
+ videoUrl           String? // Ссылка на видеоурок
+ attachments        String[] // Список вложений (PDF, документы и т.д.)
+  order              Int? // Порядковый номер урока в теме
 
   @@map("lessons")
 }
@@ -85,9 +93,15 @@ model Quiz {
   title     String
   lessonId  String     @unique
   lesson    Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  questions Question[]
+ questions Question[]
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
+  // Новые поля
+  timeLimit    Int?       // Ограничение времени (в минутах)
+  maxAttempts  Int        @default(3) // Максимальное количество попыток
+  passingScore Int        @default(70) // Процент для прохождения
+  shuffleQuestions Boolean  @default(false) // Перемешивать вопросы
+  shuffleAnswers Boolean  @default(false) // Перемешивать ответы
 
   @@map("quizzes")
 }
@@ -118,7 +132,7 @@ model Answer {
   text       String
   isCorrect  Boolean
   questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+ question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -131,11 +145,13 @@ model UserProgress {
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   lessonId    String
-  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+ lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   isCompleted Boolean   @default(false)
   completedAt DateTime?
+  score       Int? // Балл за тест (если есть)
+  timeSpent   Int? // Время, потраченное на урок (в минутах)
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@unique([userId, lessonId])
 
@@ -151,8 +167,24 @@ model Certificate {
   subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   issuedAt  DateTime @default(now())
   url       String
-  createdAt DateTime @default(now()) @map("created_at")
+ createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("certificates")
+}
+
+// Модель уведомлений
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // Тип уведомления (lesson-completed, quiz-result, recommendation, course-completed, deadline-reminder)
+  title     String   // Заголовок уведомления
+ message   String   // Содержание уведомления
+  data      Json?    // Дополнительные данные уведомления
+  isRead    Boolean  @default(false) // Статус прочтения уведомления
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notifications")
 }

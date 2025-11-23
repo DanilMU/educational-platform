@@ -50,6 +50,7 @@ export class UsersService {
 			phone: user.phone ?? undefined,
 			dob: user.dob ? new Date(user.dob).toISOString() : undefined,
 			city: user.city ?? undefined,
+			receiveNotifications: user.receiveNotifications,
 			createdAt: new Date(user.createdAt).toISOString(),
 			updatedAt: new Date(user.updatedAt).toISOString()
 		};

@@ -26,6 +26,55 @@ export class Lesson {
 	topicId!: string;
 
 	@ApiProperty({
+		description: 'Ориентировочное время прохождения урока в минутах',
+		example: 30,
+		required: false
+	})
+	estimatedTime?: number;
+
+	@ApiProperty({
+		description: 'Сложность урока от 1 до 5',
+		example: 3,
+		required: false
+	})
+	difficulty?: number;
+
+	@ApiProperty({
+		description: 'Цели обучения',
+		example: 'Изучить основы NestJS',
+		required: false
+	})
+	learningObjectives?: string;
+
+	@ApiProperty({
+		description: 'Требования для прохождения урока',
+		example: 'Знание JavaScript',
+		required: false
+	})
+	prerequisites?: string;
+
+	@ApiProperty({
+		description: 'Ссылка на видеоурок',
+		example: 'https://www.youtube.com/watch?v=example',
+		required: false
+	})
+	videoUrl?: string;
+
+	@ApiProperty({
+		description: 'Список вложений (PDF, документы и т.д.)',
+		example: ['/uploads/file1.pdf', '/uploads/file2.zip'],
+		required: false
+	})
+	attachments?: string[];
+
+	@ApiProperty({
+		description: 'Порядковый номер урока в теме',
+		example: 1,
+		required: false
+	})
+	order?: number;
+
+	@ApiProperty({
 		description: 'Дата создания записи',
 		type: Date,
 		example: '2025-11-18T12:00:00.000Z'

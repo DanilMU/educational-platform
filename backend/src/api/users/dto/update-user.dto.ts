@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
+	IsBoolean,
 	IsDateString,
 	IsOptional,
 	IsPhoneNumber,
@@ -35,4 +36,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 	@IsString()
 	@IsOptional()
 	public city?: string;
+
+	@ApiProperty({
+		example: true,
+		description: 'Whether the user wants to receive notifications',
+		required: false
+	})
+	@IsBoolean()
+	@IsOptional()
+	public receiveNotifications?: boolean;
 }

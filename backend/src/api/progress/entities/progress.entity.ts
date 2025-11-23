@@ -23,6 +23,20 @@ export class Progress {
 	isCompleted!: boolean;
 
 	@ApiProperty({
+		description: 'Балл за тест (если есть)',
+		example: 85,
+		required: false
+	})
+	score?: number;
+
+	@ApiProperty({
+		description: 'Время, потраченное на урок (в минутах)',
+		example: 25,
+		required: false
+	})
+	timeSpent?: number;
+
+	@ApiProperty({
 		description: 'Дата завершения урока',
 		type: Date,
 		required: false,

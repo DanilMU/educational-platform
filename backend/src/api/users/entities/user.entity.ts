@@ -60,6 +60,12 @@ export class User {
 	city?: string | null;
 
 	@ApiProperty({
+		description: 'Получает ли пользователь уведомления',
+		example: true
+	})
+	receiveNotifications!: boolean;
+
+	@ApiProperty({
 		description: 'Дата создания записи',
 		type: Date,
 		example: '2025-11-18T12:00:00.000Z'

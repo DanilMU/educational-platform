@@ -22,6 +22,41 @@ export class Quiz {
 	lessonId!: string;
 
 	@ApiProperty({
+		description: 'Ограничение времени на тест (в минутах)',
+		example: 30,
+		required: false
+	})
+	timeLimit?: number;
+
+	@ApiProperty({
+		description: 'Максимальное количество попыток',
+		example: 3,
+		default: 3
+	})
+	maxAttempts!: number;
+
+	@ApiProperty({
+		description: 'Проходной балл для теста (в процентах)',
+		example: 70,
+		default: 70
+	})
+	passingScore!: number;
+
+	@ApiProperty({
+		description: 'Перемешивать ли вопросы при каждом прохождении',
+		example: false,
+		default: false
+	})
+	shuffleQuestions!: boolean;
+
+	@ApiProperty({
+		description: 'Перемешивать ли ответы при каждом прохождении',
+		example: false,
+		default: false
+	})
+	shuffleAnswers!: boolean;
+
+	@ApiProperty({
 		description: 'Список вопросов в тесте',
 		type: [Question]
 	})

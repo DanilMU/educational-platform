@@ -23,6 +23,8 @@ import { Role } from '@prisma/client';
 import { Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
+import { LearningPathDto } from '../lessons/dto/learning-path.dto';
+
 import { CreateSubjectDto, UpdateSubjectDto } from './dto';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
@@ -103,5 +105,19 @@ export class SubjectsController {
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
 	remove(@Param('id') id: string) {
 		return this.subjectsService.remove(id);
+	}
+
+	@Get(':id/learning-path')
+	@ApiOperation({
+		summary: 'Получить полный путь обучения по курсу с зависимостями'
+	})
+	@ApiParam({ name: 'id', description: 'ID курса', type: String })
+	@ApiOkResponse({
+		description: 'Полный путь обучения по курсу с зависимостями.',
+		type: LearningPathDto
+	})
+	@ApiNotFoundResponse({ description: 'Курс не найден.' })
+	getLearningPath(@Param('id') id: string) {
+		return this.subjectsService.getLearningPath(id);
 	}
 }
