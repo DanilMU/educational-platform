@@ -1,132 +1,99 @@
-# Gemini Code Assistant Context
-
 ## Project Overview
 
-This project is an educational portal for occupational safety and other subjects. It is a monorepo containing a **Next.js frontend** and a **NestJS backend**.
+This is a full-stack monorepo project for an educational platform.
 
-- **`frontend/`**: The Next.js application that serves as the user interface.
-- **`backend/`**: The NestJS application that provides the REST API and business logic.
+*   **Frontend:** [Next.js](https://nextjs.org/) (React framework)
+*   **Backend:** [NestJS](https://nestjs.com/) (Node.js framework)
+*   **Database:** [Prisma](https://www.prisma.io/) ORM
+*   **Package Manager:** [Yarn](https://yarnpkg.com/)
 
-The project uses `yarn` as the package manager.
+The project is structured as a monorepo with two main packages: `frontend` and `backend`.
 
----
+### License
 
-## Backend (`backend/`)
+This software is licensed under the **MIT License with Commons Clause License Condition**.
 
-The backend is a [NestJS](https://nestjs.com/) application responsible for handling business logic, data storage, and providing a RESTful API for the frontend.
+**Important:** You cannot sell this software. See the [LICENSE](LICENSE) file for more details.
 
-### Key Technologies
+## Getting Started
 
-- **Framework**: NestJS
-- **Language**: TypeScript
-- **Database ORM**: Prisma
-- **Database**: PostgreSQL (managed via Docker)
-- **Authentication**: JWT (JSON Web Tokens)
-- **API Documentation**: Swagger
+### Prerequisites
 
-### Getting Started
+Make sure you have [Yarn](https://yarnpkg.com/getting-started/install) installed.
 
-1.  **Navigate to the backend directory:**
+### Installation
+
+It is recommended to run `yarn install` at the root of the project, as well as in the `frontend` and `backend` directories to ensure all dependencies are installed correctly.
+
+```bash
+# Install root dependencies
+yarn install
+
+# Install backend dependencies
+cd backend
+yarn install
+cd ..
+
+# Install frontend dependencies
+cd frontend
+yarn install
+cd ..
+```
+
+## Development
+
+### Backend (`/backend`)
+
+The backend is a NestJS application.
+
+*   **Run in development mode (with watch):**
     ```bash
     cd backend
+    yarn start:dev
     ```
 
-2.  **Install dependencies:**
+*   **Run tests:**
     ```bash
-    yarn install
+    cd backend
+    yarn test
     ```
 
-3.  **Start the database:**
-    Make sure you have Docker installed and running.
+*   **Database migrations:**
     ```bash
-    docker-compose up -d
-    ```
-
-4.  **Run database migrations:**
-    ```bash
+    cd backend
     yarn prisma migrate dev
     ```
 
-5.  **Run the application in development mode:**
-    This will start the server with hot-reloading at `http://localhost:3000`.
-    ```bash
-    yarn run start:dev
-    ```
+### Frontend (`/frontend`)
 
-### Other Useful Commands
+The frontend is a Next.js application.
 
-- **Build the application:**
-  ```bash
-  yarn run build
-  ```
-- **Run in production mode:**
-  ```bash
-  yarn run start:prod
-  ```
-- **Run tests:**
-  ```bash
-  # Unit tests
-  yarn run test
-
-  # End-to-end tests
-  yarn run test:e2e
-  ```
-- **Prisma commands:**
-  Use `yarn prisma` to run any Prisma command.
-  ```bash
-  # Open Prisma Studio
-  yarn prisma studio
-
-  # Generate Prisma Client
-  yarn prisma generate
-  ```
-
-### Development Conventions
-
-The file `project(backend).md` contains a detailed analysis and implementation plan for the backend. It outlines the required modules (`subjects`, `topics`, `lessons`, `quizzes`, etc.), the database schema, and the steps for future development. This file should be consulted before adding new features.
-
----
-
-## Frontend (`frontend/`)
-
-The frontend is a [Next.js](https://nextjs.org/) application that provides the user interface for the educational portal.
-
-### Key Technologies
-
-- **Framework**: Next.js
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: `lucide-react` for icons.
-
-### Getting Started
-
-1.  **Navigate to the frontend directory:**
+*   **Run the development server:**
     ```bash
     cd frontend
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    yarn install
-    ```
-
-3.  **Run the development server:**
-    This will start the server at `http://localhost:3000`.
-    ```bash
     yarn dev
     ```
+    The application will be available at [http://localhost:3000](http://localhost:3000).
 
-### Other Useful Commands
+*   **Generate API client:**
+    The frontend uses `orval` to generate a type-safe API client from the backend's OpenAPI specification. Before running the frontend for the first time, or after any backend API changes, run this command:
+    ```bash
+    cd frontend
+    yarn generate
+    ```
 
-- **Build for production:**
-  ```bash
-  yarn build
-  ```
-- **Start the production server:**
-  ```bash
-  yarn start
-  ```
-- **Lint files:**
-  ```bash
-  yarn lint
-  ```
+## Building for Production
+
+*   **Backend:**
+    ```bash
+    cd backend
+    yarn build
+    yarn start:prod
+    ```
+
+*   **Frontend:**
+    ```bash
+    cd frontend
+    yarn build
+    yarn start
+    ```
