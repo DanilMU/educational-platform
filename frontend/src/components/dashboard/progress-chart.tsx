@@ -24,7 +24,17 @@ export function ProgressChart({ data }: ProgressChartProps) {
               borderRadius: "var(--radius)",
             }}
           />
-          <Bar dataKey="progress" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+          <defs>
+            <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#7e22ce" stopOpacity={0.8}/>
+            </linearGradient>
+          </defs>
+          <Bar
+            dataKey="progress"
+            fill="url(#colorGradient)"
+            radius={[4, 4, 0, 0]}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

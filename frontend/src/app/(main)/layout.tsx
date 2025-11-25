@@ -4,7 +4,7 @@ import { MainContentHeader } from '@/src/components/layout/main-content-header'
 
 export default function MainLayout({ children }: { children: ReactNode }) {
 	return (
-		<div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+		<div className="flex min-h-screen bg-background">
 			<div className="hidden md:flex">
 				<DashboardSidebar />
 			</div>

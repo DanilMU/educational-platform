@@ -1,6 +1,7 @@
-import { type UseQueryOptions, useQuery } from '@tanstack/react-query'
-import { getQuizByLessonId } from '../requests/quiz'
-import type { Quiz } from '../types/quiz'
+import { type UseQueryOptions, useQuery } from '@tanstack/react-query';
+
+import { getQuizByLessonId } from '../requests/quiz';
+import type { Quiz } from '../types/quiz';
 
 export function useGetQuizByLessonIdQuery(
 	lessonId: string,
@@ -10,5 +11,5 @@ export function useGetQuizByLessonIdQuery(
 		queryKey: ['get quiz by lesson id', lessonId],
 		queryFn: () => getQuizByLessonId(lessonId),
 		...options
-	})
+	});
 }

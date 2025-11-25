@@ -1,16 +1,14 @@
 'use client'
 
-// Assuming a type for the subject
-type Subject = {
-  title: string
-  description: string
-  author: string
-  rating: number
-  reviews: number
-}
+// Using the actual Subject type from the API
+import { Subject } from '@/src/api/types/subject'
 
 interface SubjectDetailsHeaderProps {
-  subject: Subject
+  subject: Subject & {
+    author: string
+    rating: number
+    reviews: number
+  }
 }
 
 export function SubjectDetailsHeader({ subject }: SubjectDetailsHeaderProps) {
@@ -18,12 +16,12 @@ export function SubjectDetailsHeader({ subject }: SubjectDetailsHeaderProps) {
     <div className="rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 p-8 text-white">
       <h1 className="mb-2 text-4xl font-bold">{subject.title}</h1>
       <p className="mb-4 max-w-3xl text-lg text-blue-100">
-        {subject.description}
+        {typeof subject.description === 'string' ? subject.description : 'Описание отсутствует'}
       </p>
       <div className="flex items-center gap-4">
-        <span>Автор: {subject.author}</span>
+        <span>Автор: {subject['author'] || 'Не указан'}</span>
         <span>
-          Рейтинг: {subject.rating} ({subject.reviews} отзывов)
+          Рейтинг: {subject['rating'] || 0} ({subject['reviews'] || 0} отзывов)
         </span>
       </div>
     </div>

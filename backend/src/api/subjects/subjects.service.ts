@@ -25,7 +25,11 @@ export class SubjectsService {
 			include: {
 				topics: {
 					include: {
-						lessons: true
+						lessons: {
+							include: {
+								quiz: true
+							}
+						}
 					}
 				}
 			}

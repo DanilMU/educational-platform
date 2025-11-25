@@ -4,54 +4,53 @@ import { motion } from 'framer-motion'
 import { Timeline } from '@/src/components/subjects/timeline'
 import { LearningProgress } from '@/src/components/progress/learning-progress'
 import { SubjectDetailsHeader } from '@/src/components/subjects/details/subject-details-header'
+import { useGetSubjectByIdQuery } from '@/src/api/hooks/useGetSubjectByIdQuery'
+import { useGetUserProgressQuery } from '@/src/api/hooks/useGetUserProgressQuery'
+import { Subject } from '@/src/api/types/subject'
 
-// Mock Data
-const subject = {
-  title: 'Охрана труда',
-  description:
-    'Комплексный курс по основам охраны труда, промышленной безопасности и управлению рисками на производстве.',
-  author: 'Иван Иванов',
-  rating: 4.8,
-  reviews: 125,
+// Тип для данных заголовка предмета, включающий дополнительные поля
+type SubjectHeaderData = Subject & {
+  author: string
+  rating: number
+  reviews: number
 }
-
-const topics = [
-  {
-    id: 'topic1',
-    title: 'Введение в охрану труда',
-    lessons: [
-      { id: 'lesson1', title: 'Основные понятия и определения' },
-      { id: 'lesson2', title: 'Законодательство в области охраны труда' },
-    ],
-  },
-  {
-    id: 'topic2',
-    title: 'Производственная санитария',
-    lessons: [
-      { id: 'lesson3', title: 'Вредные производственные факторы' },
-      { id: 'lesson4', title: 'Средства индивидуальной защиты' },
-    ],
-  },
-  {
-    id: 'topic3',
-    title: 'Пожарная безопасность',
-    lessons: [
-        { id: 'lesson5', title: 'Причины возникновения пожаров' },
-        { id: 'lesson6', title: 'Действия при пожаре' },
-    ],
-  }
-]
-
-const completedLessons = ['lesson1', 'lesson2', 'lesson3']
-const totalLessons = topics.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0)
-const currentTopic = "Производственная санитария"
 
 export default function SubjectPage({
   params,
 }: {
   params: { subjectId: string }
 }) {
-  // const { subjectId } = params // We are using mock data for now
+  const { subjectId } = params
+
+  const { data: subject, isLoading, isError } = useGetSubjectByIdQuery(subjectId)
+ const { data: progressData } = useGetUserProgressQuery()
+
+  if (isLoading) {
+    return <div>Загрузка...</div>
+  }
+
+  if (isError || !subject) {
+    return <div>Ошибка при загрузке данных</div>
+ }
+
+  // Получаем список пройденных уроков из прогресса пользователя
+  const completedLessons = progressData?.filter((p: { isCompleted: boolean }) => p.isCompleted).map((p: { lessonId: string }) => p.lessonId) || []
+
+  // Вычисляем общее количество уроков
+  const totalLessons = subject.topics.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0)
+
+  // Определяем текущую тему (например, первую непройденную тему)
+  const currentTopic = subject.topics.find(topic => {
+    return topic.lessons?.some(lesson => !completedLessons.includes(lesson.id))
+  })?.title || subject.topics[0]?.title
+
+  // Подготовим данные для SubjectDetailsHeader, добавив отсутствующие поля
+  const subjectHeaderData: SubjectHeaderData = {
+    ...subject,
+    author: 'Не указан',
+    rating: 0,
+    reviews: 0
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -60,7 +59,7 @@ export default function SubjectPage({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <SubjectDetailsHeader subject={subject} />
+        <SubjectDetailsHeader subject={subjectHeaderData} />
       </motion.div>
 
       <motion.div
@@ -82,7 +81,7 @@ export default function SubjectPage({
         transition={{ duration: 0.6, delay: 0.4 }}
         className="mt-12"
       >
-        <Timeline topics={topics} completedLessons={completedLessons} />
+        <Timeline topics={subject.topics} completedLessons={completedLessons} />
       </motion.div>
     </div>
   )
