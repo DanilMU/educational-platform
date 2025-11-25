@@ -35,6 +35,8 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 .dark {
@@ -140,5 +142,24 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+.prose {
+  color: #374151;
+  line-height: 1.7;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
 }

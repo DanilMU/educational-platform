@@ -11,6 +11,10 @@ import type {
 } from 'axios';
 
 import type {
+  AnalyticsControllerGetPopularLessons200Item,
+  AnalyticsControllerGetSuccessRate200,
+  AnalyticsControllerGetTimeSpent200,
+  AnalyticsDto,
   AuthResponse,
   Certificate,
   ChangePasswordDto,
@@ -25,10 +29,15 @@ import type {
   FilesControllerUploadFile200,
   FilesControllerUploadFileBody,
   GetMeDto,
+  LearningPathDto,
   Lesson,
+  LessonDescriptionDto,
   LoginRequest,
+  NotificationDto,
+  PrerequisitesDto,
   Progress,
   Quiz,
+  RecommendationsDto,
   RegisterRequest,
   Subject,
   SubmitQuizDto,
@@ -230,6 +239,28 @@ export const subjectsControllerRemove = <TData = AxiosResponse<void>>(
   }
 
 /**
+ * @summary Получить полный путь обучения по курсу с зависимостями
+ */
+export const subjectsControllerGetLearningPath = <TData = AxiosResponse<LearningPathDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/subjects/${id}/learning-path`,options
+    );
+  }
+
+/**
+ * @summary Получить полный путь обучения по курсу с зависимостями
+ */
+export const learningPathControllerGetLearningPath = <TData = AxiosResponse<LearningPathDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/learning-path/subjects/${id}`,options
+    );
+  }
+
+/**
  * @summary Создать новую тему (только для админов/модераторов)
  */
 export const topicsControllerCreate = <TData = AxiosResponse<Topic>>(
@@ -342,6 +373,28 @@ export const lessonsControllerRemove = <TData = AxiosResponse<void>>(
  ): Promise<TData> => {
     return axios.delete(
       `/lessons/${id}`,options
+    );
+  }
+
+/**
+ * @summary Получить детальное описание урока с целями обучения и требованиями
+ */
+export const lessonsControllerGetLessonDescription = <TData = AxiosResponse<LessonDescriptionDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/lessons/${id}/description`,options
+    );
+  }
+
+/**
+ * @summary Получить список уроков, которые нужно пройти перед текущим
+ */
+export const lessonsControllerGetLessonPrerequisites = <TData = AxiosResponse<PrerequisitesDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/lessons/${id}/prerequisites`,options
     );
   }
 
@@ -498,6 +551,72 @@ export const progressControllerCompleteSubject = <TData = AxiosResponse<void>>(
   }
 
 /**
+ * @summary Создать новое уведомление
+ */
+export const notificationsControllerCreateNotification = <TData = AxiosResponse<NotificationDto>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/notifications`,undefined,options
+    );
+  }
+
+/**
+ * @summary Создать уведомление с рекомендацией
+ */
+export const notificationsControllerCreateRecommendationNotification = <TData = AxiosResponse<NotificationDto>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/notifications/recommendation`,undefined,options
+    );
+  }
+
+/**
+ * @summary Получить все уведомления для пользователя
+ */
+export const notificationsControllerGetUserNotifications = <TData = AxiosResponse<NotificationDto[]>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/notifications/users/${id}`,options
+    );
+  }
+
+/**
+ * @summary Получить уведомления для текущего авторизованного пользователя
+ */
+export const notificationsControllerGetCurrentUserNotifications = <TData = AxiosResponse<NotificationDto[]>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/notifications/current-user`,options
+    );
+  }
+
+/**
+ * @summary Отметить уведомление как прочитанное
+ */
+export const notificationsControllerMarkAsRead = <TData = AxiosResponse<NotificationDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/notifications/${id}/read`,undefined,options
+    );
+  }
+
+/**
+ * @summary Удалить уведомление
+ */
+export const notificationsControllerDeleteNotification = <TData = AxiosResponse<void>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/notifications/${id}`,options
+    );
+  }
+
+/**
  * @summary Создать новый сертификат
  */
 export const certificatesControllerCreate = <TData = AxiosResponse<Certificate>>(
@@ -571,6 +690,83 @@ if(filesControllerUploadFileBody.file !== undefined) {
     );
   }
 
+/**
+ * @summary Получить рекомендации следующих уроков на основе прогресса пользователя
+ */
+export const recommendationsControllerGetRecommendationsForUser = <TData = AxiosResponse<RecommendationsDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/recommendations/users/${id}`,options
+    );
+  }
+
+/**
+ * @summary Получить рекомендации для текущего авторизованного пользователя
+ */
+export const recommendationsControllerGetRecommendationsForCurrentUser = <TData = AxiosResponse<RecommendationsDto>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/recommendations/current-user`,options
+    );
+  }
+
+/**
+ * @summary Получить статистику обучения: время, прогресс, сильные/слабые стороны
+ */
+export const analyticsControllerGetUserAnalytics = <TData = AxiosResponse<AnalyticsDto>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/analytics/users/${id}`,options
+    );
+  }
+
+/**
+ * @summary Получить аналитику для текущего авторизованного пользователя
+ */
+export const analyticsControllerGetCurrentUserAnalytics = <TData = AxiosResponse<AnalyticsDto>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/analytics/current-user`,options
+    );
+  }
+
+/**
+ * @summary Получить время, потраченное на обучение
+ */
+export const analyticsControllerGetTimeSpent = <TData = AxiosResponse<AnalyticsControllerGetTimeSpent200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/analytics/user/${id}/time-spent`,options
+    );
+  }
+
+/**
+ * @summary Получить успешность прохождения тестов
+ */
+export const analyticsControllerGetSuccessRate = <TData = AxiosResponse<AnalyticsControllerGetSuccessRate200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/analytics/user/${id}/success-rate`,options
+    );
+  }
+
+/**
+ * @summary Получить популярные уроки в курсе
+ */
+export const analyticsControllerGetPopularLessons = <TData = AxiosResponse<AnalyticsControllerGetPopularLessons200Item[]>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/analytics/course/${id}/popular-lessons`,options
+    );
+  }
+
 export type AppControllerGetHelloResult = AxiosResponse<void>
 export type AuthControllerRegisterResult = AxiosResponse<AuthResponse>
 export type AuthControllerLoginResult = AxiosResponse<AuthResponse>
@@ -587,6 +783,8 @@ export type SubjectsControllerFindAllResult = AxiosResponse<Subject[]>
 export type SubjectsControllerFindOneResult = AxiosResponse<Subject>
 export type SubjectsControllerUpdateResult = AxiosResponse<Subject>
 export type SubjectsControllerRemoveResult = AxiosResponse<void>
+export type SubjectsControllerGetLearningPathResult = AxiosResponse<LearningPathDto>
+export type LearningPathControllerGetLearningPathResult = AxiosResponse<LearningPathDto>
 export type TopicsControllerCreateResult = AxiosResponse<Topic>
 export type TopicsControllerFindAllResult = AxiosResponse<Topic[]>
 export type TopicsControllerFindOneResult = AxiosResponse<Topic>
@@ -597,6 +795,8 @@ export type LessonsControllerFindAllResult = AxiosResponse<Lesson[]>
 export type LessonsControllerFindOneResult = AxiosResponse<Lesson>
 export type LessonsControllerUpdateResult = AxiosResponse<Lesson>
 export type LessonsControllerRemoveResult = AxiosResponse<void>
+export type LessonsControllerGetLessonDescriptionResult = AxiosResponse<LessonDescriptionDto>
+export type LessonsControllerGetLessonPrerequisitesResult = AxiosResponse<PrerequisitesDto>
 export type QuizzesControllerCreateResult = AxiosResponse<Quiz>
 export type QuizzesControllerFindAllResult = AxiosResponse<Quiz[]>
 export type QuizzesControllerFindOneResult = AxiosResponse<Quiz>
@@ -610,9 +810,22 @@ export type ProgressControllerFindOneResult = AxiosResponse<Progress>
 export type ProgressControllerUpdateResult = AxiosResponse<Progress>
 export type ProgressControllerRemoveResult = AxiosResponse<void>
 export type ProgressControllerCompleteSubjectResult = AxiosResponse<void>
+export type NotificationsControllerCreateNotificationResult = AxiosResponse<NotificationDto>
+export type NotificationsControllerCreateRecommendationNotificationResult = AxiosResponse<NotificationDto>
+export type NotificationsControllerGetUserNotificationsResult = AxiosResponse<NotificationDto[]>
+export type NotificationsControllerGetCurrentUserNotificationsResult = AxiosResponse<NotificationDto[]>
+export type NotificationsControllerMarkAsReadResult = AxiosResponse<NotificationDto>
+export type NotificationsControllerDeleteNotificationResult = AxiosResponse<void>
 export type CertificatesControllerCreateResult = AxiosResponse<Certificate>
 export type CertificatesControllerFindAllResult = AxiosResponse<Certificate[]>
 export type CertificatesControllerFindByUserResult = AxiosResponse<Certificate[]>
 export type CertificatesControllerFindOneResult = AxiosResponse<Certificate>
 export type CertificatesControllerDownloadResult = AxiosResponse<Blob>
 export type FilesControllerUploadFileResult = AxiosResponse<FilesControllerUploadFile200>
+export type RecommendationsControllerGetRecommendationsForUserResult = AxiosResponse<RecommendationsDto>
+export type RecommendationsControllerGetRecommendationsForCurrentUserResult = AxiosResponse<RecommendationsDto>
+export type AnalyticsControllerGetUserAnalyticsResult = AxiosResponse<AnalyticsDto>
+export type AnalyticsControllerGetCurrentUserAnalyticsResult = AxiosResponse<AnalyticsDto>
+export type AnalyticsControllerGetTimeSpentResult = AxiosResponse<AnalyticsControllerGetTimeSpent200>
+export type AnalyticsControllerGetSuccessRateResult = AxiosResponse<AnalyticsControllerGetSuccessRate200>
+export type AnalyticsControllerGetPopularLessonsResult = AxiosResponse<AnalyticsControllerGetPopularLessons200Item[]>

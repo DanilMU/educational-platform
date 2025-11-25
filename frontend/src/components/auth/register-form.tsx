@@ -23,7 +23,8 @@ import { AuthWrapper } from './auth-wrapper'
 import { useRegisterMutation } from '@/src/api/hooks'
 
 const registerSchema = z.object({
-	name: z.string().min(1, { message: 'Имя обязательно' }),
+	firstName: z.string().min(1, { message: 'Имя обязательно' }),
+	lastName: z.string().min(1, { message: 'Фамилия обязательна' }),
 	email: z.string().email({ message: 'Введите корректный адрес электронной почты' }),
 	password: z
 		.string()
@@ -47,7 +48,8 @@ export function RegisterForm() {
 	const form = useForm<RegisterFormValues>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
-			name: '',
+			firstName: '',
+			lastName: '',
 			email: '',
 			password: '',
 		},
@@ -69,13 +71,32 @@ export function RegisterForm() {
 				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
 					<FormField
 						control={form.control}
-						name='name'
+						name='firstName'
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Имя</FormLabel>
 								<FormControl>
 									<Input
-										placeholder='Тайлер Дерден'
+										placeholder='Иван'
+										disabled={isPending}
+										{...field}
+										className='bg-gray-100'
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name='lastName'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Фамилия</FormLabel>
+								<FormControl>
+									<Input
+										placeholder='Иванов'
 										disabled={isPending}
 										{...field}
 										className='bg-gray-100'
@@ -94,7 +115,7 @@ export function RegisterForm() {
 								<FormLabel>Почта</FormLabel>
 								<FormControl>
 									<Input
-										placeholder='tyler.derden@fightclub.com'
+										placeholder='ivan.ivanov@example.com'
 										disabled={isPending}
 										{...field}
 										className='bg-gray-100'

@@ -1,37 +1,68 @@
+'use client'
+
+import { motion } from 'framer-motion'
 import { Button } from '@/src/components/ui/button'
 import Link from 'next/link'
+import { HeroParallax } from './hero-parallax'
+
+function AnimatedTitle() {
+  return (
+    <motion.h1
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="mb-6 text-4xl font-bold text-white md:text-5xl leading-tight"
+    >
+      Добро пожаловать на
+      <br />
+      <span className="text-blue-300">Образовательную платформу</span>
+    </motion.h1>
+  )
+}
+
+function AnimatedDescription() {
+  return (
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="mx-auto mb-12 max-w-2xl text-lg text-gray-200"
+    >
+      Раскройте свой потенциал с нашими интерактивными курсами, созданными для
+      эффективного обучения и развития навыков.
+    </motion.p>
+  )
+}
+
+function AnimatedButtons() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.6 }}
+      className="flex justify-center gap-4"
+    >
+      <Button asChild size="lg">
+        <Link href="/auth/register">Начать обучение</Link>
+      </Button>
+      <Button asChild variant="outline" size="lg" className="text-white">
+        <Link href="/subjects">Просмотреть курсы</Link>
+      </Button>
+    </motion.div>
+  )
+}
 
 export function HeroSection() {
-	return (
-		<section className="px-6 py-16 text-center bg-gradient-to-b from-white to-blue-50">
-			<div className="mx-auto max-w-4xl">
-				<div className="mb-8 flex items-center justify-center">
-					<div className="flex items-center space-x-2 rounded-full border px-4 py-1 text-sm text-gray-600">
-						<div className="size-2 rounded-full bg-blue-500" />
-						<span>Образование</span>
-					</div>
-				</div>
-
-				<h1 className="mb-6 text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-					Добро пожаловать на
-					<br />
-					<span className="text-blue-600">Образовательную платформу</span>
-				</h1>
-
-				<p className="mx-auto mb-12 max-w-2xl text-lg text-gray-600">
-					Раскройте свой потенциал с нашими интерактивными курсами, созданными для 
-					эффективного обучения и развития навыков.
-				</p>
-
-				<div className="flex justify-center gap-4">
-					<Button asChild size="lg">
-						<Link href="/auth/register">Начать обучение</Link>
-					</Button>
-					<Button asChild variant="outline" size="lg">
-						<Link href="/subjects">Просмотреть курсы</Link>
-					</Button>
-				</div>
-			</div>
-		</section>
-	)
+  return (
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <HeroParallax />
+      </div>
+      <div className="relative z-10 mx-auto max-w-4xl text-center">
+        <AnimatedTitle />
+        <AnimatedDescription />
+        <AnimatedButtons />
+      </div>
+    </section>
+  )
 }

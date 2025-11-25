@@ -838,7 +838,10 @@ export const preloadCriticalResources = () => {
 | Этап 6: Тесты | 2-3 недели | Анимированный интерфейс тестов |
 | Этап 7: Dashboard | 2-3 недели | Аналитика, графики, рекомендации |
 | Этап 8: Тестирование | 1-2 недели | Полное тестирование, оптимизация |
-| **Итого** | **17-25 недель** | **Готовая платформа** |
+| Этап 9: Мобильная адаптация | 1-2 недели | Полная отзывчивость приложения |
+| Этап 10: Расширенные UI-компоненты | 2-3 недели | Внедрение новых интерактивных элементов |
+| Этап 11: Улучшение UX в формах | 2-3 недели | Улучшенные формы и загрузчики |
+| **Итого** | **22-33 недели** | **Готовая платформа** |
 
 ## Риски и решения
 
@@ -870,3 +873,199 @@ export const preloadCriticalResources = () => {
    - Test coverage > 80%
    - Bundle size < 1MB
    - No critical errors in production
+
+### Этап 9: Мобильная адаптация и отзывчивый дизайн (1-2 недели)
+
+#### 9.1 Реализация адаптивной навигации
+```typescript
+// frontend/src/components/layout/responsive-navigation.tsx
+import { Menu } from 'lucide-react'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { DashboardSidebar } from '@/components/dashboard/sidebar'
+
+export function ResponsiveNavigation() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-80 p-0">
+        <DashboardSidebar />
+      </SheetContent>
+    </Sheet>
+  )
+}
+```
+
+#### 9.2 Адаптация сеток и макетов
+- **Задача:** Проверить все основные страницы (`Dashboard`, `Subjects`, `Lesson`) на корректное отображение на мобильных устройствах.
+- **Решение:** Использовать классы `flex-col`, `grid-cols-1` и другие утилиты Tailwind CSS для мобильных брейкпоинтов. Скрывать второстепенные элементы на маленьких экранах.
+
+### Этап 10: Внедрение расширенных UI-компонентов (2-3 недели)
+
+#### 10.1 Анимированный счетчик
+```typescript
+// frontend/src/components/ui/animated-counter.tsx
+import { motion, useInView, useSpring } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+
+interface AnimatedCounterProps {
+  value: number
+}
+
+export function AnimatedCounter({ value }: AnimatedCounterProps) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true })
+  
+  const motionValue = useSpring(0, {
+    damping: 50,
+    stiffness: 200
+  })
+  
+  useEffect(() => {
+    if (inView) {
+      motionValue.set(value)
+    }
+  }, [motionValue, inView, value])
+  
+  useEffect(() => {
+    return motionValue.on('change', (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Math.round(latest).toString()
+      }
+    })
+  }, [motionValue])
+  
+  return <span ref={ref}>0</span>
+}
+```
+- **Применение:** Использовать в `StatsGrid` на странице `Dashboard` для динамичного отображения статистики.
+
+#### 10.2 Список с поэтапной анимацией
+```typescript
+// frontend/src/components/animations/staggered-list.tsx
+import { motion } from 'framer-motion'
+
+const listVariants = {
+  visible: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
+
+export function StaggeredList({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.ul
+      variants={listVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {React.Children.map(children, child => (
+        <motion.li variants={itemVariants}>{child}</motion.li>
+      ))}
+    </motion.ul>
+  )
+}
+```
+- **Применение:** Использовать для списков уроков в таймлайне курса или для списка курсов.
+
+### Этап 11: Улучшение UX в формах и загрузке данных (2-3 недели)
+
+#### 11.1 Многошаговая форма
+```typescript
+// frontend/src/components/forms/multi-step-form.tsx
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+
+interface Step {
+  id: string
+  component: React.ReactNode
+}
+
+interface MultiStepFormProps {
+  steps: Step[]
+  onSubmit: () => void
+}
+
+export function MultiStepForm({ steps, onSubmit }: MultiStepFormProps) {
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1)
+    } else {
+      onSubmit()
+    }
+  }
+
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  return (
+    <div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={steps[currentStep].id}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+        >
+          {steps[currentStep].component}
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="mt-8 flex justify-between">
+        <Button onClick={handlePrev} disabled={currentStep === 0}>
+          Назад
+        </Button>
+        <Button onClick={handleNext}>
+          {currentStep === steps.length - 1 ? 'Завершить' : 'Далее'}
+        </Button>
+      </div>
+    </div>
+  )
+}
+```
+- **Применение:** Использовать для сложных процессов, таких как регистрация с дополнительными данными или создание нового курса.
+
+#### 11.2 Улучшенный загрузчик файлов
+```typescript
+// frontend/src/components/forms/file-upload.tsx
+import { useDropzone } from 'react-dropzone'
+import { UploadCloud } from 'lucide-react'
+
+export function FileUpload() {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => console.log(acceptedFiles),
+  })
+
+  return (
+    <div
+      {...getRootProps()}
+      className={`p-10 border-2 border-dashed rounded-lg text-center cursor-pointer
+        ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
+    >
+      <input {...getInputProps()} />
+      <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
+      <p className="mt-2 text-sm text-gray-600">
+        {isDragActive
+          ? 'Отпустите файлы для загрузки'
+          : 'Перетащите файлы сюда или кликните для выбора'}
+      </p>
+    </div>
+  )
+}
+```
+- **Применение:** Использовать для загрузки аватара пользователя, материалов к уроку и т.д.

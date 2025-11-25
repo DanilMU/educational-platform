@@ -23,4 +23,6 @@ export interface UpdateUserDto {
   city?: string;
   /** The role of the user */
   role?: UpdateUserDtoRole;
+  /** Whether the user wants to receive notifications */
+  receiveNotifications?: boolean;
 }

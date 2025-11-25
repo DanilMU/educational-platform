@@ -14,6 +14,10 @@ export interface Progress {
   lessonId: string;
   /** Завершен ли урок */
   isCompleted: boolean;
+  /** Балл за тест (если есть) */
+  score?: number;
+  /** Время, потраченное на урок (в минутах) */
+  timeSpent?: number;
   /** Дата завершения урока */
   completedAt?: string;
   /** Дата создания записи */

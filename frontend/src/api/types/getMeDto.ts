@@ -25,6 +25,8 @@ export interface GetMeDto {
   dob: string;
   /** City */
   city: string;
+  /** Whether the user receives notifications */
+  receiveNotifications: boolean;
   /** Creation date */
   createdAt: string;
   /** Update date */

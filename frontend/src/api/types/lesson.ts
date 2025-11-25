@@ -14,6 +14,20 @@ export interface Lesson {
   content: string;
   /** ID темы, к которой относится урок */
   topicId: string;
+  /** Ориентировочное время прохождения урока в минутах */
+  estimatedTime?: number;
+  /** Сложность урока от 1 до 5 */
+  difficulty?: number;
+  /** Цели обучения */
+  learningObjectives?: string;
+  /** Требования для прохождения урока */
+  prerequisites?: string;
+  /** Ссылка на видеоурок */
+  videoUrl?: string;
+  /** Список вложений (PDF, документы и т.д.) */
+  attachments?: string[];
+  /** Порядковый номер урока в теме */
+  order?: number;
   /** Дата создания записи */
   createdAt: string;
   /** Дата последнего обновления записи */

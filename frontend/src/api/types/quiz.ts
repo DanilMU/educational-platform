@@ -13,6 +13,16 @@ export interface Quiz {
   title: string;
   /** ID урока, к которому относится тест */
   lessonId: string;
+  /** Ограничение времени на тест (в минутах) */
+  timeLimit?: number;
+  /** Максимальное количество попыток */
+  maxAttempts: number;
+  /** Проходной балл для теста (в процентах) */
+  passingScore: number;
+  /** Перемешивать ли вопросы при каждом прохождении */
+  shuffleQuestions: boolean;
+  /** Перемешивать ли ответы при каждом прохождении */
+  shuffleAnswers: boolean;
   /** Список вопросов в тесте */
   questions: Question[];
   /** Дата создания записи */

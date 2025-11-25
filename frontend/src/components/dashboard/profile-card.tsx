@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
 import { Button } from '@/src/components/ui/button'
 import { Pencil, MapPin, Mail, Phone, Calendar } from 'lucide-react'
 import { useGetProfileQuery } from '@/src/api/hooks'
@@ -57,9 +57,9 @@ export function ProfileCard() {
 
 	// Обработка значений с учетом их возможной структуры объекта
 	const avatarUrl = extractStringValue(profile?.avatarUrl);
-	const phone = profile?.phone || '';
-	const city = profile?.city || '';
-	const dob = profile?.dob || '';
+	const phone = extractStringValue(profile?.phone);
+	const city = extractStringValue(profile?.city);
+	const dob = extractStringValue(profile?.dob);
 
 	// Проверяем роль пользователя
 	const isStudent = profile?.role === 'STUDENT';

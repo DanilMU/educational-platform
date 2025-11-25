@@ -12,4 +12,18 @@ export interface CreateLessonDto {
   content: string;
   /** The ID of the topic this lesson belongs to */
   topicId: string;
+  /** Estimated time to complete the lesson in minutes */
+  estimatedTime?: number;
+  /** Difficulty of the lesson from 1 to 5 */
+  difficulty?: number;
+  /** Learning objectives for the lesson */
+  learningObjectives?: string;
+  /** Prerequisites for the lesson */
+  prerequisites?: string;
+  /** URL to a video lesson */
+  videoUrl?: string;
+  /** List of URLs to attachments */
+  attachments?: string[];
+  /** Order of the lesson within the topic */
+  order?: number;
 }

@@ -5,6 +5,10 @@
  * OpenAPI spec version: 0.0.1
  */
 
+export * from './analyticsControllerGetPopularLessons200Item';
+export * from './analyticsControllerGetSuccessRate200';
+export * from './analyticsControllerGetTimeSpent200';
+export * from './analyticsDto';
 export * from './answer';
 export * from './authResponse';
 export * from './certificate';
@@ -25,13 +29,23 @@ export * from './filesControllerUploadFile200';
 export * from './filesControllerUploadFileBody';
 export * from './getMeDto';
 export * from './getMeDtoRole';
+export * from './learningPathDto';
+export * from './learningPathDtoTopicsItem';
+export * from './learningPathDtoTopicsItemLessonsItem';
 export * from './lesson';
+export * from './lessonDescriptionDto';
 export * from './loginRequest';
+export * from './notificationDto';
+export * from './notificationDtoData';
+export * from './notificationDtoType';
+export * from './prerequisitesDto';
+export * from './prerequisitesDtoRequiredLessonsItem';
 export * from './progress';
 export * from './question';
 export * from './questionType';
 export * from './quiz';
-export * from './quizResultDto';
+export * from './recommendationsDto';
+export * from './recommendationsDtoRecommendationsItem';
 export * from './registerRequest';
 export * from './subject';
 export * from './subjectDescription';

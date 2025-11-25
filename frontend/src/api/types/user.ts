@@ -31,6 +31,8 @@ export interface User {
   dob?: UserDob;
   /** Город */
   city?: UserCity;
+  /** Получает ли пользователь уведомления */
+  receiveNotifications: boolean;
   /** Дата создания записи */
   createdAt: string;
   /** Дата последнего обновления записи */

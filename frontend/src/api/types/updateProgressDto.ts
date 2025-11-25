@@ -8,4 +8,8 @@
 export interface UpdateProgressDto {
   /** Whether the lesson is completed */
   isCompleted?: boolean;
+  /** Score obtained in the quiz (if any) */
+  score?: number;
+  /** Time spent on the lesson in minutes */
+  timeSpent?: number;
 }

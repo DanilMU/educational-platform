@@ -4,12 +4,14 @@ import { MainContentHeader } from '@/src/components/layout/main-content-header'
 
 export default function MainLayout({ children }: { children: ReactNode }) {
 	return (
-		<div className='flex min-h-screen'>
-			<DashboardSidebar />
-			<main className='flex-1 bg-gray-100'>
-				<div className='flex flex-col p-8'>
+		<div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+			<div className="hidden md:flex">
+				<DashboardSidebar />
+			</div>
+			<main className="flex-1">
+				<div className="flex flex-col p-4 sm:p-8">
 					<MainContentHeader />
-					<div className='mt-8'>{children}</div>
+					<div className="mt-8">{children}</div>
 				</div>
 			</main>
 		</div>

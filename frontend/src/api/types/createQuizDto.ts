@@ -13,4 +13,14 @@ export interface CreateQuizDto {
   lessonId: string;
   /** A list of questions for the quiz */
   questions: CreateQuestionDto[];
+  /** Time limit for the quiz in minutes */
+  timeLimit?: number;
+  /** Maximum number of attempts allowed */
+  maxAttempts?: number;
+  /** Passing score in percentage */
+  passingScore?: number;
+  /** Whether to shuffle questions */
+  shuffleQuestions?: boolean;
+  /** Whether to shuffle answers */
+  shuffleAnswers?: boolean;
 }
