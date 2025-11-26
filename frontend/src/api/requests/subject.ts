@@ -4,7 +4,7 @@ import { EnrolledSubject } from "../types/enrolled-subject"
 
 
 export const getEnrolledSubjects = async () => {
-	const subjects = await instance.get<Subject[]>('/subjects/enrolled').then(res => res.data);
+	const subjects = await instance.get<Subject[]>('/subjects').then(res => res.data);
 	
 	// Transform the subjects to include name and progress properties
 	// In a real implementation, you would calculate actual progress based on user's lesson completion

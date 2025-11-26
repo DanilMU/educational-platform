@@ -45,27 +45,15 @@ export function PersonalDataForm() {
 		},
 	})
 
-	// Helper function to extract string value from potentially wrapped types
-	const extractStringValue = <T extends { [key: string]: unknown } | string | undefined>(value: T | undefined): string => {
-	if (typeof value === 'string') {
-			return value;
-		} else if (value && typeof value === 'object') {
-			// Try common property names that might contain the actual string value
-			const obj = value as { [key: string]: unknown };
-			return (obj.value as string) || (obj.data as string) || (obj.name as string) || (obj.number as string) || (obj.date as string) || '';
-	}
-		return '';
-	};
-
 	useEffect(() => {
 		if (profile) {
 			form.reset({
-				firstName: extractStringValue(profile.firstName),
-				lastName: extractStringValue(profile.lastName),
+				firstName: profile.firstName || '',
+				lastName: profile.lastName || '',
 				email: profile.email || '',
-				phone: extractStringValue(profile.phone),
-				dob: extractStringValue(profile.dob),
-				city: extractStringValue(profile.city),
+				phone: profile.phone || '',
+				dob: profile.dob || '',
+				city: profile.city || '',
 			})
 	}
 	}, [profile, form])

@@ -7,17 +7,6 @@ import { useGetProfileQuery } from '@/src/api/hooks'
 
 import { User } from '@/src/api/types/user';
 
-// Вспомогательная функция для извлечения строкового значения из объекта или строки
-function extractStringValue(value: string | { [key: string]: unknown } | undefined): string {
-	if (typeof value === 'string') {
-		return value;
-	}
-	if (value && typeof value === 'object') {
-		return Object.values(value)[0] as string || '';
-	}
-	return '';
-}
-
 export function ProfileCard() {
 	const { data: profile, isLoading, error } = useGetProfileQuery();
 
@@ -50,16 +39,8 @@ export function ProfileCard() {
 		);
 	}
 
-	const firstName = extractStringValue(profile?.firstName);
-	const lastName = extractStringValue(profile?.lastName);
-	const fullName = firstName ? `${firstName} ${lastName}`.trim() : 'Пользователь';
-	const userInitial = firstName ? firstName.charAt(0).toUpperCase() : '?';
-
-	// Обработка значений с учетом их возможной структуры объекта
-	const avatarUrl = extractStringValue(profile?.avatarUrl);
-	const phone = extractStringValue(profile?.phone);
-	const city = extractStringValue(profile?.city);
-	const dob = extractStringValue(profile?.dob);
+	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь';
+	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?';
 
 	// Проверяем роль пользователя
 	const isStudent = profile?.role === 'STUDENT';
@@ -68,7 +49,7 @@ export function ProfileCard() {
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
-					<AvatarImage src={avatarUrl} alt='User Avatar' />
+					<AvatarImage src={profile?.avatarUrl} alt='User Avatar' />
 					<AvatarFallback className='text-4xl'>{userInitial}</AvatarFallback>
 				</Avatar>
 				<div>
@@ -79,22 +60,22 @@ export function ProfileCard() {
 			</div>
 			
 			<div className='mt-6 grid grid-cols-2 gap-4'>
-				{phone && (
+				{profile?.phone && (
 					<div className='flex items-center'>
 						<Phone className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{phone}</span>
+						<span>{profile.phone}</span>
 					</div>
 				)}
-				{city && (
+				{profile?.city && (
 					<div className='flex items-center'>
 						<MapPin className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{city}</span>
+						<span>{profile.city}</span>
 					</div>
 				)}
-				{dob && (
+				{profile?.dob && (
 					<div className='flex items-center'>
 						<Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{dob}</span>
+						<span>{profile.dob}</span>
 					</div>
 				)}
 			</div>

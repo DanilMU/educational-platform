@@ -7,17 +7,6 @@ import { useGetProfileQuery } from '@/src/api/hooks'
 
 import { User } from '@/src/api/types/user';
 
-// Вспомогательная функция для извлечения строкового значения из объекта или строки
-function extractStringValue(value: string | { [key: string]: unknown } | undefined): string {
-	if (typeof value === 'string') {
-		return value;
-	}
-	if (value && typeof value === 'object') {
-		return Object.values(value)[0] as string || '';
-	}
-	return '';
-}
-
 export function ProfileSummaryCard() {
 	const { data: profile, isLoading, error } = useGetProfileQuery();
 
@@ -44,32 +33,25 @@ export function ProfileSummaryCard() {
 		);
 	}
 
-	const firstName = extractStringValue(profile?.firstName);
-	const lastName = extractStringValue(profile?.lastName);
-	const fullName = firstName ? `${firstName} ${lastName}`.trim() : 'Пользователь';
-	const userInitial = firstName ? firstName.charAt(0).toUpperCase() : '?';
-
-	// Обработка значений с учетом их возможной структуры объекта
-	const avatarUrl = extractStringValue(profile?.avatarUrl);
-	const phone = extractStringValue(profile?.phone);
-	const city = extractStringValue(profile?.city);
+	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь';
+	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?';
 
 	return (
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
-					<AvatarImage src={avatarUrl} alt='User Avatar' />
+					<AvatarImage src={profile?.avatarUrl} alt='User Avatar' />
 					<AvatarFallback className='text-4xl'>{userInitial}</AvatarFallback>
 				</Avatar>
 				<div>
 					<h2 className='text-xl font-semibold'>{fullName}</h2>
 					<p className='text-muted-foreground text-sm'>{profile?.role || 'Роль'}</p>
 					<p className='text-muted-foreground text-sm'>{profile?.email || 'Email'}</p>
-					{phone && (
-						<p className='text-muted-foreground text-sm'>{phone}</p>
+					{profile?.phone && (
+						<p className='text-muted-foreground text-sm'>{profile.phone}</p>
 					)}
-					{city && (
-						<p className='text-muted-foreground text-sm'>{city}</p>
+					{profile?.city && (
+						<p className='text-muted-foreground text-sm'>{profile.city}</p>
 					)}
 				</div>
 			</div>

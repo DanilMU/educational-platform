@@ -12,17 +12,32 @@ import { RecommendationsSection } from '@/src/components/dashboard/recommendatio
 import { ProgressChart } from '@/src/components/dashboard/progress-chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { useGetAnalyticsQuery } from '@/src/api/hooks/useGetAnalyticsQuery'
+import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
 
 export default function DashboardPage() {
-  const { data: analytics, isLoading, isError } = useGetAnalyticsQuery();
+  const { data: analytics, isLoading: isAnalyticsLoading, isError: isAnalyticsError } = useGetAnalyticsQuery();
+  const { data: enrolledSubjects, isLoading: isSubjectsLoading, isError: isSubjectsError } = useGetEnrolledSubjectsQuery();
 
-  if (isLoading) {
+  if (isAnalyticsLoading || isSubjectsLoading) {
     return <div>Загрузка...</div>;
   }
 
-  if (isError || !analytics) {
-    return <div>Ошибка при загрузке данных</div>;
+  if (isAnalyticsError || !analytics || !enrolledSubjects) {
+    return (
+      <div className="text-red-500 p-4">
+        <h3 className="font-bold mb-2">Ошибка при загрузке данных</h3>
+        <p>Analytics error: {isAnalyticsError ? 'Да' : 'Нет'}</p>
+        <p>Analytics data: {analytics ? 'Есть' : 'Нет'}</p>
+        <p>Enrolled subjects: {enrolledSubjects ? 'Есть' : 'Нет'}</p>
+        <p>Enrolled subjects length: {enrolledSubjects?.length || 0}</p>
+      </div>
+    );
   }
+
+  // Определяем текущий курс (первый незавершенный курс или курс с наименьшим прогрессом)
+  const currentCourse = enrolledSubjects.length > 0
+    ? enrolledSubjects.find(subject => subject.progress < 100) || enrolledSubjects[0]
+    : null;
 
  return (
     <div className="space-y-8">
@@ -48,7 +63,7 @@ export default function DashboardPage() {
         />
         <TimeSpentCard timeSpent={analytics.totalTimeSpent} />
         <LearningStatisticsCard analytics={analytics} />
-        <CurrentCourseCard currentCourse={analytics.userId ? { id: analytics.userId, title: 'Безопасность труда' } : { id: '1', title: 'Безопасность труда' }} />
+        <CurrentCourseCard currentCourse={currentCourse ? { id: currentCourse.id, title: currentCourse.name } : undefined} />
       </motion.div>
 
       <div className="grid grid-cols-1 gap-8">

@@ -38,21 +38,12 @@ export function SubjectDetails({ subjectId }: SubjectDetailsProps) {
 		)
 	}
 
-	const getDescription = (description: any): string => {
-		if (!description) return ''
-		if (typeof description === 'string') return description
-		if (typeof description === 'object' && description !== null) {
-			return String(Object.values(description)[0] || '');
-		}
-		return '';
-	}
-
 	return (
 		<div className='space-y-6'>
 			<div>
 				<h1 className='text-4xl font-bold'>{subject.title}</h1>
 				<p className='mt-2 text-lg text-gray-600'>
-					{getDescription(subject.description)}
+					{subject.description || ''}
 				</p>
 			</div>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useRef, type ReactNode, type MouseEvent } from 'react'
 
 interface Card3DProps {
@@ -12,8 +12,15 @@ export function Card3D({ children, className }: Card3DProps) {
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const rotateX = useTransform(y, [-100, 100], [30, -30])
-  const rotateY = useTransform(x, [-100, 100], [-30, 30])
+
+  const rotateX = useSpring(useTransform(y, [-100, 100], [15, -15]), {
+    stiffness: 300,
+    damping: 20,
+  })
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-15, 15]), {
+    stiffness: 300,
+    damping: 20,
+  })
 
   const handleMouseMove = (event: MouseEvent) => {
     if (!ref.current) return

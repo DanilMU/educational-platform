@@ -18,48 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
 export function MainContentHeader() {
 	const { data: profile } = useGetProfileQuery()
 
-	// Явная проверка типов для firstName, lastName и avatarUrl
-	let firstName = ''
-	let lastName = ''
-	let avatarUrl = ''
-
-	if (profile) {
-		// Обработка firstName
-		if (typeof profile.firstName === 'string') {
-			firstName = profile.firstName
-		} else if (profile.firstName && typeof profile.firstName === 'object') {
-			// Если firstName объект, пытаемся получить строковое значение
-			// В реальности это может быть объект, содержащий строковое значение
-			firstName =
-				JSON.stringify(profile.firstName) !== '{}'
-					? JSON.stringify(profile.firstName)
-					: ''
-		}
-
-		// Обработка lastName
-		if (typeof profile.lastName === 'string') {
-			lastName = profile.lastName
-		} else if (profile.lastName && typeof profile.lastName === 'object') {
-			lastName =
-				JSON.stringify(profile.lastName) !== '{}'
-					? JSON.stringify(profile.lastName)
-					: ''
-		}
-
-		// Обработка avatarUrl
-		if (typeof profile.avatarUrl === 'string') {
-			avatarUrl = profile.avatarUrl
-		} else if (profile.avatarUrl && typeof profile.avatarUrl === 'object') {
-			// Пытаемся получить строковое значение из объекта avatarUrl
-			avatarUrl =
-				JSON.stringify(profile.avatarUrl) !== '{}'
-					? JSON.stringify(profile.avatarUrl)
-					: ''
-		}
-	}
-
-	const fullName = firstName ? `${firstName} ${lastName}`.trim() : 'Пользователь'
-	const userInitial = firstName ? firstName.charAt(0).toUpperCase() : '?'
+	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь'
+	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?'
 
 	return (
 		<header className="flex items-center justify-between space-x-4 rounded-lg bg-white p-4 shadow-sm">
@@ -94,7 +54,7 @@ export function MainContentHeader() {
 				<DropdownMenu>
 					<DropdownMenuTrigger className="flex items-center space-x-2">
 						<Avatar>
-							<AvatarImage src={avatarUrl} alt="User Avatar" />
+							<AvatarImage src={profile?.avatarUrl} alt="User Avatar" />
 							<AvatarFallback>{userInitial}</AvatarFallback>
 						</Avatar>
 						<span className="hidden text-gray-800 sm:inline">{fullName}</span>

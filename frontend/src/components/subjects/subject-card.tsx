@@ -32,9 +32,9 @@ interface SubjectCardProps {
 
 export function SubjectCard({ subject }: SubjectCardProps) {
 	const description =
-		subject.description.length > 100
-			? subject.description.slice(0, 100) + '...'
-			: subject.description
+		(subject.description || '').length > 100
+			? (subject.description || '').slice(0, 100) + '...'
+			: (subject.description || '')
 
 	return (
 		<motion.div
