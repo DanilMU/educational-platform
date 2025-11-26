@@ -59,7 +59,7 @@ export function LessonContent({ lesson }: LessonContentProps) {
           <h1 className="mb-4 text-4xl font-bold">{lesson.title}</h1>
 
           {lesson.learningObjectives && (
-            <div className="mb-6 rounded-lg bg-blue-50 p-4 dark:bg-blue-950/20">
+            <div className="mb-6 rounded-lg bg-blue-800/10 p-4 dark:bg-blue-950/20">
               <h3 className="mb-2 font-semibold">Цели обучения:</h3>
               <ul className="list-inside list-disc space-y-1 text-sm">
                 {lesson.learningObjectives

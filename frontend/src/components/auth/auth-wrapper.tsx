@@ -21,8 +21,8 @@ export function AuthWrapper({
 }: AuthWrapperProps) {
 	return (
 		<div className='flex min-h-screen'>
-			<div className='relative hidden overflow-hidden bg-gradient-to-br from-blue-400 via-blue-600 to-blue-800 lg:flex lg:w-1/2'>
-				<div className='absolute inset-0 bg-gradient-to-br from-blue-400/90 via-blue-600/90 to-blue-800/90' />
+			<div className='relative hidden overflow-hidden bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 lg:flex lg:w-1/2'>
+				<div className='absolute inset-0 bg-gradient-to-br from-blue-700/90 via-blue-800/90 to-blue-900/90' />
 
 				<div className='relative z-10 flex h-full w-full flex-col items-center justify-center p-12'>
 					{/* Замените на реальный логотип. Текущий является временным решением. */}
@@ -49,7 +49,7 @@ export function AuthWrapper({
 							{bottomText}{' '}
 							<Link
 								href={bottomLinkHref}
-								className='font-medium text-blue-600 hover:underline'
+								className='font-medium text-blue-800 hover:underline'
 							>
 								{bottomTextLink}
 							</Link>

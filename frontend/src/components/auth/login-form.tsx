@@ -134,7 +134,7 @@ export function LoginForm() {
 					<div className='text-right'>
 						<Link
 							href='#'
-							className='text-sm text-blue-600 hover:underline'
+							className='text-sm text-blue-800 hover:underline'
 						>
 							Забыли пароль?
 						</Link>
@@ -142,7 +142,7 @@ export function LoginForm() {
 
 					<Button
 						type='submit'
-						className='w-full bg-blue-600 text-white hover:bg-blue-700'
+						className='w-full'
 						disabled={isPending}
 					>
 						Войти

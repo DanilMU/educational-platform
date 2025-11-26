@@ -30,7 +30,7 @@ export function QuestionCard({
       className="space-y-6 rounded-lg border bg-card p-6"
     >
       <div className="flex items-start gap-4">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-800/20 font-semibold text-blue-800">
           {questionNumber}
         </div>
         <div className="flex-1">

@@ -28,7 +28,7 @@ export function LessonNavigation({
               className={cn(
                 'block rounded-md p-3 transition-colors',
                 lesson.id === currentLessonId
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-blue-800/20 text-blue-800'
                   : 'hover:bg-gray-100'
               )}
             >

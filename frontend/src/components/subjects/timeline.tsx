@@ -30,7 +30,7 @@ export function Timeline({ topics, completedLessons }: TimelineProps) {
 
 	return (
 		<div className="relative">
-			<div className="absolute left-8 top-0 h-full w-0.5 bg-gradient-to-b from-blue-500 to-purple-500" />
+			<div className="absolute left-8 top-0 h-full w-0.5 bg-gradient-to-b from-blue-800 to-purple-500" />
 
 			{topics.map((topic, index) => (
 				<motion.div
@@ -40,9 +40,9 @@ export function Timeline({ topics, completedLessons }: TimelineProps) {
 					transition={{ delay: index * 0.1 }}
 					className="relative mb-8 flex items-start gap-8"
 				>
-					<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-blue-500 bg-white">
+					<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-blue-800 bg-white">
 						{completedTopics[index] ? (
-							<CheckCircle className="size-8 text-blue-500" />
+							<CheckCircle className="size-8 text-blue-800" />
 						) : (
 							<Circle className="size-8 text-gray-400" />
 						)}

@@ -11,8 +11,8 @@ export function StatsGrid() {
 				value='12'
 				change='+2 в этом месяце'
 				changeType='increase'
-				icon={<BookOpen className='h-4 w-4 text-blue-600' />}
-				iconBgClass='bg-blue-100'
+				icon={<BookOpen className='h-4 w-4 text-blue-800' />}
+				iconBgClass='bg-blue-800/20'
 			/>
 			<StatCard
 				title='Текущий прогресс'

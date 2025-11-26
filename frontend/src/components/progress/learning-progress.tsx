@@ -20,7 +20,7 @@ export function LearningProgress({
     <div className="rounded-lg border bg-card p-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Ваш прогресс</h3>
-        <span className="text-sm font-bold text-blue-600">
+        <span className="text-sm font-bold text-blue-800">
           {completedLessons} из {totalLessons} уроков
         </span>
       </div>

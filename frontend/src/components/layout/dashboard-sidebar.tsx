@@ -38,7 +38,7 @@ export function DashboardSidebar() {
 	const isAdmin = profile?.role === 'ADMIN'
 
 	return (
-		<aside className='flex w-64 flex-col justify-between bg-gradient-to-br from-blue-800 via-blue-900 to-blue-950 p-6 text-white'>
+		<aside className='flex w-64 flex-col justify-between bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 p-6 text-white'>
 			<div>
 				<div className='mb-8 flex items-center space-x-2'>
 					<Image
@@ -60,8 +60,8 @@ export function DashboardSidebar() {
 								key={link.href}
 								href={link.href}
 								className={cn(
-									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-700',
-									isActive ? 'bg-blue-700' : ''
+									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-900',
+									isActive ? 'bg-blue-900' : ''
 								)}
 							>
 								<link.icon className='h-5 w-5' />

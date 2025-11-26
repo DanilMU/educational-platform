@@ -42,14 +42,14 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 			transition={{ type: "spring", stiffness: 300, damping: 20 }}
 			className="group relative h-full overflow-hidden rounded-xl border bg-card shadow-lg hover:shadow-2xl"
 		>
-			<div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
+			<div className="absolute inset-0 bg-gradient-to-br from-blue-800/10 to-purple-500/10" />
 			<Card className="relative flex h-full flex-col">
 				<CardHeader className="flex-row items-start gap-4">
-					<div className="flex size-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-800 to-purple-600">
 						<BookOpen className="size-6 text-white" />
 					</div>
 					<div>
-						<CardTitle className="text-lg font-semibold text-gray-800 transition-colors group-hover:text-blue-600">
+						<CardTitle className="text-lg font-semibold text-gray-800 transition-colors group-hover:text-blue-800">
 							{subject.title}
 						</CardTitle>
 						<div className="mt-1 flex items-center gap-2">
@@ -73,7 +73,10 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 				</CardContent>
 
 				<CardFooter>
-					<Button asChild className="w-full group-hover:bg-blue-600">
+					<Button
+						asChild
+						className="w-full"
+					>
 						<Link href={`/subjects/${subject.id}`}>
 							Продолжить обучение
 							<ArrowRight className="ml-2 size-4" />

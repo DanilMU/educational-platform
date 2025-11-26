@@ -1,26 +1,19 @@
 'use client'
 
+import React from 'react'
 import { motion } from 'framer-motion'
 import { Timeline } from '@/src/components/subjects/timeline'
 import { LearningProgress } from '@/src/components/progress/learning-progress'
 import { SubjectDetailsHeader } from '@/src/components/subjects/details/subject-details-header'
 import { useGetSubjectByIdQuery } from '@/src/api/hooks/useGetSubjectByIdQuery'
 import { useGetUserProgressQuery } from '@/src/api/hooks/useGetUserProgressQuery'
-import { Subject } from '@/src/api/types/subject'
-
-// Тип для данных заголовка предмета, включающий дополнительные поля
-type SubjectHeaderData = Subject & {
-  author: string
-  rating: number
-  reviews: number
-}
 
 export default function SubjectPage({
   params,
 }: {
-  params: { subjectId: string }
+  params: Promise<{ subjectId: string }>
 }) {
-  const { subjectId } = params
+  const { subjectId } = React.use(params)
 
   const { data: subject, isLoading, isError } = useGetSubjectByIdQuery(subjectId)
  const { data: progressData } = useGetUserProgressQuery()
@@ -44,14 +37,6 @@ export default function SubjectPage({
     return topic.lessons?.some(lesson => !completedLessons.includes(lesson.id))
   })?.title || subject.topics[0]?.title
 
-  // Подготовим данные для SubjectDetailsHeader, добавив отсутствующие поля
-  const subjectHeaderData: SubjectHeaderData = {
-    ...subject,
-    author: 'Не указан',
-    rating: 0,
-    reviews: 0
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <motion.div
@@ -59,7 +44,7 @@ export default function SubjectPage({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <SubjectDetailsHeader subject={subjectHeaderData} />
+        <SubjectDetailsHeader subject={subject} />
       </motion.div>
 
       <motion.div

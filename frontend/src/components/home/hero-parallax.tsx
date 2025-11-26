@@ -18,7 +18,7 @@ export function HeroParallax() {
     <div ref={ref} className="relative h-screen overflow-hidden">
       <motion.div
         style={{ y, opacity }}
-        className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600"
+        className="absolute inset-0 bg-gradient-to-br from-blue-800 via-purple-800 to-pink-600"
       />
       <ParticleBackground />
     </div>

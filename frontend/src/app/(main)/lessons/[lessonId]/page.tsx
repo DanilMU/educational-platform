@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import {
@@ -15,9 +16,9 @@ import { Skeleton } from '@/src/components/ui/skeleton'
 export default function LessonPage({
   params,
 }: {
-  params: { lessonId: string }
+  params: Promise<{ lessonId: string }>
 }) {
-  const { lessonId } = params
+  const { lessonId } = React.use(params)
   const contentRef = useRef<HTMLElement>(null)
 
   const {
@@ -57,7 +58,7 @@ export default function LessonPage({
   const lessonIndex = lessonsInTopic.findIndex(l => l.id === lessonId)
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="bg-gradient-to-br from-blue-800/10 via-white to-purple-50">
       <div className="flex">
         <LessonNavigation lessons={lessonsInTopic} currentLessonId={lessonId} />
         <main ref={contentRef} className="min-h-screen flex-1">
