@@ -2,6 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { CheckCircle, Circle, Clock } from 'lucide-react'
+import Link from 'next/link'
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/src/components/ui/accordion'
 
 // These types should be replaced with actual types from the API client.
 type Lesson = {
@@ -29,55 +36,57 @@ export function Timeline({ topics, completedLessons }: TimelineProps) {
 	})
 
 	return (
-		<div className="relative">
-			<div className="absolute left-8 top-0 h-full w-0.5 bg-gradient-to-b from-blue-800 to-purple-500" />
-
+		<Accordion type="multiple" className="w-full">
 			{topics.map((topic, index) => (
 				<motion.div
 					key={topic.id}
 					initial={{ opacity: 0, x: -50 }}
 					animate={{ opacity: 1, x: 0 }}
 					transition={{ delay: index * 0.1 }}
-					className="relative mb-8 flex items-start gap-8"
 				>
-					<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-blue-800 bg-white">
-						{completedTopics[index] ? (
-							<CheckCircle className="size-8 text-blue-800" />
-						) : (
-							<Circle className="size-8 text-gray-400" />
-						)}
-					</div>
-
-					<div className="flex-1 pt-1">
-						<h3 className="text-lg font-semibold">{topic.title}</h3>
-						<p className="text-sm text-muted-foreground">
-							{topic.lessons?.length || 0} уроков
-						</p>
-
-						<div className="mt-4 space-y-2">
-							{topic.lessons?.map(lesson => (
-								<div
-									key={lesson.id}
-									className={`flex items-center gap-2 text-sm ${
-										completedLessons.includes(lesson.id)
-											? 'text-green-600'
-											: 'text-muted-foreground'
-									}`}
-								>
-									{completedLessons.includes(lesson.id) ? (
-										<CheckCircle className="size-4" />
-									) : (
-										<Circle className="size-4" />
-									)}
-									<span>{lesson.title}</span>
-									<div className="flex-grow" />
-									<Clock className="size-3" />
-								</div>
-							))}
-						</div>
-					</div>
+					<AccordionItem value={`topic-${topic.id}`} className="mb-4 border-none">
+						<AccordionTrigger className="flex w-full items-center justify-start gap-8 rounded-lg bg-gray-50 p-4 hover:bg-gray-100">
+							<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-blue-800 bg-white">
+								{completedTopics[index] ? (
+									<CheckCircle className="size-8 text-blue-800" />
+								) : (
+									<Circle className="size-8 text-gray-400" />
+								)}
+							</div>
+							<div className="text-left">
+								<h3 className="text-lg font-semibold">{topic.title}</h3>
+								<p className="text-sm text-muted-foreground">
+									{topic.lessons?.length || 0} уроков
+								</p>
+							</div>
+						</AccordionTrigger>
+						<AccordionContent className="p-4">
+							<div className="space-y-2">
+								{topic.lessons?.map(lesson => (
+									<Link
+										key={lesson.id}
+										href={`/lessons/${lesson.id}`}
+										className={`flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:bg-gray-100 ${
+											completedLessons.includes(lesson.id)
+												? 'text-green-600'
+												: 'text-muted-foreground'
+										}`}
+									>
+										{completedLessons.includes(lesson.id) ? (
+											<CheckCircle className="size-4" />
+										) : (
+											<Circle className="size-4" />
+										)}
+										<span>{lesson.title}</span>
+										<div className="flex-grow" />
+										<Clock className="size-3" />
+									</Link>
+								))}
+							</div>
+						</AccordionContent>
+					</AccordionItem>
 				</motion.div>
 			))}
-		</div>
+		</Accordion>
 	)
 }
