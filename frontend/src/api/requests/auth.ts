@@ -1,4 +1,4 @@
-import { saveToken, saveRefreshToken } from "@/src/lib/cookies"
+import { removeTokens, saveToken, saveRefreshToken } from "@/src/lib/cookies"
 import { api } from "../instance"
 import type { AuthResponse, LoginRequest, RegisterRequest } from "../types"
 
@@ -25,3 +25,8 @@ export const refresh = async () =>
 
         return res.data
     })
+
+export const logout = async () => {
+    await api.post('/auth/logout')
+    removeTokens()
+}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EnumTokens } from "./lib/cookies";
 
-const protectedRoutes = ['/dashboard']
+const protectedRoutes = ['/dashboard', '/settings']
 
 const authRoutes = ['/auth/register', '/auth/login']
 

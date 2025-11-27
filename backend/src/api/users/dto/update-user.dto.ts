@@ -3,7 +3,6 @@ import {
 	IsBoolean,
 	IsDateString,
 	IsOptional,
-	IsPhoneNumber,
 	IsString
 } from 'class-validator';
 
@@ -15,7 +14,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 		description: 'Phone number of the user',
 		required: false
 	})
-	@IsPhoneNumber()
+	@IsString()
 	@IsOptional()
 	public phone?: string;
 

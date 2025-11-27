@@ -4,6 +4,7 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
+import type { SubjectDescription } from './subjectDescription';
 import type { Topic } from './topic';
 
 export interface Subject {
@@ -12,7 +13,7 @@ export interface Subject {
   /** Название предмета */
   title: string;
   /** Описание предмета */
-  description?: string;
+  description?: SubjectDescription;
   /** Список тем в предмете */
   topics: Topic[];
   /** Дата создания записи */

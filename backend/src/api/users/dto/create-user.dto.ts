@@ -5,7 +5,6 @@ import {
 	IsEmail,
 	IsEnum,
 	IsOptional,
-	IsPhoneNumber,
 	IsString,
 	MinLength
 } from 'class-validator';
@@ -51,7 +50,7 @@ export class CreateUserDto {
 		description: 'Phone number of the user',
 		required: false
 	})
-	@IsPhoneNumber()
+	@IsString()
 	@IsOptional()
 	public phone?: string;
 

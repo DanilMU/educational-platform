@@ -4,7 +4,7 @@ import { Bell, Moon, Search, Sun } from 'lucide-react'
 import { Input } from '@/src/components/ui/input'
 import { ResponsiveNavigation } from './responsive-navigation'
 
-import { useGetProfileQuery } from '@/src/api/hooks'
+import { useGetProfileQuery, useLogoutMutation } from '@/src/api/hooks'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -14,9 +14,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import Link from 'next/link'
 
 export function MainContentHeader() {
 	const { data: profile } = useGetProfileQuery()
+	const { mutate: logout } = useLogoutMutation()
 
 	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь'
 	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?'
@@ -62,10 +64,14 @@ export function MainContentHeader() {
 					<DropdownMenuContent>
 						<DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>Профиль</DropdownMenuItem>
-						<DropdownMenuItem>Настройки</DropdownMenuItem>
+						<Link href="/dashboard">
+							<DropdownMenuItem>Профиль</DropdownMenuItem>
+						</Link>
+						<Link href="/settings">
+							<DropdownMenuItem>Настройки</DropdownMenuItem>
+						</Link>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>Выйти</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => logout()}>Выйти</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>

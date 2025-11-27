@@ -1,15 +1,11 @@
 import type { Metadata } from 'next'
-import { SubjectList } from '@/src/components/subjects/subject-list'
+import { SubjectsPageClient } from '@/src/components/subjects/subjects-page-client'
 
 export const metadata: Metadata = {
 	title: 'Все курсы',
 }
 
 export default function SubjectsPage() {
-	return (
-		<div className='space-y-8'>
-			<h1 className='text-3xl font-bold'>Все курсы</h1>
-			<SubjectList />
-		</div>
-	)
+	return <SubjectsPageClient />
 }
+

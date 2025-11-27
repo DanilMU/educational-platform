@@ -8,13 +8,14 @@ import {
 	BookOpenText,
 	User,
 	ShieldQuestion,
+	Settings,
 } from 'lucide-react'
 import { cn } from '@/src/lib/utils'
 import { useGetProfileQuery } from '@/src/api/hooks'
 
 const navLinks = [
 	{
-	href: '/dashboard',
+		href: '/dashboard',
 		icon: LayoutDashboard,
 		label: 'Профиль',
 	},
@@ -22,6 +23,11 @@ const navLinks = [
 		href: '/subjects',
 		icon: BookOpenText,
 		label: 'Курсы',
+	},
+	{
+		href: '/settings',
+		icon: Settings,
+		label: 'Настройки',
 	},
 	{
 		href: '/admin',
@@ -54,7 +60,7 @@ export function DashboardSidebar() {
 						if (link.adminOnly && !isAdmin) {
 							return null
 						}
-						const isActive = pathname === link.href
+						const isActive = pathname.startsWith(link.href)
 						return (
 							<Link
 								key={link.href}
