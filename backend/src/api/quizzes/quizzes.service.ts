@@ -199,6 +199,9 @@ export class QuizzesService {
 		}
 
 		const totalQuestions = quiz.questions.length;
+		const userScorePercentage = (score / totalQuestions) * 100;
+		const passed = userScorePercentage >= quiz.passingScore;
+
 		const result = {
 			score,
 			totalQuestions
@@ -215,9 +218,7 @@ export class QuizzesService {
 					quizId,
 					score,
 					totalQuestions,
-					passed:
-						score >=
-						Math.ceil(totalQuestions * (quiz.passingScore / 100))
+					passed
 				},
 				isRead: false
 			});
@@ -226,11 +227,11 @@ export class QuizzesService {
 			console.error('Error sending quiz result notification:', error);
 		}
 
-		if (score > 0 && score === totalQuestions) {
-			await this.progressService.markLessonAsCompleted(
-				userId,
-				quiz.lessonId
-			);
+		if (passed) {
+			await this.progressService.update(userId, quiz.lessonId, {
+				isCompleted: true,
+				score
+			});
 		}
 
 		return result;

@@ -15,8 +15,8 @@ function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
 		typeof error === 'object' &&
 		error !== null &&
 		'message' in error &&
-		(typeof (error as any).message === 'string' ||
-			Array.isArray((error as any).message))
+		(typeof (error as Record<string, unknown>).message === 'string' ||
+			Array.isArray((error as Record<string, unknown>).message))
 	)
 }
 

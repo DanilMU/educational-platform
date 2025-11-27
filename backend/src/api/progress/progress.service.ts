@@ -61,14 +61,22 @@ export class ProgressService {
 		updateProgressDto: UpdateProgressDto
 	): Promise<ProgressDto> {
 		const { isCompleted, score, timeSpent } = updateProgressDto;
-		return this.prisma.userProgress.update({
+		return this.prisma.userProgress.upsert({
 			where: {
 				userId_lessonId: {
 					userId,
 					lessonId
 				}
 			},
-			data: {
+			update: {
+				isCompleted,
+				completedAt: isCompleted ? new Date() : null,
+				score,
+				timeSpent
+			},
+			create: {
+				userId,
+				lessonId,
 				isCompleted,
 				completedAt: isCompleted ? new Date() : null,
 				score,

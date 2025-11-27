@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/src/components/ui/button'
-import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle, FileQuestion } from 'lucide-react'
 import Link from 'next/link'
 import type { Lesson } from '@/src/api/types'
 
@@ -10,6 +10,7 @@ interface LessonActionsProps {
   prevLessonId?: string
   nextLessonId?: string
   isCompleted: boolean
+  hasQuiz?: boolean
 }
 
 export function LessonActions({
@@ -17,6 +18,7 @@ export function LessonActions({
   prevLessonId,
   nextLessonId,
   isCompleted,
+  hasQuiz
 }: LessonActionsProps) {
   return (
     <div className="mx-auto mt-8 flex max-w-4xl justify-between border-t p-6">
@@ -36,6 +38,13 @@ export function LessonActions({
             <CheckCircle className="mr-2 size-4" />
             Урок пройден
           </Button>
+        ) : hasQuiz ? (
+            <Button asChild>
+                <Link href={`/lessons/${lesson.id}/quiz`}>
+                    <FileQuestion className="mr-2 size-4" />
+                    Пройти тест
+                </Link>
+            </Button>
         ) : (
           <Button>Завершить урок</Button>
         )}

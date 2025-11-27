@@ -1,6 +1,7 @@
 'use client'
 
 import { useGetQuizByLessonIdQuery, useSubmitQuizMutation } from '@/src/api/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { Button } from '@/src/components/ui/button'
 import {
@@ -30,6 +31,8 @@ interface QuizViewProps {
 
 export function QuizView({ lessonId }: QuizViewProps) {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const {
     data: quiz,
     isLoading,
@@ -38,25 +41,29 @@ export function QuizView({ lessonId }: QuizViewProps) {
   } = useGetQuizByLessonIdQuery(lessonId, {
     retry: false, // Don't retry on 404
   })
+
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, string[]>
   >({})
   const [quizResult, setQuizResult] = useState<QuizResultDto | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
-  const quizId = quiz?.id ?? ''
-  const submitMutation = useSubmitQuizMutation(quizId, {
+  const submitMutation = useSubmitQuizMutation(quiz?.id ?? '', {
     onSuccess: data => {
       setQuizResult(data)
+      // Since the backend now updates the progress, we just need to invalidate queries
+      // to refetch the user's updated progress information.
+      queryClient.invalidateQueries({ queryKey: ['get user progress'] })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'current-user'] })
+      queryClient.invalidateQueries({ queryKey: ['get enrolled subjects'] })
     },
     onError: error => {
-      console.error(error)
+      console.error('Ошибка при отправке теста:', error)
       alert('Ошибка при отправке теста.')
     },
   })
 
   const handleTimeUp = () => {
-    // Auto-submit on time up
     handleSubmit()
   }
 
@@ -74,7 +81,7 @@ export function QuizView({ lessonId }: QuizViewProps) {
     )
   }
 
-  if (isError || (!isLoading && !quiz)) {
+  if (isError) {
     const errorMessage = error ? errorCatch(error as Error) : 'Тест не найден.'
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
@@ -89,10 +96,15 @@ export function QuizView({ lessonId }: QuizViewProps) {
       </div>
     )
   }
+  
+  if (!quiz) {
+    return null;
+  }
 
-  if (quizResult && quiz) {
-    const userScore = (quizResult.score / quizResult.totalQuestions) * 100;
+  if (quizResult) {
+    const userScore = Math.round((quizResult.score / quizResult.totalQuestions) * 100);
     const isPassed = userScore >= quiz.passingScore;
+
     return (
       <Card className="mx-auto max-w-4xl">
         <CardHeader>

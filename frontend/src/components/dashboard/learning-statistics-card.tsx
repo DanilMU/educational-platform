@@ -2,20 +2,31 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { BookOpen, GraduationCap, FileText, TestTube } from 'lucide-react'
-import { AnalyticsDto } from '@/src/api/types/analyticsDto'
+import { AnalyticsDto, Progress } from '@/src/api/types'
+import { EnrolledSubject } from '@/src/api/types/enrolled-subject'
 
 interface LearningStatisticsCardProps {
   analytics: AnalyticsDto
+  progress: Progress[]
+  enrolledSubjects: EnrolledSubject[]
 }
 
-export function LearningStatisticsCard({ analytics }: LearningStatisticsCardProps) {
-  // Временные значения на основе аналитики
-  // В будущем эти данные должны приходить напрямую из API
-  const subjectsCompleted = 1; // Условно считаем, что 1 предмет пройден
-  const topicsCompleted = 3; // Условное количество пройденных тем
+export function LearningStatisticsCard({ analytics, progress, enrolledSubjects }: LearningStatisticsCardProps) {
+	const completedLessonIds = new Set(
+		progress.filter(p => p.isCompleted).map(p => p.lessonId)
+	);
+
+	const subjectsCompleted = enrolledSubjects.filter(s => s.progress === 100).length;
+
+	const topicsCompleted = enrolledSubjects.reduce((acc, subject) => {
+			return acc + (subject.topics || []).filter(topic => {
+					const lessonIds = topic.lessons?.map(l => l.id) || [];
+					return lessonIds.length > 0 && lessonIds.every(id => completedLessonIds.has(id));
+			}).length;
+	}, 0);
+	
   const lessonsCompleted = analytics.lessonsCompleted;
-  // Количество пройденных тестов может быть вычислено на основе данных о прогрессе
-  const testsPassed = Math.round((analytics.quizSuccessRate * analytics.lessonsCompleted) / 10);
+  const testsPassed = progress.filter(p => p.isCompleted && p.score != null).length;
 
   return (
     <Card>

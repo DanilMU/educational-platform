@@ -11,23 +11,26 @@ import { ActiveCoursesSection } from '@/src/components/dashboard/active-courses'
 import { RecommendationsSection } from '@/src/components/dashboard/recommendations'
 import { ProgressChart } from '@/src/components/dashboard/progress-chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
-import { useGetAnalyticsQuery } from '@/src/api/hooks/useGetAnalyticsQuery'
+import { useGetAnalyticsQuery, useGetUserProgressQuery } from '@/src/api/hooks'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
 
 export default function DashboardPage() {
   const { data: analytics, isLoading: isAnalyticsLoading, isError: isAnalyticsError } = useGetAnalyticsQuery();
   const { data: enrolledSubjects, isLoading: isSubjectsLoading, isError: isSubjectsError } = useGetEnrolledSubjectsQuery();
+  const { data: progressData, isLoading: isProgressLoading, isError: isProgressError } = useGetUserProgressQuery();
 
-  if (isAnalyticsLoading || isSubjectsLoading) {
+  if (isAnalyticsLoading || isSubjectsLoading || isProgressLoading) {
     return <div>Загрузка...</div>;
   }
 
-  if (isAnalyticsError || !analytics || !enrolledSubjects) {
+  if (isAnalyticsError || !analytics || isSubjectsError || !enrolledSubjects || isProgressError || !progressData) {
     return (
       <div className="text-red-500 p-4">
         <h3 className="font-bold mb-2">Ошибка при загрузке данных</h3>
         <p>Analytics error: {isAnalyticsError ? 'Да' : 'Нет'}</p>
         <p>Analytics data: {analytics ? 'Есть' : 'Нет'}</p>
+		<p>Progress error: {isProgressError ? 'Да' : 'Нет'}</p>
+        <p>Progress data: {progressData ? 'Есть' : 'Нет'}</p>
         <p>Enrolled subjects: {enrolledSubjects ? 'Есть' : 'Нет'}</p>
         <p>Enrolled subjects length: {enrolledSubjects?.length || 0}</p>
       </div>
@@ -62,7 +65,7 @@ export default function DashboardPage() {
           icon={BookOpen}
         />
         <TimeSpentCard timeSpent={analytics.totalTimeSpent} />
-        <LearningStatisticsCard analytics={analytics} />
+        <LearningStatisticsCard analytics={analytics} progress={progressData} enrolledSubjects={enrolledSubjects} />
         <CurrentCourseCard currentCourse={currentCourse ? { id: currentCourse.id, title: currentCourse.name } : undefined} />
       </motion.div>
 

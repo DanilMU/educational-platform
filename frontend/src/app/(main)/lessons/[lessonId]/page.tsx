@@ -6,6 +6,8 @@ import { useRef } from 'react'
 import {
 	useGetLessonByIdQuery,
 	useGetTopicByIdQuery,
+	useCheckQuizExists,
+	useGetUserProgressQuery,
 } from '@/src/api/hooks'
 import { LessonNavigation } from '@/src/components/lessons/navigation'
 import { LessonContent } from '@/src/components/lessons/content'
@@ -34,7 +36,13 @@ export default function LessonPage({
     }
   )
 
-  if (isLessonLoading || (!!lesson?.topicId && isTopicLoading)) {
+  const { data: hasQuiz, isLoading: isQuizLoading } = useCheckQuizExists(lesson?.id ?? '', {
+    enabled: !!lesson?.id,
+  })
+  
+  const { data: progressData, isLoading: isProgressLoading } = useGetUserProgressQuery();
+
+  if (isLessonLoading || isTopicLoading || isQuizLoading || isProgressLoading) {
     return (
       <div className="flex">
         <Skeleton className="hidden h-screen w-80 min-h-screen border-r md:block" />
@@ -56,6 +64,7 @@ export default function LessonPage({
   
   const lessonsInTopic = topic?.lessons || []
   const lessonIndex = lessonsInTopic.findIndex(l => l.id === lessonId)
+  const isCompleted = !!progressData?.find(p => p.lessonId === lessonId && p.isCompleted);
 
   return (
     <div className="bg-gradient-to-br from-blue-800/10 via-white to-purple-50">
@@ -70,9 +79,9 @@ export default function LessonPage({
             <LessonContent lesson={{
               id: lesson.id,
               title: lesson.title,
-              difficulty: lesson.difficulty ?? 1, // значение по умолчанию
-              estimatedTime: lesson.estimatedTime ?? 0, // значение по умолчанию
-              learningObjectives: lesson.learningObjectives ?? "", // значение по умолчанию
+              difficulty: lesson.difficulty ?? 1,
+              estimatedTime: lesson.estimatedTime ?? 0,
+              learningObjectives: lesson.learningObjectives ?? "",
               content: lesson.content,
               attachments: lesson.attachments
             }} />
@@ -84,24 +93,11 @@ export default function LessonPage({
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <LessonActions
-              lesson={{
-                id: lesson.id,
-                title: lesson.title,
-                content: lesson.content,
-                topicId: lesson.topicId,
-                estimatedTime: lesson.estimatedTime,
-                difficulty: lesson.difficulty,
-                learningObjectives: lesson.learningObjectives,
-                prerequisites: lesson.prerequisites,
-                videoUrl: lesson.videoUrl,
-                attachments: lesson.attachments,
-                order: lesson.order,
-                createdAt: lesson.createdAt,
-                updatedAt: lesson.updatedAt
-              }}
+              lesson={lesson}
               prevLessonId={lessonIndex > 0 ? lessonsInTopic[lessonIndex - 1].id : undefined}
               nextLessonId={lessonIndex < lessonsInTopic.length - 1 ? lessonsInTopic[lessonIndex + 1].id : undefined}
-              isCompleted={false} // This needs real progress data later
+              isCompleted={isCompleted}
+              {...(hasQuiz !== undefined && { hasQuiz })}
             />
           </motion.div>
         </main>
