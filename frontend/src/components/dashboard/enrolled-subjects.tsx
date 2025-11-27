@@ -74,7 +74,7 @@ export function EnrolledSubjects() {
 											</div>
 											<div>
 												<h4 className='font-semibold text-gray-900'>
-													{subject.name}
+													{subject.title || (typeof subject.name === 'string' ? subject.name : 'Без названия')}
 												</h4>
 												<p className='text-sm text-gray-600'>
 													Прогресс: {subject.progress}%

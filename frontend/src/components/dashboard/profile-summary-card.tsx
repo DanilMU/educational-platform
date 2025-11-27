@@ -5,8 +5,6 @@ import { Button } from '@/src/components/ui/button'
 import { Pencil } from 'lucide-react'
 import { useGetProfileQuery } from '@/src/api/hooks'
 
-import { User } from '@/src/api/types/user';
-
 export function ProfileSummaryCard() {
 	const { data: profile, isLoading, error } = useGetProfileQuery();
 
@@ -33,26 +31,21 @@ export function ProfileSummaryCard() {
 		);
 	}
 
-	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь';
-	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?';
+	const fullName = `${profile?.firstName ?? ''} ${profile?.lastName ?? ''}`.trim() || 'Пользователь';
+	
+	const userInitial = (profile?.firstName ?? '?').charAt(0).toUpperCase();
 
 	return (
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
-					<AvatarImage src={profile?.avatarUrl} alt='User Avatar' />
+					<AvatarImage src={profile?.avatarUrl ?? undefined} alt='User Avatar' />
 					<AvatarFallback className='text-4xl'>{userInitial}</AvatarFallback>
 				</Avatar>
 				<div>
 					<h2 className='text-xl font-semibold'>{fullName}</h2>
 					<p className='text-muted-foreground text-sm'>{profile?.role || 'Роль'}</p>
 					<p className='text-muted-foreground text-sm'>{profile?.email || 'Email'}</p>
-					{profile?.phone && (
-						<p className='text-muted-foreground text-sm'>{profile.phone}</p>
-					)}
-					{profile?.city && (
-						<p className='text-muted-foreground text-sm'>{profile.city}</p>
-					)}
 				</div>
 			</div>
 			<Button variant='outline' className='mt-4'>

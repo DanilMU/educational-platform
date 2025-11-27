@@ -12,21 +12,38 @@ interface LearningStatisticsCardProps {
 }
 
 export function LearningStatisticsCard({ analytics, progress, enrolledSubjects }: LearningStatisticsCardProps) {
+	
+	// Проверяем, что analytics и необходимые поля существуют
+	if (!analytics || !progress || !enrolledSubjects) {
+		return (
+			<Card>
+				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+					<CardTitle className="text-sm font-medium">Статистика обучения</CardTitle>
+					<GraduationCap className="h-4 w-4 text-muted-foreground" />
+				</CardHeader>
+				<CardContent>
+					<div className="text-center py-4 text-muted-foreground">
+						Нет данных для отображения
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
 	const completedLessonIds = new Set(
-		progress.filter(p => p.isCompleted).map(p => p.lessonId)
+		progress?.filter(p => p.isCompleted).map(p => p.lessonId) || []
 	);
 
-	const subjectsCompleted = enrolledSubjects.filter(s => s.progress === 100).length;
+	const subjectsCompleted = enrolledSubjects?.filter(s => s.progress === 100).length || 0;
 
-	const topicsCompleted = enrolledSubjects.reduce((acc, subject) => {
+	const topicsCompleted = enrolledSubjects?.reduce((acc, subject) => {
 			return acc + (subject.topics || []).filter(topic => {
 					const lessonIds = topic.lessons?.map(l => l.id) || [];
 					return lessonIds.length > 0 && lessonIds.every(id => completedLessonIds.has(id));
 			}).length;
-	}, 0);
+	}, 0) || 0;
 	
-  const lessonsCompleted = analytics.lessonsCompleted;
-  const testsPassed = progress.filter(p => p.isCompleted && p.score != null).length;
+  const lessonsCompleted = analytics?.lessonsCompleted || 0;
+  const testsPassed = progress?.filter(p => p.isCompleted && p.score != null).length || 0;
 
   return (
     <Card>

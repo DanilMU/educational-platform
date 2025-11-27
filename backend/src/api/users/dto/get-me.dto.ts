@@ -8,10 +8,20 @@ export class GetMeDto {
 	})
 	public id!: string;
 
-	@ApiProperty({ example: 'John', description: 'First name of the user' })
+	@ApiProperty({
+		example: 'John',
+		description: 'First name of the user',
+		type: String,
+		nullable: true
+	})
 	public firstName?: string;
 
-	@ApiProperty({ example: 'Doe', description: 'Last name of the user' })
+	@ApiProperty({
+		example: 'Doe',
+		description: 'Last name of the user',
+		type: String,
+		nullable: true
+	})
 	public lastName?: string;
 
 	@ApiProperty({
@@ -29,18 +39,11 @@ export class GetMeDto {
 
 	@ApiProperty({
 		example: 'https://example.com/avatar.jpg',
-		description: 'Avatar URL'
+		description: 'Avatar URL',
+		type: String,
+		nullable: true
 	})
 	public avatarUrl?: string;
-
-	@ApiProperty({ example: '+79991234567', description: 'Phone number' })
-	public phone?: string;
-
-	@ApiProperty({ example: '1990-01-01', description: 'Date of birth' })
-	public dob?: string;
-
-	@ApiProperty({ example: 'Moscow', description: 'City' })
-	public city?: string;
 
 	@ApiProperty({
 		example: true,

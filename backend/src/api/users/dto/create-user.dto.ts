@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import {
-	IsDateString,
 	IsEmail,
 	IsEnum,
 	IsOptional,
@@ -44,33 +43,6 @@ export class CreateUserDto {
 	@IsString()
 	@IsOptional()
 	public lastName?: string;
-
-	@ApiProperty({
-		example: '+79991234567',
-		description: 'Phone number of the user',
-		required: false
-	})
-	@IsString()
-	@IsOptional()
-	public phone?: string;
-
-	@ApiProperty({
-		example: '1995-06-15',
-		description: 'Date of birth of the user',
-		required: false
-	})
-	@IsDateString()
-	@IsOptional()
-	public dob?: string;
-
-	@ApiProperty({
-		example: 'Москва',
-		description: 'City of the user',
-		required: false
-	})
-	@IsString()
-	@IsOptional()
-	public city?: string;
 
 	@ApiProperty({
 		example: Role.STUDENT,

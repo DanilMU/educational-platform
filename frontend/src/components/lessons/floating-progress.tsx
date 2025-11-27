@@ -1,7 +1,7 @@
 'use client'
 
 import { Progress } from '@/src/components/ui/progress'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface FloatingProgressProps {
   // The target element to track scroll progress against
@@ -11,7 +11,7 @@ interface FloatingProgressProps {
 export function FloatingProgress({ targetRef }: FloatingProgressProps) {
   const [progress, setProgress] = useState(0)
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     const mainElement = targetRef.current;
     if (!mainElement) return
 
@@ -30,7 +30,7 @@ export function FloatingProgress({ targetRef }: FloatingProgressProps) {
     } else {
       setProgress(0);
     }
-  }
+  }, [targetRef])
 
   useEffect(() => {
     const mainElement = targetRef.current;
@@ -40,7 +40,7 @@ export function FloatingProgress({ targetRef }: FloatingProgressProps) {
     handleScroll(); // initial calculation
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [targetRef])
+  }, [targetRef, handleScroll])
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20">

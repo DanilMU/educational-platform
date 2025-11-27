@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { hash, verify } from 'argon2';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
@@ -33,10 +33,27 @@ export class UsersService {
 	}
 
 	public async update(id: string, dto: UpdateUserDto): Promise<User> {
-		return this.prismaService.user.update({
-			where: { id },
-			data: dto
-		});
+		const data: Partial<UpdateUserDto> = { ...dto };
+
+		if (dto.password) {
+			data.password = await hash(dto.password);
+		}
+
+		try {
+			return await this.prismaService.user.update({
+				where: { id },
+				data
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					throw new ConflictException(
+						'Пользователь с таким email уже существует'
+					);
+				}
+			}
+			throw error;
+		}
 	}
 
 	public getMe(user: User): GetMeDto {
@@ -47,9 +64,6 @@ export class UsersService {
 			email: user.email,
 			role: user.role,
 			avatarUrl: user.avatarUrl ?? undefined,
-			phone: user.phone ?? undefined,
-			dob: user.dob ? new Date(user.dob).toISOString() : undefined,
-			city: user.city ?? undefined,
 			receiveNotifications: user.receiveNotifications,
 			createdAt: new Date(user.createdAt).toISOString(),
 			updatedAt: new Date(user.updatedAt).toISOString()
@@ -61,13 +75,32 @@ export class UsersService {
 	}
 
 	public async updateMe(id: string, dto: UpdateUserDto): Promise<User> {
-		if (dto.password) {
-			dto.password = await hash(dto.password);
+		const dataToUpdate = { ...dto };
+
+		if ('password' in dataToUpdate) {
+			delete dataToUpdate.password;
 		}
-		return this.prismaService.user.update({
-			where: { id },
-			data: dto
-		});
+
+		try {
+			const result = await this.prismaService.user.update({
+				where: { id },
+				data: dataToUpdate
+			});
+			return result;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					throw new ConflictException(
+						'Пользователь с таким email уже существует'
+					);
+				}
+			}
+			console.error(
+				'Ошибка при обновлении профиля в базе данных:',
+				error
+			);
+			throw error;
+		}
 	}
 
 	public async changePassword(
@@ -83,7 +116,6 @@ export class UsersService {
 			throw new Error('Пользователь не найден');
 		}
 
-		// Проверяем текущий пароль
 		const isCurrentPasswordValid = await this.validatePassword(
 			currentPassword,
 			user.password
@@ -93,10 +125,8 @@ export class UsersService {
 			throw new Error('Неверный текущий пароль');
 		}
 
-		// Хешируем новый пароль
 		const hashedNewPassword = await hash(newPassword);
 
-		// Обновляем пароль
 		await this.prismaService.user.update({
 			where: { id: userId },
 			data: { password: hashedNewPassword }

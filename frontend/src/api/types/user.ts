@@ -4,33 +4,30 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
-import type { UserFirstName } from './userFirstName';
-import type { UserLastName } from './userLastName';
 import type { UserRole } from './userRole';
-import type { UserAvatarUrl } from './userAvatarUrl';
-import type { UserPhone } from './userPhone';
-import type { UserDob } from './userDob';
-import type { UserCity } from './userCity';
 
 export interface User {
   /** Уникальный идентификатор пользователя */
   id: string;
-  /** Имя пользователя */
-  firstName?: UserFirstName;
-  /** Фамилия пользователя */
-  lastName?: UserLastName;
+  /**
+   * Имя пользователя
+   * @nullable
+   */
+  firstName?: string | null;
+  /**
+   * Фамилия пользователя
+   * @nullable
+   */
+  lastName?: string | null;
   /** Адрес электронной почты */
   email: string;
   /** Роль пользователя */
   role: UserRole;
-  /** URL аватара */
-  avatarUrl?: UserAvatarUrl;
-  /** Номер телефона */
-  phone?: UserPhone;
-  /** Дата рождения */
-  dob?: UserDob;
-  /** Город */
-  city?: UserCity;
+  /**
+   * URL аватара
+   * @nullable
+   */
+  avatarUrl?: string | null;
   /** Получает ли пользователь уведомления */
   receiveNotifications: boolean;
   /** Дата создания записи */

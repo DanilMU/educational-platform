@@ -2,7 +2,6 @@
 
 import { UserIcon } from 'lucide-react'
 
-
 import { useGetProfileQuery } from '@/src/api/hooks'
 import { Skeleton } from '../ui/skeleton'
 
@@ -16,7 +15,7 @@ export function DashboardHeader() {
 					Личный кабинет
 				</h1>
 				<p className='mt-1 text-gray-600'>
-					Добро пожаловать, {isLoading ? '...' : user?.name}! Здесь вы
+					Добро пожаловать, {isLoading ? '...' : user?.firstName || 'пользователь'}! Здесь вы
 					можете отслеживать свой прогресс.
 				</p>
 			</div>
@@ -35,7 +34,7 @@ export function DashboardHeader() {
 					) : (
 						<>
 							<p className='font-medium text-gray-900'>
-								{user?.name}
+								{user?.firstName || 'Пользователь'}
 							</p>
 							<p className='text-sm text-gray-600'>
 								{user?.email}

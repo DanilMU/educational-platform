@@ -11,14 +11,18 @@ export class User {
 	@ApiProperty({
 		description: 'Имя пользователя',
 		required: false,
-		example: 'Анна'
+		example: 'Анна',
+		type: String,
+		nullable: true
 	})
 	firstName?: string | null;
 
 	@ApiProperty({
 		description: 'Фамилия пользователя',
 		required: false,
-		example: 'Иванова'
+		example: 'Иванова',
+		type: String,
+		nullable: true
 	})
 	lastName?: string | null;
 
@@ -38,26 +42,11 @@ export class User {
 	@ApiProperty({
 		description: 'URL аватара',
 		required: false,
-		example: 'https://example.com/avatars/anna.png'
+		example: 'https://example.com/avatars/anna.png',
+		type: String,
+		nullable: true
 	})
 	avatarUrl?: string | null;
-
-	@ApiProperty({
-		description: 'Номер телефона',
-		required: false,
-		example: '+79991234567'
-	})
-	phone?: string | null;
-
-	@ApiProperty({
-		description: 'Дата рождения',
-		required: false,
-		example: '1995-06-15'
-	})
-	dob?: string | null;
-
-	@ApiProperty({ description: 'Город', required: false, example: 'Москва' })
-	city?: string | null;
 
 	@ApiProperty({
 		description: 'Получает ли пользователь уведомления',

@@ -38,8 +38,8 @@ export function ActiveCoursesSection() {
     id: subject.id,
     title: subject.title,
     description: subject.description ? String(subject.description) : 'Описание отсутствует',
-    progress: subject.progress,
-    lessons: subject.topics?.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) || 0,
+    progress: subject.progress || 0,
+    lessons: subject.topics ? subject.topics.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) : 0,
     category: 'Курс'
   })) || []
 

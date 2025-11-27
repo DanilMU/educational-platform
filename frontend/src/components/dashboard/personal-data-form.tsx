@@ -1,9 +1,8 @@
-'use client'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { useEffect } from 'react'
+import { toast } from 'sonner'
 
 import { Button } from '@/src/components/ui/button'
 import {
@@ -16,15 +15,11 @@ import {
 } from '@/src/components/ui/form'
 import { Input } from '@/src/components/ui/input'
 import { useGetProfileQuery, useUpdateProfileMutation } from '@/src/api/hooks'
-import { UpdateUserDto } from '@/src/api/types/updateUserDto'
 
 const personalDataSchema = z.object({
-	firstName: z.string().min(1, 'Имя обязательно'),
-	lastName: z.string().min(1, 'Фамилия обязательна'),
-	email: z.string().email('Введите корректный адрес электронной почты'),
-	phone: z.string().optional(),
-	dob: z.string().optional(), // Date of Birth
-	city: z.string().optional(),
+	firstName: z.string().min(1, 'Имя обязательно').max(100, 'Имя слишком длинное'),
+	lastName: z.string().min(1, 'Фамилия обязательна').max(100, 'Фамилия слишком длинная'),
+	email: z.string().email('Введите корректный адрес электронной почты').max(255, 'Email слишком длинный'),
 })
 
 type PersonalDataFormValues = z.infer<typeof personalDataSchema>
@@ -39,43 +34,69 @@ export function PersonalDataForm() {
 			firstName: '',
 			lastName: '',
 			email: '',
-			phone: '',
-			dob: '',
-			city: '',
 		},
 	})
 
 	useEffect(() => {
 		if (profile) {
 			form.reset({
-				firstName: profile.firstName || '',
-				lastName: profile.lastName || '',
-				email: profile.email || '',
-				phone: profile.phone || '',
-				dob: profile.dob || '',
-				city: profile.city || '',
+				firstName: profile.firstName ?? '',
+				lastName: profile.lastName ?? '',
+				email: profile.email ?? '',
 			})
-	}
+		}
 	}, [profile, form])
 
 	const onSubmit = (values: PersonalDataFormValues) => {
-		// Подготовим данные для отправки, учитывая структуру, в которой они хранятся в бэкенде
-		const updateData: UpdateUserDto = {
-			firstName: values.firstName,
-			lastName: values.lastName,
-			email: values.email,
-			phone: values.phone,
-			dob: values.dob,
-			city: values.city,
-		};
-
-		updateProfileMutation.mutate(updateData, {
+		updateProfileMutation.mutate(values, {
 			onSuccess: () => {
-				console.log('Профиль успешно обновлён');
+				toast.success('Профиль успешно обновлён');
 				refetch(); // Обновляем данные профиля после успешного обновления
 			},
-			onError: (error) => {
-				console.error('Ошибка при обновлении профиля:', error);
+			onError: (error: Error | { response?: { status?: number; data?: { message?: string; error?: string } } } | unknown) => {
+				console.error('Полная ошибка при обновлении профиля:', error);
+				
+				if (error && typeof error === 'object' && 'response' in error) {
+					const axiosError = error as { response?: { status?: number; data?: { message?: string; error?: string } } };
+					const status = axiosError.response?.status;
+					const message = axiosError.response?.data?.message;
+					const errorType = axiosError.response?.data?.error;
+					
+					console.log('Детали ошибки:', {
+						status,
+						message,
+						errorType,
+						fullResponse: axiosError.response?.data
+					});
+
+					if (status === 400) {
+						toast.error('Ошибка валидации данных', {
+							description: message || 'Проверьте правильность введенных данных'
+						});
+					} else if (status === 401) {
+						toast.error('Ошибка аутентификации', {
+							description: 'Пожалуйста, войдите в систему снова'
+						});
+					} else if (status === 403) {
+						toast.error('Ошибка доступа', {
+							description: 'У вас нет прав для обновления профиля'
+						});
+					} else if (status === 409) {
+						toast.error('Конфликт данных', {
+							description: message || 'Пользователь с такими данными уже существует'
+						});
+					} else {
+						toast.error('Ошибка сервера', {
+							description: message || errorType || 'Произошла ошибка при обновлении профиля'
+						});
+					}
+				} else {
+					const errorMessage = error instanceof Error ? error.message : 'Произошла неизвестная ошибка';
+					console.log('Обычная ошибка:', errorMessage);
+					toast.error('Ошибка при обновлении профиля', {
+						description: errorMessage
+					});
+				}
 			}
 		});
 	}
@@ -113,62 +134,19 @@ export function PersonalDataForm() {
 							)}
 						/>
 					</div>
-					<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-						<FormField
-							control={form.control}
-							name='email'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Email</FormLabel>
-									<FormControl>
-										<Input type='email' className='bg-gray-100' {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name='phone'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Номер телефона</FormLabel>
-									<FormControl>
-										<Input className='bg-gray-100' {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-						<FormField
-							control={form.control}
-							name='dob'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Дата рождения</FormLabel>
-									<FormControl>
-										<Input type='date' className='bg-gray-100' {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name='city'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Город</FormLabel>
-									<FormControl>
-										<Input className='bg-gray-100' {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
+					<FormField
+						control={form.control}
+						name='email'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input type='email' className='bg-gray-100' {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					<Button type='submit' disabled={updateProfileMutation.isPending}>
 						{updateProfileMutation.isPending ? 'Сохранение...' : 'Сохранить изменения'}
 					</Button>

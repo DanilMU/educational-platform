@@ -62,14 +62,16 @@ export class AnalyticsService {
 				: 0;
 
 		// Strong and weak areas (Optimized to remove N+1 query)
-		const topicScores: { [topicId: string]: { scores: number[]; title: string } } = {};
+		const topicScores: {
+			[topicId: string]: { scores: number[]; title: string };
+		} = {};
 		userProgress.forEach(p => {
 			if (p.score !== null) {
 				const topic = p.lesson.topic;
 				if (!topicScores[topic.id]) {
 					topicScores[topic.id] = { scores: [], title: topic.title };
 				}
-				topicScores[topic.id].scores.push(p.score as number);
+				topicScores[topic.id].scores.push(p.score);
 			}
 		});
 

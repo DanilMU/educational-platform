@@ -11,7 +11,7 @@ export const useCheckQuizExists = (
       try {
         const quiz = await getQuizByLessonId(lessonId)
         return !!quiz
-      } catch (error) {
+      } catch {
         // Если тест не найден (404), возвращаем false вместо ошибки
         return false
       }

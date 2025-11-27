@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
+
 import { LearningPathService } from '../learning-path/learning-path.service';
 
 import { CreateSubjectDto, UpdateSubjectDto } from './dto';

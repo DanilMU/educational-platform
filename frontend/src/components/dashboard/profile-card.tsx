@@ -2,10 +2,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
 import { Button } from '@/src/components/ui/button'
-import { Pencil, MapPin, Mail, Phone, Calendar } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useGetProfileQuery } from '@/src/api/hooks'
-
-import { User } from '@/src/api/types/user';
 
 export function ProfileCard() {
 	const { data: profile, isLoading, error } = useGetProfileQuery();
@@ -39,8 +37,9 @@ export function ProfileCard() {
 		);
 	}
 
-	const fullName = profile?.firstName ? `${profile.firstName} ${profile.lastName}`.trim() : 'Пользователь';
-	const userInitial = profile?.firstName ? profile.firstName.charAt(0).toUpperCase() : '?';
+	const fullName = `${profile?.firstName ?? ''} ${profile?.lastName ?? ''}`.trim() || 'Пользователь';
+	
+	const userInitial = (profile?.firstName ?? '?').charAt(0).toUpperCase();
 
 	// Проверяем роль пользователя
 	const isStudent = profile?.role === 'STUDENT';
@@ -49,7 +48,7 @@ export function ProfileCard() {
 		<div className='rounded-lg bg-white p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
-					<AvatarImage src={profile?.avatarUrl} alt='User Avatar' />
+					<AvatarImage src={profile?.avatarUrl ?? undefined} alt='User Avatar' />
 					<AvatarFallback className='text-4xl'>{userInitial}</AvatarFallback>
 				</Avatar>
 				<div>
@@ -57,27 +56,6 @@ export function ProfileCard() {
 					<p className='text-muted-foreground text-sm'>{profile?.role || 'Роль'}</p>
 					<p className='text-muted-foreground text-sm'>{profile?.email || 'Email'}</p>
 				</div>
-			</div>
-			
-			<div className='mt-6 grid grid-cols-2 gap-4'>
-				{profile?.phone && (
-					<div className='flex items-center'>
-						<Phone className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{profile.phone}</span>
-					</div>
-				)}
-				{profile?.city && (
-					<div className='flex items-center'>
-						<MapPin className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{profile.city}</span>
-					</div>
-				)}
-				{profile?.dob && (
-					<div className='flex items-center'>
-						<Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
-						<span>{profile.dob}</span>
-					</div>
-				)}
 			</div>
 			
 			<Button variant='outline' className='mt-6'>

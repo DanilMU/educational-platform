@@ -16,7 +16,8 @@ import {
 } from '@/src/components/ui/form'
 import { Input } from '@/src/components/ui/input'
 import z from 'zod'
-import { useGetProfileQuery, useUpdatePasswordMutation } from '@/src/api/hooks'
+import { useUpdatePasswordMutation } from '@/src/api/hooks'
+import { toast } from 'sonner'
 
 const passwordChangeSchema = z.object({
 	currentPassword: z.string().min(6, 'Текущий пароль должен содержать не менее 6 символов'),
@@ -30,7 +31,6 @@ const passwordChangeSchema = z.object({
 type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>
 
 export function SecuritySettings() {
-	const { data: profile } = useGetProfileQuery()
 	const updatePasswordMutation = useUpdatePasswordMutation()
 
 	const passwordForm = useForm<PasswordChangeFormValues>({
@@ -48,10 +48,13 @@ export function SecuritySettings() {
 			newPassword: values.newPassword
 		}, {
 			onSuccess: () => {
-				console.log('Пароль успешно изменён');
+				toast.success('Пароль успешно изменён');
 				passwordForm.reset();
 			},
 			onError: (error) => {
+				toast.error('Ошибка при изменении пароля', {
+					description: error.message || 'Произошла неизвестная ошибка'
+				});
 				console.error('Ошибка при изменении пароля:', error);
 			}
 		});

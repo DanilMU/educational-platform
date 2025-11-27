@@ -2,19 +2,19 @@
 
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 
-// Mock data structure
-const recommendations = [
-    {
-        id: '3',
-        title: 'Менеджмент',
-        description: 'Развивайте навыки управления проектами и командами',
-        category: 'Бизнес',
-        lessons: '8',
-        progress: 0,
-    }
-]
-
 export function RecommendationsSection() {
+    // TODO: Заменить на реальные данные из API
+    const recommendations = [
+        {
+            id: '3',
+            title: 'Менеджмент',
+            description: 'Развивайте навыки управления проектами и командами',
+            category: 'Бизнес',
+            lessons: '8',
+            progress: 0,
+        }
+    ]
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Рекомендации для вас</h2>

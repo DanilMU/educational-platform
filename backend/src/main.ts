@@ -1,11 +1,76 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+	ArgumentsHost,
+	Catch,
+	ExceptionFilter,
+	HttpException,
+	HttpStatus,
+	Logger,
+	ValidationPipe
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import { Request, Response } from 'express';
 
 import { AppModule } from './app.module';
 import { getCorsConfig, getSwaggerConfig } from './config';
+
+@Catch()
+export class GlobalExceptionFilter implements ExceptionFilter {
+	catch(exception: unknown, host: ArgumentsHost) {
+		const ctx = host.switchToHttp();
+		const response = ctx.getResponse<Response>();
+		const request = ctx.getRequest<Request>();
+
+		console.error('Глобальная ошибка:', exception);
+
+		if (exception instanceof HttpException) {
+			const status = exception.getStatus();
+			const message = exception.message;
+			const responseObj = exception.getResponse() as
+				| string
+				| { error: string };
+
+			console.log('Ошибка HttpException:', {
+				status,
+				message,
+				responseObj,
+				path: request.url,
+				method: request.method,
+				timestamp: new Date().toISOString()
+			});
+
+			response.status(status).json({
+				statusCode: status,
+				message: message,
+				error:
+					typeof responseObj === 'string'
+						? responseObj
+						: responseObj.error || 'Bad Request',
+				path: request.url,
+				method: request.method,
+				timestamp: new Date().toISOString()
+			});
+		} else {
+			console.log('Неизвестная ошибка:', {
+				error: exception,
+				path: request.url,
+				method: request.method,
+				timestamp: new Date().toISOString()
+			});
+
+			response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+				statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+				message: 'Internal server error',
+				error: 'Internal Server Error',
+				path: request.url,
+				method: request.method,
+				timestamp: new Date().toISOString()
+			});
+		}
+	}
+}
 
 /**
  * Точка входа в приложение.
@@ -22,7 +87,16 @@ async function bootstrap() {
 
 	app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
 
-	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true, // Удаляет свойства, не указанные в DTO
+			forbidNonWhitelisted: false, // Не запрещает не указанные свойства, а просто удаляет их
+			transform: true, // Преобразует строки в нужные типы данных
+			validateCustomDecorators: true, // Валидирует кастомные декораторы
+			skipMissingProperties: false // Не пропускает пропущенные свойства
+		})
+	);
+	app.useGlobalFilters(new GlobalExceptionFilter());
 
 	// Включаем CORS с настройками из конфигурационного файла.
 	app.enableCors(getCorsConfig(config));

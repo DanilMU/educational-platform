@@ -9,22 +9,25 @@ import type { GetMeDtoRole } from './getMeDtoRole';
 export interface GetMeDto {
   /** User ID */
   id: string;
-  /** First name of the user */
-  firstName: string;
-  /** Last name of the user */
-  lastName: string;
+  /**
+   * First name of the user
+   * @nullable
+   */
+  firstName: string | null;
+  /**
+   * Last name of the user
+   * @nullable
+   */
+  lastName: string | null;
   /** Email address of the user */
   email: string;
   /** User role */
   role: GetMeDtoRole;
-  /** Avatar URL */
-  avatarUrl: string;
-  /** Phone number */
-  phone: string;
-  /** Date of birth */
-  dob: string;
-  /** City */
-  city: string;
+  /**
+   * Avatar URL
+   * @nullable
+   */
+  avatarUrl: string | null;
   /** Whether the user receives notifications */
   receiveNotifications: boolean;
   /** Creation date */

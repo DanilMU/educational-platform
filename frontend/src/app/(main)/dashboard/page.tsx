@@ -64,9 +64,9 @@ export default function DashboardPage() {
           total={analytics.totalLessons}
           icon={BookOpen}
         />
-        <TimeSpentCard timeSpent={analytics.totalTimeSpent} />
-        <LearningStatisticsCard analytics={analytics} progress={progressData} enrolledSubjects={enrolledSubjects} />
-        <CurrentCourseCard currentCourse={currentCourse ? { id: currentCourse.id, title: currentCourse.name } : undefined} />
+        <TimeSpentCard timeSpent={analytics?.totalTimeSpent} />
+        <LearningStatisticsCard analytics={analytics} progress={progressData || []} enrolledSubjects={enrolledSubjects || []} />
+        <CurrentCourseCard currentCourse={currentCourse ? { id: currentCourse.id, title: currentCourse.title || currentCourse.name } : undefined} />
       </motion.div>
 
       <div className="grid grid-cols-1 gap-8">

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { LearningPathModule } from '../learning-path/learning-path.module';
 
 import { SubjectsController } from './subjects.controller';

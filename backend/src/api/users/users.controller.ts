@@ -53,27 +53,6 @@ export class UsersController {
 		return this.usersService.create(dto);
 	}
 
-	@Patch(':id')
-	@Roles(Role.ADMIN)
-	@UseGuards(JwtAuthGuard, RolesGuard)
-	@ApiOperation({
-		summary: 'Обновить пользователя по ID (только для админов)'
-	})
-	@ApiParam({ name: 'id', description: 'ID пользователя', type: String })
-	@ApiBody({ type: UpdateUserDto })
-	@ApiOkResponse({
-		description: 'Пользователь успешно обновлен.',
-		type: User
-	})
-	@ApiNotFoundResponse({ description: 'Пользователь не найден.' })
-	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
-	public async update(
-		@Param('id') id: string,
-		@Body() dto: UpdateUserDto
-	): Promise<UserModel> {
-		return this.usersService.update(id, dto);
-	}
-
 	@Protected()
 	@Get('@me')
 	@ApiOperation({ summary: 'Получить информацию о текущем пользователе' })
@@ -112,7 +91,16 @@ export class UsersController {
 		@Authorized() user: UserModel,
 		@Body() dto: UpdateUserDto
 	): Promise<UserModel> {
-		return this.usersService.updateMe(user.id, dto);
+		try {
+			const result = await this.usersService.updateMe(user.id, dto);
+			return result;
+		} catch (error) {
+			console.error(
+				'Ошибка в контроллере при обновлении профиля:',
+				error
+			);
+			throw error;
+		}
 	}
 
 	@Protected()
@@ -131,5 +119,26 @@ export class UsersController {
 			dto.currentPassword,
 			dto.newPassword
 		);
+	}
+
+	@Patch(':id')
+	@Roles(Role.ADMIN)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@ApiOperation({
+		summary: 'Обновить пользователя по ID (только для админов)'
+	})
+	@ApiParam({ name: 'id', description: 'ID пользователя', type: String })
+	@ApiBody({ type: UpdateUserDto })
+	@ApiOkResponse({
+		description: 'Пользователь успешно обновлен.',
+		type: User
+	})
+	@ApiNotFoundResponse({ description: 'Пользователь не найден.' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	public async update(
+		@Param('id') id: string,
+		@Body() dto: UpdateUserDto
+	): Promise<UserModel> {
+		return this.usersService.update(id, dto);
 	}
 }

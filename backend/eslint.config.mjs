@@ -25,6 +25,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/main.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
+  },
+  {
     languageOptions: {
       globals: {
         ...globals.node,

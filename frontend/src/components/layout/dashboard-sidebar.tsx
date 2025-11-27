@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import {
 	LayoutDashboard,
 	BookOpenText,
-	User,
 	ShieldQuestion,
 	Settings,
 } from 'lucide-react'
@@ -37,14 +36,14 @@ const navLinks = [
 	},
 ]
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ onLinkClick }: { onLinkClick?: () => void }) {
 	const pathname = usePathname()
 	const { data: profile } = useGetProfileQuery()
 
 	const isAdmin = profile?.role === 'ADMIN'
 
 	return (
-		<aside className='flex w-64 flex-col justify-between bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 p-6 text-white'>
+		<aside className='flex h-full w-full flex-col justify-between bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 p-6 text-white'>
 			<div>
 				<div className='mb-8 flex items-center space-x-2'>
 					<Image
@@ -65,6 +64,7 @@ export function DashboardSidebar() {
 							<Link
 								key={link.href}
 								href={link.href}
+								onClick={onLinkClick}
 								className={cn(
 									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-900',
 									isActive ? 'bg-blue-900' : ''

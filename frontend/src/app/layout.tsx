@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Inter } from 'next/font/google'
+import { Toaster } from 'sonner' // Import Toaster
 
 import './globals.css'
 import { Providers } from './providers'
@@ -29,6 +30,7 @@ export default function RootLayout({
 		<html lang='ru'>
 			<body className={`${geist.className} ${inter.variable} antialiased`}>
 				<Providers>{children}</Providers>
+				<Toaster richColors position="top-center" /> {/* Add Toaster component */}
 			</body>
 		</html>
 	)

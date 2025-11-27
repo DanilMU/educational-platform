@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { Lesson } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { RecommendationsDto } from './dto/recommendations.dto';
+
+type RecommendedLesson = Lesson & {
+	reason: string;
+	topic: {
+		subject: {
+			title: string;
+		};
+		title: string;
+	};
+};
 
 @Injectable()
 export class RecommendationsService {
@@ -51,7 +62,11 @@ export class RecommendationsService {
 
 		// Analyze performance by topic
 		const topicPerformance: {
-			[topicId: string]: { scores: number[]; title: string; subjectId: string };
+			[topicId: string]: {
+				scores: number[];
+				title: string;
+				subjectId: string;
+			};
 		} = {};
 		for (const progress of userProgress) {
 			if (progress.score !== null && progress.lesson.quiz) {
@@ -80,7 +95,7 @@ export class RecommendationsService {
 			}
 		}
 
-		let recommendedLessons: any[] = [];
+		let recommendedLessons: RecommendedLesson[] = [];
 
 		// Priority 1: Remedial path for weak topics
 		if (weakTopics.size > 0) {
@@ -90,10 +105,13 @@ export class RecommendationsService {
 						weakTopics.has(lesson.topicId) &&
 						(lesson.difficulty ?? 0) <= 2
 				)
-				.map(lesson => ({
-					...lesson,
-					reason: 'Рекомендуется для закрепления материала по теме, с которой возникли сложности.'
-				}));
+				.map(
+					lesson =>
+						({
+							...lesson,
+							reason: 'Рекомендуется для закрепления материала по теме, с которой возникли сложности.'
+						}) as RecommendedLesson
+				);
 			if (recommendedLessons.length > 0) {
 				// We have a recommendation, let's stop here
 				return this.formatRecommendations(userId, recommendedLessons);
@@ -178,7 +196,7 @@ export class RecommendationsService {
 
 	private formatRecommendations(
 		userId: string,
-		lessons: any[]
+		lessons: RecommendedLesson[]
 	): RecommendationsDto {
 		const recommendations = lessons.slice(0, 3).map(lesson => ({
 			id: lesson.id,
@@ -197,4 +215,3 @@ export class RecommendationsService {
 		};
 	}
 }
-

@@ -1,5 +1,11 @@
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { Controller, Get, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Param,
+	UseGuards,
+	UseInterceptors
+} from '@nestjs/common';
 import {
 	ApiBearerAuth,
 	ApiNotFoundResponse,

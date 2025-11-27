@@ -4,7 +4,6 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
-import type { UpdateUserDtoRole } from './updateUserDtoRole';
 
 export interface UpdateUserDto {
   /** Email address of the user */
@@ -15,14 +14,4 @@ export interface UpdateUserDto {
   firstName?: string;
   /** Last name of the user */
   lastName?: string;
-  /** Phone number of the user */
-  phone?: string;
-  /** Date of birth of the user */
-  dob?: string;
-  /** City of the user */
-  city?: string;
-  /** The role of the user */
-  role?: UpdateUserDtoRole;
-  /** Whether the user wants to receive notifications */
-  receiveNotifications?: boolean;
 }
