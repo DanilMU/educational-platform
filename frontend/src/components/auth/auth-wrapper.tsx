@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
+import { AuthBackground } from './auth-background'
 
 interface AuthWrapperProps {
 	title: string
@@ -21,9 +22,8 @@ export function AuthWrapper({
 }: AuthWrapperProps) {
 	return (
 		<div className='flex min-h-screen'>
-			<div className='relative hidden overflow-hidden bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 lg:flex lg:w-1/2'>
-				<div className='absolute inset-0 bg-gradient-to-br from-blue-700/90 via-blue-800/90 to-blue-900/90' />
-
+			<div className='relative hidden lg:flex lg:w-1/2'>
+				<AuthBackground />
 				<div className='relative z-10 flex h-full w-full flex-col items-center justify-center p-12'>
 					{/* Замените на реальный логотип. Текущий является временным решением. */}
 					<Image

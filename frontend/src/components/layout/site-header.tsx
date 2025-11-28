@@ -14,7 +14,7 @@ export function SiteHeader() {
 	return (
 		<header className='w-full px-6 py-4'>
 			<div className='mx-auto flex max-w-7xl items-center justify-between'>
-				<div className='flex items-center gap-x-2'>
+				<Link href='/' className='flex items-center gap-x-2'>
 					<Image
 						src='/images/logo/logo3.svg'
 						alt='Образовательная платформа'
@@ -24,7 +24,7 @@ export function SiteHeader() {
 					<span className='text-xl font-semibold text-gray-800'>
 						Образовательная платформа
 					</span>
-				</div>
+				</Link>
 
 				<div className='flex items-center gap-x-4'>
 					{isAuthorized ? (

@@ -45,7 +45,11 @@ export function DashboardSidebar({ onLinkClick }: { onLinkClick?: () => void }) 
 	return (
 		<aside className='flex h-full w-full flex-col justify-between bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 p-6 text-white'>
 			<div>
-				<div className='mb-8 flex items-center space-x-2'>
+				<Link
+					href='/'
+					className='mb-8 flex items-center space-x-2'
+					onClick={onLinkClick}
+				>
 					<Image
 						src='/images/logo/logo3.svg' // Placeholder logo
 						alt='Образовательная Платформа'
@@ -53,7 +57,7 @@ export function DashboardSidebar({ onLinkClick }: { onLinkClick?: () => void }) 
 						height={32}
 					/>
 					<span className='text-xl font-bold'>Образовательная Платформа</span>
-				</div>
+				</Link>
 				<nav className='space-y-4'>
 					{navLinks.map((link) => {
 						if (link.adminOnly && !isAdmin) {
