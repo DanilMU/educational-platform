@@ -14,11 +14,11 @@ export function FAQSection() {
 	]
 
 	return (
-		<section className="py-16 px-6 bg-white">
+		<section className="py-16 px-6 bg-background">
 			<div className="mx-auto max-w-6xl">
 				<div className="text-center mb-12">
-					<h2 className="text-3xl font-bold text-gray-900 mb-4">Часто задаваемые вопросы</h2>
-					<p className="text-gray-600">
+					<h2 className="text-3xl font-bold text-foreground mb-4">Часто задаваемые вопросы</h2>
+					<p className="text-muted-foreground">
 						Ответы на популярные вопросы о нашей платформе
 					</p>
 				</div>

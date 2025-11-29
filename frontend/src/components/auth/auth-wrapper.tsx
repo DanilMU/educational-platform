@@ -35,7 +35,7 @@ export function AuthWrapper({
 				</div>
 			</div>
 
-			<div className='flex w-full items-center justify-center bg-white p-8 lg:w-1/2'>
+			<div className='flex w-full items-center justify-center bg-background p-8 lg:w-1/2'>
 				<div className='mx-auto w-full max-w-md'>
 					<div className='text-center lg:text-left'>
 						<h1 className='text-3xl font-bold'>{title}</h1>
@@ -49,7 +49,7 @@ export function AuthWrapper({
 							{bottomText}{' '}
 							<Link
 								href={bottomLinkHref}
-								className='font-medium text-blue-800 hover:underline'
+								className='font-medium text-primary hover:underline'
 							>
 								{bottomTextLink}
 							</Link>

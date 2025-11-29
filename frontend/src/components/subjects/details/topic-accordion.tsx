@@ -16,7 +16,7 @@ interface TopicAccordionProps {
 
 export function TopicAccordion({ topics }: TopicAccordionProps) {
 	if (!topics || topics.length === 0) {
-		return <p className='text-gray-500'>Темы для этого курса еще не добавлены.</p>
+		return <p className='text-muted-foreground'>Темы для этого курса еще не добавлены.</p>
 	}
 
 	return (
@@ -40,16 +40,16 @@ export function TopicAccordion({ topics }: TopicAccordionProps) {
 										<li key={lesson.id}>
 											<Link
 												href={`/lessons/${lesson.id}`}
-												className='flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-gray-100'
+												className='flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-accent'
 											>
-												<FileText className='size-5 text-gray-500' />
-												<span className='text-gray-700'>{lesson.title}</span>
+												<FileText className='size-5 text-muted-foreground' />
+												<span className='text-foreground'>{lesson.title}</span>
 											</Link>
 										</li>
 									))}
 								</ul>
 							) : (
-								<p className='text-sm text-gray-500'>
+								<p className='text-sm text-muted-foreground'>
 									Уроки для этой темы еще не добавлены.
 								</p>
 							)}

@@ -45,12 +45,12 @@ export function Timeline({ topics, completedLessons }: TimelineProps) {
 					transition={{ delay: index * 0.1 }}
 				>
 					<AccordionItem value={`topic-${topic.id}`} className="mb-4 border-none">
-						<AccordionTrigger className="flex w-full items-center justify-start gap-8 rounded-lg bg-gray-50 p-4 hover:bg-gray-100">
-							<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-blue-800 bg-white">
+						<AccordionTrigger className="flex w-full items-center justify-start gap-8 rounded-lg bg-muted/50 p-4 hover:bg-accent">
+							<div className="z-10 flex size-16 items-center justify-center rounded-full border-4 border-primary bg-card">
 								{completedTopics[index] ? (
-									<CheckCircle className="size-8 text-blue-800" />
+									<CheckCircle className="size-8 text-primary" />
 								) : (
-									<Circle className="size-8 text-gray-400" />
+									<Circle className="size-8 text-muted-foreground" />
 								)}
 							</div>
 							<div className="text-left">
@@ -66,7 +66,7 @@ export function Timeline({ topics, completedLessons }: TimelineProps) {
 									<Link
 										key={lesson.id}
 										href={`/lessons/${lesson.id}`}
-										className={`flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:bg-gray-100 ${
+										className={`flex items-center gap-2 rounded-md p-2 text-sm transition-colors hover:bg-accent ${
 											completedLessons.includes(lesson.id)
 												? 'text-green-600'
 												: 'text-muted-foreground'

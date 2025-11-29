@@ -65,23 +65,23 @@ export function EnrolledSubjects() {
 							<li key={subject.id}>
 								<Link
 									href={`/subjects/${subject.id}`}
-									className='block rounded-lg border p-4 transition-all hover:bg-gray-50 hover:shadow-sm'
+									className='block rounded-lg border p-4 transition-all hover:bg-accent hover:shadow-sm'
 								>
 									<div className='flex items-center justify-between'>
 										<div className='flex items-center gap-4'>
-											<div className='flex size-10 items-center justify-center rounded-lg bg-orange-100'>
-												<Book className='size-5 text-orange-600' />
+											<div className='flex size-10 items-center justify-center rounded-lg bg-primary/10'>
+												<Book className='size-5 text-primary' />
 											</div>
 											<div>
-												<h4 className='font-semibold text-gray-900'>
+												<h4 className='font-semibold text-foreground'>
 													{subject.title || (typeof subject.name === 'string' ? subject.name : 'Без названия')}
 												</h4>
-												<p className='text-sm text-gray-600'>
+												<p className='text-sm text-muted-foreground'>
 													Прогресс: {subject.progress}%
 												</p>
 											</div>
 										</div>
-										<ChevronRight className='size-5 text-gray-400' />
+										<ChevronRight className='size-5 text-muted-foreground' />
 									</div>
 								</Link>
 							</li>

@@ -80,7 +80,7 @@ export function RegisterForm() {
 										placeholder='Иван'
 										disabled={isPending}
 										{...field}
-										className='bg-gray-100'
+										className='bg-input'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -99,7 +99,7 @@ export function RegisterForm() {
 										placeholder='Иванов'
 										disabled={isPending}
 										{...field}
-										className='bg-gray-100'
+										className='bg-input'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -118,7 +118,7 @@ export function RegisterForm() {
 										placeholder='ivan.ivanov@example.com'
 										disabled={isPending}
 										{...field}
-										className='bg-gray-100'
+										className='bg-input'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -139,12 +139,12 @@ export function RegisterForm() {
 											placeholder='••••••••'
 											disabled={isPending}
 											{...field}
-											className='bg-gray-100'
+											className='bg-input'
 										/>
 										<button
 											type='button'
 											onClick={() => setShowPassword(!showPassword)}
-											className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400'
+											className='absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground'
 										>
 											{showPassword ? (
 												<EyeOff className='h-5 w-5' />

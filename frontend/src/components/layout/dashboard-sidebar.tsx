@@ -70,8 +70,10 @@ export function DashboardSidebar({ onLinkClick }: { onLinkClick?: () => void }) 
 								href={link.href}
 								onClick={onLinkClick}
 								className={cn(
-									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-900',
-									isActive ? 'bg-blue-900' : ''
+									'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+									isActive
+										? 'bg-white/10 text-white'
+										: 'text-gray-400 hover:bg-white/5 hover:text-white'
 								)}
 							>
 								<link.icon className='h-5 w-5' />

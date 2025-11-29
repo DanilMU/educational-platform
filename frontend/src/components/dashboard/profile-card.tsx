@@ -10,20 +10,20 @@ export function ProfileCard() {
 
 	if (isLoading) {
 		return (
-			<div className='rounded-lg bg-white p-6 shadow-sm'>
+			<div className='rounded-lg bg-card p-6 shadow-sm'>
 				<div className='flex items-center space-x-4'>
-					<div className='h-24 w-24 rounded-full bg-gray-200 animate-pulse' />
+					<div className='h-24 w-24 rounded-full bg-muted animate-pulse' />
 					<div className='space-y-2'>
-						<div className='h-6 bg-gray-200 rounded w-48 animate-pulse' />
-						<div className='h-4 bg-gray-200 rounded w-32 animate-pulse' />
-						<div className='h-4 bg-gray-200 rounded w-40 animate-pulse' />
+						<div className='h-6 bg-muted rounded w-48 animate-pulse' />
+						<div className='h-4 bg-muted rounded w-32 animate-pulse' />
+						<div className='h-4 bg-muted rounded w-40 animate-pulse' />
 					</div>
 				</div>
 				<div className='mt-6 grid grid-cols-2 gap-4'>
-					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
-					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
-					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
-					<div className='h-4 bg-gray-200 rounded w-full animate-pulse' />
+					<div className='h-4 bg-muted rounded w-full animate-pulse' />
+					<div className='h-4 bg-muted rounded w-full animate-pulse' />
+					<div className='h-4 bg-muted rounded w-full animate-pulse' />
+					<div className='h-4 bg-muted rounded w-full animate-pulse' />
 				</div>
 			</div>
 		);
@@ -31,8 +31,8 @@ export function ProfileCard() {
 
 	if (error) {
 		return (
-			<div className='rounded-lg bg-white p-6 shadow-sm'>
-				<div className='text-red-500'>Ошибка загрузки профиля: {(error as Error).message}</div>
+			<div className='rounded-lg bg-card p-6 shadow-sm'>
+				<div className='text-destructive'>Ошибка загрузки профиля: {(error as Error).message}</div>
 			</div>
 		);
 	}
@@ -45,7 +45,7 @@ export function ProfileCard() {
 	const isStudent = profile?.role === 'STUDENT';
 
 	return (
-		<div className='rounded-lg bg-white p-6 shadow-sm'>
+		<div className='rounded-lg bg-card p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
 					<AvatarImage src={profile?.avatarUrl ?? undefined} alt='User Avatar' />
@@ -65,7 +65,7 @@ export function ProfileCard() {
 			
 			{/* Панель администратора не отображается для STUDENT пользователя */}
 			{!isStudent && (
-				<div className='mt-6 pt-6 border-t border-gray-200'>
+				<div className='mt-6 pt-6 border-t border-border'>
 					<h3 className='font-medium mb-2'>Административные функции</h3>
 					<div className='flex space-x-2'>
 						<Button variant='outline' size='sm'>Управление пользователями</Button>

@@ -4,6 +4,7 @@ import { Toaster } from 'sonner' // Import Toaster
 
 import './globals.css'
 import { Providers } from './providers'
+import { ThemeProvider } from './theme-provider'
 
 const geist = Geist({
 	subsets: ['latin']
@@ -27,10 +28,17 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='ru'>
+		<html lang='ru' suppressHydrationWarning>
 			<body className={`${geist.className} ${inter.variable} antialiased`}>
-				<Providers>{children}</Providers>
-				<Toaster richColors position="top-center" /> {/* Add Toaster component */}
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<Providers>{children}</Providers>
+					<Toaster richColors position="top-center" /> {/* Add Toaster component */}
+				</ThemeProvider>
 			</body>
 		</html>
 	)

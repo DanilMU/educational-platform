@@ -102,7 +102,7 @@ export function PersonalDataForm() {
 	}
 
 	return (
-		<div className='rounded-lg bg-white p-6 shadow-sm'>
+		<div className='rounded-lg bg-card p-6 shadow-sm'>
 			<h2 className='mb-4 text-xl font-semibold'>Личные данные</h2>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
@@ -114,7 +114,7 @@ export function PersonalDataForm() {
 								<FormItem>
 									<FormLabel>Имя</FormLabel>
 									<FormControl>
-										<Input className='bg-gray-100' {...field} />
+										<Input className='bg-input' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -127,7 +127,7 @@ export function PersonalDataForm() {
 								<FormItem>
 									<FormLabel>Фамилия</FormLabel>
 									<FormControl>
-										<Input className='bg-gray-100' {...field} />
+										<Input className='bg-input' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -141,7 +141,7 @@ export function PersonalDataForm() {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input type='email' className='bg-gray-100' {...field} />
+									<Input type='email' className='bg-input' {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

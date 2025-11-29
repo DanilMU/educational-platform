@@ -82,14 +82,14 @@ export function UserProgress() {
 								className='flex items-center justify-between'
 							>
 								<div className='flex items-center gap-3'>
-									<div className='flex size-8 items-center justify-center rounded-full bg-gray-100'>
-										<stat.icon className='size-5 text-gray-600' />
+									<div className='flex size-8 items-center justify-center rounded-full bg-muted'>
+										<stat.icon className='size-5 text-muted-foreground' />
 									</div>
-									<span className='font-medium text-gray-700'>
+									<span className='font-medium text-foreground'>
 										{stat.name}
 									</span>
 								</div>
-								<span className='text-lg font-bold text-gray-900'>
+								<span className='text-lg font-bold text-foreground'>
 									{stat.value ?? 0}
 								</span>
 							</li>

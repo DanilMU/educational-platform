@@ -26,9 +26,9 @@ function AttachmentCard({ attachment }: { attachment: string }) {
       href={attachment}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-gray-50"
+      className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-accent"
     >
-      <Paperclip className="size-6 text-gray-500" />
+      <Paperclip className="size-6 text-muted-foreground" />
       <div className="flex-1">
         <p className="font-semibold">
           {attachment.split('/').pop() || 'Скачать материал'}

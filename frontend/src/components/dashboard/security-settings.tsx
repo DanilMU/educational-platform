@@ -61,7 +61,7 @@ export function SecuritySettings() {
 	}
 
 	return (
-		<div className='rounded-lg bg-white p-6 shadow-sm'>
+		<div className='rounded-lg bg-card p-6 shadow-sm'>
 			<h2 className='mb-4 text-xl font-semibold'>Настройки безопасности</h2>
 			<div className='space-y-6'>
 				<div className='flex items-start space-x-3'>
@@ -92,7 +92,7 @@ export function SecuritySettings() {
 					</div>
 				</div>
 				
-				<div className='pt-4 border-t border-gray-200'>
+				<div className='pt-4 border-t border-border'>
 					<h3 className='mb-3 font-medium'>Изменить пароль</h3>
 					<Form {...passwordForm}>
 						<form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className='space-y-4'>
@@ -103,7 +103,7 @@ export function SecuritySettings() {
 									<FormItem>
 										<FormLabel>Текущий пароль</FormLabel>
 										<FormControl>
-											<Input type='password' className='bg-gray-100' {...field} />
+											<Input type='password' className='bg-input' {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -116,7 +116,7 @@ export function SecuritySettings() {
 									<FormItem>
 										<FormLabel>Новый пароль</FormLabel>
 										<FormControl>
-											<Input type='password' className='bg-gray-100' {...field} />
+											<Input type='password' className='bg-input' {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -129,7 +129,7 @@ export function SecuritySettings() {
 									<FormItem>
 										<FormLabel>Подтвердите новый пароль</FormLabel>
 										<FormControl>
-											<Input type='password' className='bg-gray-100' {...field} />
+											<Input type='password' className='bg-input' {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -142,7 +142,7 @@ export function SecuritySettings() {
 					</Form>
 				</div>
 				
-				<Button variant='outline' className='w-full text-red-600 border-red-600 hover:bg-red-50'>
+				<Button variant='outline' className='w-full text-destructive border-destructive hover:bg-destructive/10'>
 					Удалить аккаунт
 				</Button>
 			</div>

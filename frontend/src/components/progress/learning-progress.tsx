@@ -27,7 +27,7 @@ export function LearningProgress({
       <Progress value={progress} className="my-4 h-2" />
       <div className="text-sm text-muted-foreground">
         <span>Текущая тема: </span>
-        <span className="font-semibold text-gray-800">{currentTopic}</span>
+        <span className="font-semibold text-foreground dark:text-gray-100">{currentTopic}</span>
       </div>
     </div>
   )

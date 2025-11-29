@@ -10,13 +10,13 @@ export function ProfileSummaryCard() {
 
 	if (isLoading) {
 		return (
-			<div className='rounded-lg bg-white p-6 shadow-sm'>
+			<div className='rounded-lg bg-card p-6 shadow-sm'>
 				<div className='flex items-center space-x-4'>
-					<div className='h-24 w-24 rounded-full bg-gray-200 animate-pulse' />
+					<div className='h-24 w-24 rounded-full bg-muted animate-pulse' />
 					<div className='space-y-2'>
-						<div className='h-6 bg-gray-200 rounded w-48 animate-pulse' />
-						<div className='h-4 bg-gray-200 rounded w-32 animate-pulse' />
-						<div className='h-4 bg-gray-200 rounded w-40 animate-pulse' />
+						<div className='h-6 bg-muted rounded w-48 animate-pulse' />
+						<div className='h-4 bg-muted rounded w-32 animate-pulse' />
+						<div className='h-4 bg-muted rounded w-40 animate-pulse' />
 					</div>
 				</div>
 			</div>
@@ -25,8 +25,8 @@ export function ProfileSummaryCard() {
 
 	if (error) {
 		return (
-			<div className='rounded-lg bg-white p-6 shadow-sm'>
-				<div className='text-red-500'>Ошибка загрузки профиля: {(error as Error).message}</div>
+			<div className='rounded-lg bg-card p-6 shadow-sm'>
+				<div className='text-destructive'>Ошибка загрузки профиля: {(error as Error).message}</div>
 			</div>
 		);
 	}
@@ -36,7 +36,7 @@ export function ProfileSummaryCard() {
 	const userInitial = (profile?.firstName ?? '?').charAt(0).toUpperCase();
 
 	return (
-		<div className='rounded-lg bg-white p-6 shadow-sm'>
+		<div className='rounded-lg bg-card p-6 shadow-sm'>
 			<div className='flex items-center space-x-4'>
 				<Avatar className='h-24 w-24'>
 					<AvatarImage src={profile?.avatarUrl ?? undefined} alt='User Avatar' />

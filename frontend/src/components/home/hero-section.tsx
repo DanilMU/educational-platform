@@ -45,7 +45,7 @@ function AnimatedButtons() {
       <Button asChild size="lg">
         <Link href="/auth/register">Начать обучение</Link>
       </Button>
-      <Button asChild variant="outline" size="lg" className="text-white">
+      <Button asChild variant="outline" size="lg" className="text-white border-white bg-transparent hover:bg-white/10">
         <Link href="/subjects">Просмотреть курсы</Link>
       </Button>
     </motion.div>

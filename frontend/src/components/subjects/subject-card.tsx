@@ -40,16 +40,16 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 		<motion.div
 			whileHover={{ y: -8 }}
 			transition={{ type: "spring", stiffness: 300, damping: 20 }}
-			className="group relative h-full overflow-hidden rounded-xl border bg-card shadow-lg hover:shadow-2xl"
+			className="group relative h-full overflow-hidden rounded-xl border bg-card"
 		>
-			<div className="absolute inset-0 bg-gradient-to-br from-blue-800/10 to-purple-500/10" />
+			<div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
 			<Card className="relative flex h-full flex-col">
 				<CardHeader className="flex-row items-start gap-4">
-					<div className="flex size-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-800 to-purple-600">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
 						<BookOpen className="size-6 text-white" />
 					</div>
 					<div>
-						<CardTitle className="text-lg font-semibold text-gray-800 transition-colors group-hover:text-blue-800">
+						<CardTitle className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
 							{subject.title}
 						</CardTitle>
 						<div className="mt-1 flex items-center gap-2">

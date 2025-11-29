@@ -90,7 +90,7 @@ export function LoginForm() {
 										placeholder='your@email.com'
 										disabled={isPending}
 										{...field}
-										className='bg-gray-100'
+										className='bg-input'
 									/>
 								</FormControl>
 								<FormMessage />
@@ -111,12 +111,12 @@ export function LoginForm() {
 											placeholder='••••••••'
 											disabled={isPending}
 											{...field}
-											className='bg-gray-100'
+											className='bg-input'
 										/>
 										<button
 											type='button'
 											onClick={() => setShowPassword(!showPassword)}
-											className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400'
+											className='absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground'
 										>
 											{showPassword ? (
 												<EyeOff className='h-5 w-5' />
@@ -134,7 +134,7 @@ export function LoginForm() {
 					<div className='text-right'>
 						<Link
 							href='#'
-							className='text-sm text-blue-800 hover:underline'
+							className='text-sm text-primary hover:underline'
 						>
 							Забыли пароль?
 						</Link>
@@ -149,7 +149,7 @@ export function LoginForm() {
 					</Button>
 					
 					{error && (
-						<div className="text-red-600 text-sm mt-2 text-center">
+						<div className="text-destructive text-sm mt-2 text-center">
 							{error}
 						</div>
 					)}
@@ -157,9 +157,9 @@ export function LoginForm() {
 			</Form>
 
 			<div className='my-6 flex items-center'>
-				<div className='flex-grow border-t border-gray-300'></div>
-				<span className='mx-4 text-sm text-gray-500'>ИЛИ</span>
-				<div className='flex-grow border-t border-gray-300'></div>
+				<div className='flex-grow border-t border-border'></div>
+				<span className='mx-4 text-sm text-muted-foreground'>ИЛИ</span>
+				<div className='flex-grow border-t border-border'></div>
 			</div>
 
 			<div className='space-y-4'>

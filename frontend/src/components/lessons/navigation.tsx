@@ -18,7 +18,7 @@ export function LessonNavigation({
   currentLessonId,
 }: LessonNavigationProps) {
   return (
-    <aside className="hidden h-screen w-80 min-h-screen border-r bg-white p-4 md:block">
+<aside className="hidden h-screen w-80 min-h-screen border-r bg-background p-4 md:block">
       <h3 className="mb-4 text-lg font-semibold">Уроки в теме</h3>
       <ul className="space-y-2">
         {lessons.map(lesson => (
@@ -29,7 +29,7 @@ export function LessonNavigation({
                 'block rounded-md p-3 transition-colors',
                 lesson.id === currentLessonId
                   ? 'bg-blue-800/20 text-blue-800'
-                  : 'hover:bg-gray-100'
+                  : 'hover:bg-accent'
               )}
             >
               {lesson.title}
