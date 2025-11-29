@@ -15,11 +15,14 @@ import {
 } from '@/src/components/ui/form'
 import { Input } from '@/src/components/ui/input'
 import { useGetProfileQuery, useUpdateProfileMutation } from '@/src/api/hooks'
+import { FileUpload } from '../ui/file-upload'
+import { uploadFile } from '@/src/api/requests/file'
 
 const personalDataSchema = z.object({
 	firstName: z.string().min(1, 'Имя обязательно').max(100, 'Имя слишком длинное'),
 	lastName: z.string().min(1, 'Фамилия обязательна').max(100, 'Фамилия слишком длинная'),
 	email: z.string().email('Введите корректный адрес электронной почты').max(255, 'Email слишком длинный'),
+	avatarUrl: z.string().optional(),
 })
 
 type PersonalDataFormValues = z.infer<typeof personalDataSchema>
@@ -34,6 +37,7 @@ export function PersonalDataForm() {
 			firstName: '',
 			lastName: '',
 			email: '',
+			avatarUrl: '',
 		},
 	})
 
@@ -43,6 +47,7 @@ export function PersonalDataForm() {
 				firstName: profile.firstName ?? '',
 				lastName: profile.lastName ?? '',
 				email: profile.email ?? '',
+				avatarUrl: profile.avatarUrl ?? '',
 			})
 		}
 	}, [profile, form])
@@ -106,6 +111,28 @@ export function PersonalDataForm() {
 			<h2 className='mb-4 text-xl font-semibold'>Личные данные</h2>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+					<FormField
+						control={form.control}
+						name='avatarUrl'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Аватар</FormLabel>
+								<FormControl>
+									<FileUpload
+										value={field.value}
+										onChange={field.onChange}
+										uploadFile={async (file) => {
+											const res = await uploadFile(file);
+											// Assuming the backend returns the path in `filePath`
+											const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${res.filePath}`;
+											return { url: fullUrl };
+										}}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
 						<FormField
 							control={form.control}

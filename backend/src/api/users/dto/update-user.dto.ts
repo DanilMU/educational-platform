@@ -40,4 +40,13 @@ export class UpdateUserDto {
 	@IsString()
 	@IsOptional()
 	public lastName?: string;
+
+	@ApiProperty({
+		example: 'https://example.com/avatar.png',
+		description: 'URL of the user avatar',
+		required: false
+	})
+	@IsString()
+	@IsOptional()
+	public avatarUrl?: string;
 }

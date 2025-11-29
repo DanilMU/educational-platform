@@ -133,19 +133,6 @@ export const usersControllerGetAllUsers = <TData = AxiosResponse<User[]>>(
   }
 
 /**
- * @summary Обновить пользователя по ID (только для админов)
- */
-export const usersControllerUpdate = <TData = AxiosResponse<User>>(
-    id: string,
-    updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/users/${id}`,
-      updateUserDto,options
-    );
-  }
-
-/**
  * @summary Получить информацию о текущем пользователе
  */
 export const usersControllerGetMe = <TData = AxiosResponse<GetMeDto>>(
@@ -177,6 +164,19 @@ export const usersControllerChangePassword = <TData = AxiosResponse<void>>(
     return axios.patch(
       `/users/@me/password`,
       changePasswordDto,options
+    );
+  }
+
+/**
+ * @summary Обновить пользователя по ID (только для админов)
+ */
+export const usersControllerUpdate = <TData = AxiosResponse<User>>(
+    id: string,
+    updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/users/${id}`,
+      updateUserDto,options
     );
   }
 
@@ -774,10 +774,10 @@ export type AuthControllerRefreshResult = AxiosResponse<AuthResponse>
 export type AuthControllerLogoutResult = AxiosResponse<void>
 export type UsersControllerCreateResult = AxiosResponse<User>
 export type UsersControllerGetAllUsersResult = AxiosResponse<User[]>
-export type UsersControllerUpdateResult = AxiosResponse<User>
 export type UsersControllerGetMeResult = AxiosResponse<GetMeDto>
 export type UsersControllerUpdateMeResult = AxiosResponse<User>
 export type UsersControllerChangePasswordResult = AxiosResponse<void>
+export type UsersControllerUpdateResult = AxiosResponse<User>
 export type SubjectsControllerCreateResult = AxiosResponse<Subject>
 export type SubjectsControllerFindAllResult = AxiosResponse<Subject[]>
 export type SubjectsControllerFindOneResult = AxiosResponse<Subject>

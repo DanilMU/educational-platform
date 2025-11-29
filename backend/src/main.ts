@@ -9,9 +9,11 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { Request, Response } from 'express';
+import { join } from 'path';
 
 import { AppModule } from './app.module';
 import { getCorsConfig, getSwaggerConfig } from './config';
@@ -78,7 +80,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
  */
 async function bootstrap() {
 	// Создаем экземпляр приложения NestJS, используя корневой модуль AppModule.
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
 	// Получаем доступ к сервису конфигурации.
 	const config = app.get(ConfigService);
@@ -100,6 +102,10 @@ async function bootstrap() {
 
 	// Включаем CORS с настройками из конфигурационного файла.
 	app.enableCors(getCorsConfig(config));
+
+	app.useStaticAssets(join(process.cwd(), 'uploads'), {
+		prefix: '/uploads'
+	});
 
 	const swaggerConfig = getSwaggerConfig();
 	const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

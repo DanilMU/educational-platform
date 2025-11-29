@@ -14,4 +14,6 @@ export interface UpdateUserDto {
   firstName?: string;
   /** Last name of the user */
   lastName?: string;
+  /** URL of the user avatar */
+  avatarUrl?: string;
 }
