@@ -5,6 +5,9 @@
  * OpenAPI spec version: 0.0.1
  */
 
+export * from './adminControllerGetCoursesParams';
+export * from './adminControllerGetLessonsParams';
+export * from './adminControllerGetUsersParams';
 export * from './analyticsControllerGetPopularLessons200Item';
 export * from './analyticsControllerGetSuccessRate200';
 export * from './analyticsControllerGetTimeSpent200';

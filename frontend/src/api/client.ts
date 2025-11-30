@@ -5,6 +5,9 @@
  * OpenAPI spec version: 0.0.1
  */
 import type {
+  AdminControllerGetCoursesParams,
+  AdminControllerGetLessonsParams,
+  AdminControllerGetUsersParams,
   AnalyticsControllerGetPopularLessons200Item,
   AnalyticsControllerGetSuccessRate200,
   AnalyticsControllerGetTimeSpent200,
@@ -290,6 +293,18 @@ const subjectsControllerGetLearningPath = (
  ) => {
       return customInstance<LearningPathDto>(
       {url: `/subjects/${id}/learning-path`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить курсы, в которых участвует пользователь
+ */
+const subjectsControllerFindByUserId = (
+    userId: string,
+ ) => {
+      return customInstance<Subject[]>(
+      {url: `/subjects/user/${userId}`, method: 'GET'
     },
       );
     }
@@ -826,10 +841,64 @@ const adminControllerGetDashboard = (
  * @summary Получить список пользователей админки
  */
 const adminControllerGetUsers = (
-    
+    params?: AdminControllerGetUsersParams,
  ) => {
       return customInstance<void>(
-      {url: `/admin/users`, method: 'GET'
+      {url: `/admin/users`, method: 'GET',
+        params
+    },
+      );
+    }
+  
+/**
+ * @summary Создать нового пользователя
+ */
+const adminControllerCreateUser = (
+    createUserDto: CreateUserDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/users`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserDto
+    },
+      );
+    }
+  
+/**
+ * @summary Получить пользователя по ID
+ */
+const adminControllerGetUserById = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/users/${id}`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Обновить пользователя
+ */
+const adminControllerUpdateUser = (
+    id: string,
+    updateUserDto: UpdateUserDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/users/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDto
+    },
+      );
+    }
+  
+/**
+ * @summary Удалить пользователя
+ */
+const adminControllerDeleteUser = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/users/${id}`, method: 'DELETE'
     },
       );
     }
@@ -838,10 +907,130 @@ const adminControllerGetUsers = (
  * @summary Получить список курсов админки
  */
 const adminControllerGetCourses = (
-    
+    params?: AdminControllerGetCoursesParams,
  ) => {
       return customInstance<void>(
-      {url: `/admin/courses`, method: 'GET'
+      {url: `/admin/courses`, method: 'GET',
+        params
+    },
+      );
+    }
+  
+/**
+ * @summary Создать новый курс
+ */
+const adminControllerCreateCourse = (
+    createSubjectDto: CreateSubjectDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/courses`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createSubjectDto
+    },
+      );
+    }
+  
+/**
+ * @summary Получить курс по ID
+ */
+const adminControllerGetCourseById = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/courses/${id}`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Обновить курс
+ */
+const adminControllerUpdateCourse = (
+    id: string,
+    updateSubjectDto: UpdateSubjectDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/courses/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateSubjectDto
+    },
+      );
+    }
+  
+/**
+ * @summary Удалить курс
+ */
+const adminControllerDeleteCourse = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/courses/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить список уроков админки
+ */
+const adminControllerGetLessons = (
+    params?: AdminControllerGetLessonsParams,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/lessons`, method: 'GET',
+        params
+    },
+      );
+    }
+  
+/**
+ * @summary Создать новый урок
+ */
+const adminControllerCreateLesson = (
+    createLessonDto: CreateLessonDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/lessons`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createLessonDto
+    },
+      );
+    }
+  
+/**
+ * @summary Получить урок по ID
+ */
+const adminControllerGetLessonById = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/lessons/${id}`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Обновить урок
+ */
+const adminControllerUpdateLesson = (
+    id: string,
+    updateLessonDto: UpdateLessonDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/lessons/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateLessonDto
+    },
+      );
+    }
+  
+/**
+ * @summary Удалить урок
+ */
+const adminControllerDeleteLesson = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/lessons/${id}`, method: 'DELETE'
     },
       );
     }
@@ -942,7 +1131,7 @@ const userAnalyticsControllerGetCurrentUserAnalytics = (
       );
     }
   
-return {appControllerGetHello,authControllerRegister,authControllerLogin,authControllerRefresh,authControllerLogout,usersControllerCreate,usersControllerGetAllUsers,usersControllerGetMe,usersControllerUpdateMe,usersControllerChangePassword,usersControllerUpdate,usersControllerRemove,subjectsControllerCreate,subjectsControllerFindAll,subjectsControllerFindOne,subjectsControllerUpdate,subjectsControllerRemove,subjectsControllerGetLearningPath,learningPathControllerGetLearningPath,topicsControllerCreate,topicsControllerFindAll,topicsControllerFindOne,topicsControllerUpdate,topicsControllerRemove,lessonsControllerCreate,lessonsControllerFindAll,lessonsControllerFindOne,lessonsControllerUpdate,lessonsControllerRemove,lessonsControllerGetLessonDescription,lessonsControllerGetLessonPrerequisites,quizzesControllerCreate,quizzesControllerFindAll,quizzesControllerFindOne,quizzesControllerUpdate,quizzesControllerRemove,quizzesControllerFindByLessonId,quizzesControllerSubmit,progressControllerCreate,progressControllerFindAll,progressControllerFindOne,progressControllerUpdate,progressControllerRemove,progressControllerCompleteSubject,notificationsControllerCreateNotification,notificationsControllerCreateRecommendationNotification,notificationsControllerGetUserNotifications,notificationsControllerGetCurrentUserNotifications,notificationsControllerMarkAsRead,notificationsControllerDeleteNotification,certificatesControllerCreate,certificatesControllerFindAll,certificatesControllerFindByUser,certificatesControllerFindOne,certificatesControllerDownload,filesControllerUploadFile,recommendationsControllerGetRecommendationsForUser,recommendationsControllerGetRecommendationsForCurrentUser,adminControllerGetDashboard,adminControllerGetUsers,adminControllerGetCourses,analyticsControllerGetUserAnalytics,analyticsControllerGetCurrentUserAnalytics,analyticsControllerGetTimeSpent,analyticsControllerGetSuccessRate,analyticsControllerGetUserProgressOverTime,analyticsControllerGetPopularLessons,analyticsControllerGetCourseAnalytics,userAnalyticsControllerGetCurrentUserAnalytics}};
+return {appControllerGetHello,authControllerRegister,authControllerLogin,authControllerRefresh,authControllerLogout,usersControllerCreate,usersControllerGetAllUsers,usersControllerGetMe,usersControllerUpdateMe,usersControllerChangePassword,usersControllerUpdate,usersControllerRemove,subjectsControllerCreate,subjectsControllerFindAll,subjectsControllerFindOne,subjectsControllerUpdate,subjectsControllerRemove,subjectsControllerGetLearningPath,subjectsControllerFindByUserId,learningPathControllerGetLearningPath,topicsControllerCreate,topicsControllerFindAll,topicsControllerFindOne,topicsControllerUpdate,topicsControllerRemove,lessonsControllerCreate,lessonsControllerFindAll,lessonsControllerFindOne,lessonsControllerUpdate,lessonsControllerRemove,lessonsControllerGetLessonDescription,lessonsControllerGetLessonPrerequisites,quizzesControllerCreate,quizzesControllerFindAll,quizzesControllerFindOne,quizzesControllerUpdate,quizzesControllerRemove,quizzesControllerFindByLessonId,quizzesControllerSubmit,progressControllerCreate,progressControllerFindAll,progressControllerFindOne,progressControllerUpdate,progressControllerRemove,progressControllerCompleteSubject,notificationsControllerCreateNotification,notificationsControllerCreateRecommendationNotification,notificationsControllerGetUserNotifications,notificationsControllerGetCurrentUserNotifications,notificationsControllerMarkAsRead,notificationsControllerDeleteNotification,certificatesControllerCreate,certificatesControllerFindAll,certificatesControllerFindByUser,certificatesControllerFindOne,certificatesControllerDownload,filesControllerUploadFile,recommendationsControllerGetRecommendationsForUser,recommendationsControllerGetRecommendationsForCurrentUser,adminControllerGetDashboard,adminControllerGetUsers,adminControllerCreateUser,adminControllerGetUserById,adminControllerUpdateUser,adminControllerDeleteUser,adminControllerGetCourses,adminControllerCreateCourse,adminControllerGetCourseById,adminControllerUpdateCourse,adminControllerDeleteCourse,adminControllerGetLessons,adminControllerCreateLesson,adminControllerGetLessonById,adminControllerUpdateLesson,adminControllerDeleteLesson,analyticsControllerGetUserAnalytics,analyticsControllerGetCurrentUserAnalytics,analyticsControllerGetTimeSpent,analyticsControllerGetSuccessRate,analyticsControllerGetUserProgressOverTime,analyticsControllerGetPopularLessons,analyticsControllerGetCourseAnalytics,userAnalyticsControllerGetCurrentUserAnalytics}};
 export type AppControllerGetHelloResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['appControllerGetHello']>>>
 export type AuthControllerRegisterResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerRegister']>>>
 export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerLogin']>>>
@@ -961,6 +1150,7 @@ export type SubjectsControllerFindOneResult = NonNullable<Awaited<ReturnType<Ret
 export type SubjectsControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerUpdate']>>>
 export type SubjectsControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerRemove']>>>
 export type SubjectsControllerGetLearningPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerGetLearningPath']>>>
+export type SubjectsControllerFindByUserIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerFindByUserId']>>>
 export type LearningPathControllerGetLearningPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['learningPathControllerGetLearningPath']>>>
 export type TopicsControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerCreate']>>>
 export type TopicsControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerFindAll']>>>
@@ -1003,7 +1193,20 @@ export type RecommendationsControllerGetRecommendationsForUserResult = NonNullab
 export type RecommendationsControllerGetRecommendationsForCurrentUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['recommendationsControllerGetRecommendationsForCurrentUser']>>>
 export type AdminControllerGetDashboardResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetDashboard']>>>
 export type AdminControllerGetUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetUsers']>>>
+export type AdminControllerCreateUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerCreateUser']>>>
+export type AdminControllerGetUserByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetUserById']>>>
+export type AdminControllerUpdateUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerUpdateUser']>>>
+export type AdminControllerDeleteUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerDeleteUser']>>>
 export type AdminControllerGetCoursesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetCourses']>>>
+export type AdminControllerCreateCourseResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerCreateCourse']>>>
+export type AdminControllerGetCourseByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetCourseById']>>>
+export type AdminControllerUpdateCourseResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerUpdateCourse']>>>
+export type AdminControllerDeleteCourseResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerDeleteCourse']>>>
+export type AdminControllerGetLessonsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetLessons']>>>
+export type AdminControllerCreateLessonResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerCreateLesson']>>>
+export type AdminControllerGetLessonByIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetLessonById']>>>
+export type AdminControllerUpdateLessonResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerUpdateLesson']>>>
+export type AdminControllerDeleteLessonResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerDeleteLesson']>>>
 export type AnalyticsControllerGetUserAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetUserAnalytics']>>>
 export type AnalyticsControllerGetCurrentUserAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetCurrentUserAnalytics']>>>
 export type AnalyticsControllerGetTimeSpentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetTimeSpent']>>>
