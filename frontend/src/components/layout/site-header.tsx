@@ -26,7 +26,7 @@ export function SiteHeader() {
 						</span>
 					</Link>
 					<nav className="flex items-center space-x-6 text-sm font-medium">
-						<Link href="/subjects" className="transition-colors hover:text-foreground/80 text-foreground/60">
+						<Link href={isAuthorized ? "/my-courses" : "/subjects"} className="transition-colors hover:text-foreground/80 text-foreground/60">
 							Курсы
 						</Link>
 					</nav>

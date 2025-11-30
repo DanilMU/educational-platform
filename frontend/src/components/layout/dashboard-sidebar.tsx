@@ -19,7 +19,7 @@ const navLinks = [
 		label: 'Профиль',
 	},
 	{
-		href: '/subjects',
+		href: '/my-courses',
 		icon: BookOpenText,
 		label: 'Курсы',
 	},

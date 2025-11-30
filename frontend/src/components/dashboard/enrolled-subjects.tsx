@@ -56,7 +56,7 @@ export function EnrolledSubjects() {
 						Мои курсы
 					</CardTitle>
 					<Button variant='ghost' size='sm' asChild>
-						<Link href='/subjects'>Все курсы</Link>
+						<Link href='/my-courses'>Все курсы</Link>
 					</Button>
 				</div>
 			</CardHeader>
@@ -100,7 +100,7 @@ export function EnrolledSubjects() {
 							курсов.
 						</p>
 						<Button asChild>
-							<Link href='/subjects'>Перейти к курсам</Link>
+							<Link href='/my-courses'>Перейти к курсам</Link>
 						</Button>
 					</div>
 				)}
