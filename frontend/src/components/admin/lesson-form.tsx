@@ -117,7 +117,7 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Тема</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Выберите тему" />
@@ -125,7 +125,7 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
                 </FormControl>
                 <SelectContent>
                   {isLoadingTopics ? (
-                    <SelectItem value="" disabled>Загрузка тем...</SelectItem>
+                    <SelectItem value="loading" disabled>Загрузка тем...</SelectItem>
                   ) : (
                     topics.map((topic) => (
                       <SelectItem key={topic.id} value={topic.id}>
