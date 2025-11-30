@@ -51,9 +51,9 @@ export function SecuritySettings() {
 				toast.success('Пароль успешно изменён');
 				passwordForm.reset();
 			},
-			onError: (error) => {
+			onError: (error: unknown) => {
 				toast.error('Ошибка при изменении пароля', {
-					description: error.message || 'Произошла неизвестная ошибка'
+					description: error instanceof Error ? error.message : 'Произошла неизвестная ошибка'
 				});
 				console.error('Ошибка при изменении пароля:', error);
 			}

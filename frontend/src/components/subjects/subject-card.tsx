@@ -1,92 +1,145 @@
 'use client'
 
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/src/components/ui/card'
+import { memo } from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/src/components/ui/card' // Explicitly import CardFooter
 import { Badge } from '@/src/components/ui/badge'
 import { Button } from '@/src/components/ui/button'
-import { Progress } from '@/src/components/ui/progress'
+import { 
+  Clock, 
+  Users, 
+  Star,
+  BookOpen,
+  PlayCircle
+} from 'lucide-react'
 import { motion } from 'framer-motion'
-import { BookOpen, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import { Progress } from '@/src/components/ui/progress'
 import { Skeleton } from '@/src/components/ui/skeleton'
+import { MagicCard } from '@/src/components/ui/magic-card' // Import MagicCard
 
 // I'll assume the subject type based on the usage in the card.
 // This should be replaced with the actual type from the API client later.
+import type { SubjectDescription } from '@/src/api/types'
+
 type Subject = {
-	id: string
-	title: string
-	description: string
-	progress?: number
-	lessons?: number | string
-	category?: string
+  id: string
+  title: string
+  description?: string | SubjectDescription
+  progress?: number
+  lessons?: number | string
+  category?: string
+  studentCount?: number
+  rating?: number
 }
 
 interface SubjectCardProps {
-	subject: Subject
+  subject: Subject
 }
 
-export function SubjectCard({ subject }: SubjectCardProps) {
-	const description =
-		(subject.description || '').length > 100
-			? (subject.description || '').slice(0, 100) + '...'
-			: (subject.description || '')
+const SubjectCard = memo(({ subject }: SubjectCardProps) => {
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'programming':
+        return 'bg-blue-100 text-blue-800'
+      case 'design':
+        return 'bg-purple-100 text-purple-800'
+      case 'data-science':
+        return 'bg-green-100 text-green-800'
+      case 'business':
+        return 'bg-orange-100 text-orange-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
 
-	return (
-		<motion.div
-			whileHover={{ y: -8 }}
-			transition={{ type: "spring", stiffness: 300, damping: 20 }}
-			className="group relative h-full overflow-hidden rounded-xl border bg-card"
-		>
-			<div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
-			<Card className="relative flex h-full flex-col">
-				<CardHeader className="flex-row items-start gap-4">
-					<div className="flex size-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80">
-						<BookOpen className="size-6 text-white" />
-					</div>
-					<div>
-						<CardTitle className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
-							{subject.title}
-						</CardTitle>
-						<div className="mt-1 flex items-center gap-2">
-							{subject.category && <Badge variant="secondary">{subject.category}</Badge>}
-							{subject.lessons && (
-								<span className="text-sm text-muted-foreground">
-									{subject.lessons} уроков
-								</span>
-							)}
-						</div>
-					</div>
-				</CardHeader>
+  const getCategoryName = (category: string) => {
+    switch (category) {
+      case 'programming':
+        return 'Программирование'
+      case 'design':
+        return 'Дизайн'
+      case 'data-science':
+        return 'Data Science'
+      case 'business':
+        return 'Бизнес'
+      default:
+        return 'Другое'
+    }
+  }
 
-				<CardContent className="flex-grow space-y-4">
-					{subject.progress !== undefined && (
-						<Progress value={subject.progress} className="h-2" />
-					)}
-					<p className="text-sm text-muted-foreground line-clamp-3">
-						{description}
-					</p>
-				</CardContent>
+  const description = String(subject.description || '').length > 100
+    ? String(subject.description || '').slice(0, 100) + '...'
+    : String(subject.description || '')
 
-				<CardFooter>
-					<Button
-						asChild
-						className="w-full"
-					>
-						<Link href={`/subjects/${subject.id}`}>
-							Продолжить обучение
-							<ArrowRight className="ml-2 size-4" />
-						</Link>
-					</Button>
-				</CardFooter>
-			</Card>
-		</motion.div>
-	)
-}
+  return (
+    <MagicCard
+      className="group relative h-full overflow-hidden rounded-xl border"
+      gradientColor="#3b82f6" // Example gradient color
+      gradientOpacity={0.3}
+      gradientSize={200}
+    >
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <CardTitle className="text-lg line-clamp-2">{subject.title}</CardTitle>
+            <CardDescription className="mt-1 line-clamp-2">
+              {description}
+            </CardDescription>
+          </div>
+        </div>
+        
+        {subject.category && (
+          <Badge className={getCategoryColor(subject.category)}>
+            {getCategoryName(subject.category)}
+          </Badge>
+        )}
+      </CardHeader>
+      
+      <CardContent className="flex-grow space-y-3">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <div className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
+            <span>{subject.lessons || 0} уроков</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Users className="w-4 h-4" />
+            <span>{subject.studentCount || 0} студентов</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between text-sm">
+          {subject.rating !== undefined && (
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 text-yellow-500 fill-current" />
+              <span>{subject.rating.toFixed(1)}</span>
+            </div>
+          )}
+        </div>
+        
+        {subject.progress !== undefined && (
+          <Progress value={subject.progress} className="h-2" />
+        )}
+      </CardContent>
+      
+      <CardFooter>
+        <Button 
+          className="w-full" 
+          asChild
+          size="sm"
+        >
+          <Link href={`/subjects/${subject.id}`}>
+            <PlayCircle className="w-4 h-4 mr-2" />
+            Начать обучение
+          </Link>
+        </Button>
+      </CardFooter>
+    </MagicCard>
+  )
+})
+
+SubjectCard.displayName = 'SubjectCard'
+
+export { SubjectCard }
 
 export function SubjectCardSkeleton() {
 	return (

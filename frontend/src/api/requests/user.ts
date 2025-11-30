@@ -1,7 +1,8 @@
-import { instance } from "../instance"
-import { User } from "../types/user"
-import { UpdateUserDto } from "../types/updateUserDto"
-import { GetMeDto } from "../types"
+import { instance } from '../instance'
+import { User } from '../types/user'
+import { UpdateUserDto } from '../types/updateUserDto'
+import { GetMeDto } from '../types'
+import { usersControllerGetAllUsers } from '../generated-client'
 
 
 export const getProfile = async () => {
@@ -17,4 +18,13 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
 	currentPassword,
 		newPassword
 	}).then(res => res.data)
+}
+
+export const deleteUser = async (id: string) => {
+	return await instance.delete<User>(`/users/${id}`).then(res => res.data)
+}
+
+export const getAllUsersPaginated = async (skip: string, take: string) => {
+	const response = await usersControllerGetAllUsers({ skip, take });
+	return response;
 }

@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -17,14 +18,17 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
+	ApiQuery,
+	// Add this import
 	ApiTags
 } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Lesson as LessonModel, Role } from '@prisma/client';
 import { Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { CreateLessonDto, UpdateLessonDto } from './dto';
 import { LessonDescriptionDto } from './dto/lesson-description.dto';
+import { PaginatedLessonsDto } from './dto/paginated-lessons.dto';
 import { PrerequisitesDto } from './dto/prerequisites.dto';
 import { Lesson } from './entities/lesson.entity';
 import { LessonsService } from './lessons.service';
@@ -48,9 +52,27 @@ export class LessonsController {
 
 	@Get()
 	@ApiOperation({ summary: 'Получить все уроки' })
-	@ApiOkResponse({ description: 'Список всех уроков.', type: [Lesson] })
-	findAll() {
-		return this.lessonsService.findAll();
+	@ApiOkResponse({
+		description: 'Список всех уроков.',
+		type: PaginatedLessonsDto
+	})
+	@ApiQuery({
+		name: 'skip',
+		required: false,
+		type: String,
+		description: 'Количество пропускаемых элементов'
+	}) // Add this
+	@ApiQuery({
+		name: 'take',
+		required: false,
+		type: String,
+		description: 'Количество возвращаемых элементов'
+	}) // Add this
+	findAll(
+		@Query('skip') skip: string,
+		@Query('take') take: string
+	): Promise<{ lessons: LessonModel[]; total: number }> {
+		return this.lessonsService.findAll(+skip, +take);
 	}
 
 	@Get(':id')

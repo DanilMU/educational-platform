@@ -1,6 +1,7 @@
 import { instance } from "../instance";
 import type { Quiz } from "../types/quiz";
-import type { SubmitQuizDto, QuizResultDto } from "../types";
+import type { SubmitQuizDto } from "../types";
+import type { QuizResultDto } from "../types/quizResultDto";
 
 export const getQuizByLessonId = async (lessonId: string): Promise<Quiz> => {
     return await instance.get<Quiz>(`/quizzes/lesson/${lessonId}`).then(res => res.data);

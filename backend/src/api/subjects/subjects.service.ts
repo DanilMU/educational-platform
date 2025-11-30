@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Subject } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { LearningPathService } from '../learning-path/learning-path.service';
@@ -16,8 +17,19 @@ export class SubjectsService {
 		return this.prisma.subject.create({ data: createSubjectDto });
 	}
 
-	findAll() {
-		return this.prisma.subject.findMany();
+	findAll(
+		skip: number = 0,
+		take: number = 10
+	): Promise<{ subjects: Subject[]; total: number }> {
+		return this.prisma
+			.$transaction([
+				this.prisma.subject.findMany({
+					skip: isNaN(skip) || skip < 0 ? 0 : skip,
+					take: isNaN(take) || take < 0 ? 10 : take
+				}),
+				this.prisma.subject.count()
+			])
+			.then(([subjects, total]) => ({ subjects, total }));
 	}
 
 	findOne(id: string) {

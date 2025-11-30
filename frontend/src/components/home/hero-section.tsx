@@ -1,9 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Button } from '@/src/components/ui/button'
+import { Button } from '@/src/components/ui/button' // Keep regular Button for asChild prop if MagicButton doesn't support it directly
 import Link from 'next/link'
 import { HeroParallax } from './hero-parallax'
+import { MagicButton } from '@/src/components/ui/magic-button' // Import MagicButton
 
 function AnimatedTitle() {
   return (
@@ -42,12 +43,12 @@ function AnimatedButtons() {
       transition={{ duration: 0.5, delay: 0.6 }}
       className="flex justify-center gap-4"
     >
-      <Button asChild size="lg">
+      <MagicButton asChild size="lg">
         <Link href="/auth/register">Начать обучение</Link>
-      </Button>
-      <Button asChild variant="outline" size="lg" className="text-white border-white bg-transparent hover:bg-white/10">
+      </MagicButton>
+      <MagicButton asChild variant="outline" size="lg" className="text-white border-white bg-transparent hover:bg-white/10">
         <Link href="/subjects">Просмотреть курсы</Link>
-      </Button>
+      </MagicButton>
     </motion.div>
   )
 }

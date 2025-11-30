@@ -199,12 +199,20 @@ export class QuizzesService {
 		}
 
 		const totalQuestions = quiz.questions.length;
+		const correctAnswers = score;
+		const incorrectAnswers = totalQuestions - score;
 		const userScorePercentage = (score / totalQuestions) * 100;
 		const passed = userScorePercentage >= quiz.passingScore;
+		const message = passed
+			? 'Отлично! Тест пройден.'
+			: 'Тест не пройден. Попробуйте еще раз.';
 
-		const result = {
+		const result: QuizResultDto = {
 			score,
-			totalQuestions
+			totalQuestions,
+			correctAnswers,
+			incorrectAnswers,
+			message
 		};
 
 		// Отправляем уведомление о результатах теста

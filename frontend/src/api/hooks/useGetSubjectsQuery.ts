@@ -1,14 +1,14 @@
 import { type UseQueryOptions, useQuery } from '@tanstack/react-query'
 
 import { getAllSubjects } from '../requests/subjects'
-import type { Subject } from '../types/subject'
+import type { PaginatedSubjectsDto } from '../types/paginatedSubjectsDto'
 
 export function useGetSubjectsQuery(
-	options?: Omit<UseQueryOptions<Subject[], unknown>, 'queryKey' | 'queryFn'>
+	options?: Omit<UseQueryOptions<PaginatedSubjectsDto, unknown>, 'queryKey' | 'queryFn'>
 ) {
 	return useQuery({
 		queryKey: ['get all subjects'],
-		queryFn: getAllSubjects,
+		queryFn: () => getAllSubjects('0', '10'), // Default pagination
 		...options
 	})
 }

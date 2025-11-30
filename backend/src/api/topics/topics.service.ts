@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Topic } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateTopicDto, UpdateTopicDto } from './dto';
@@ -11,8 +12,19 @@ export class TopicsService {
 		return this.prisma.topic.create({ data: createTopicDto });
 	}
 
-	findAll() {
-		return this.prisma.topic.findMany();
+	findAll(
+		skip: number,
+		take: number
+	): Promise<{ topics: Topic[]; total: number }> {
+		return this.prisma
+			.$transaction([
+				this.prisma.topic.findMany({
+					skip: isNaN(skip) ? undefined : skip,
+					take: isNaN(take) ? undefined : take
+				}),
+				this.prisma.topic.count()
+			])
+			.then(([topics, total]) => ({ topics, total }));
 	}
 
 	findOne(id: string) {

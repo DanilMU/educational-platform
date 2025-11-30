@@ -1,6 +1,5 @@
 import { instance } from "../instance"
-import { Subject } from "../types/subject"
 
-export const getAllSubjects = async () => {
-	return await instance.get<Subject[]>('/subjects').then(res => res.data);
+export const getAllSubjects = async (skip: string = '0', take: string = '10') => {
+	return await instance.get('/subjects', { params: { skip, take } }).then(res => res.data);
 }

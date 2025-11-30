@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -17,13 +18,16 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
+	ApiQuery,
+	// Add this import
 	ApiTags
 } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Role, Topic as TopicModel } from '@prisma/client';
 import { Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { CreateTopicDto, UpdateTopicDto } from './dto';
+import { PaginatedTopicsDto } from './dto/paginated-topics.dto';
 import { Topic } from './entities/topic.entity';
 import { TopicsService } from './topics.service';
 
@@ -48,9 +52,27 @@ export class TopicsController {
 
 	@Get()
 	@ApiOperation({ summary: 'Получить все темы' })
-	@ApiOkResponse({ description: 'Список всех тем.', type: [Topic] })
-	findAll() {
-		return this.topicsService.findAll();
+	@ApiOkResponse({
+		description: 'Список всех тем.',
+		type: PaginatedTopicsDto
+	})
+	@ApiQuery({
+		name: 'skip',
+		required: false,
+		type: String,
+		description: 'Количество пропускаемых элементов'
+	}) // Add this
+	@ApiQuery({
+		name: 'take',
+		required: false,
+		type: String,
+		description: 'Количество возвращаемых элементов'
+	}) // Add this
+	findAll(
+		@Query('skip') skip: string,
+		@Query('take') take: string
+	): Promise<{ topics: TopicModel[]; total: number }> {
+		return this.topicsService.findAll(+skip, +take);
 	}
 
 	@Get(':id')

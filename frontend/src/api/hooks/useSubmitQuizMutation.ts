@@ -1,6 +1,7 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { submitQuiz } from '../requests/quiz'
-import type { SubmitQuizDto, QuizResultDto } from '../types'
+import type { SubmitQuizDto } from '../types'
+import type { QuizResultDto } from '../types/quizResultDto'
 
 export function useSubmitQuizMutation(
     quizId: string,

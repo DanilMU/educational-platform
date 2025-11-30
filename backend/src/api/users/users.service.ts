@@ -56,6 +56,12 @@ export class UsersService {
 		}
 	}
 
+	public async remove(id: string): Promise<User> {
+		return this.prismaService.user.delete({
+			where: { id }
+		});
+	}
+
 	public getMe(user: User): GetMeDto {
 		return {
 			id: user.id,
@@ -70,8 +76,18 @@ export class UsersService {
 		};
 	}
 
-	public async getAllUsers(): Promise<User[]> {
-		return this.prismaService.user.findMany();
+	public async getAllUsers(
+		skip: number,
+		take: number
+	): Promise<{ users: User[]; total: number }> {
+		const [users, total] = await this.prismaService.$transaction([
+			this.prismaService.user.findMany({
+				skip: isNaN(skip) ? undefined : skip,
+				take: isNaN(take) ? undefined : take
+			}),
+			this.prismaService.user.count()
+		]);
+		return { users, total };
 	}
 
 	public async updateMe(id: string, dto: UpdateUserDto): Promise<User> {

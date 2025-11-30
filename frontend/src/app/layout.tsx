@@ -1,21 +1,21 @@
 import type { Metadata } from 'next'
-import { Geist, Inter } from 'next/font/google'
+// import { Geist, Inter } from 'next/font/google'
 import { Toaster } from 'sonner' // Import Toaster
 
 import './globals.css'
 import { Providers } from './providers'
 import { ThemeProvider } from './theme-provider'
 
-const geist = Geist({
-	subsets: ['latin']
-})
+// const geist = Geist({
+// 	subsets: ['latin']
+// })
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-sans',
-  display: 'swap'
-})
+// const inter = Inter({
+//   subsets: ['latin'],
+//   weight: ['300', '400', '500', '600', '700', '800'],
+//   variable: '--font-sans',
+//   display: 'swap'
+// })
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='ru' suppressHydrationWarning>
-			<body className={`${geist.className} ${inter.variable} antialiased`}>
+			<body className={`antialiased`}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

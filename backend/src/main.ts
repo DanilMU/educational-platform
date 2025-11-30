@@ -103,7 +103,8 @@ async function bootstrap() {
 	// Включаем CORS с настройками из конфигурационного файла.
 	app.enableCors(getCorsConfig(config));
 
-	app.useStaticAssets(join(process.cwd(), 'uploads'), {
+	const uploadsPath = join(__dirname, '..', 'uploads');
+	app.useStaticAssets(uploadsPath, {
 		prefix: '/uploads'
 	});
 

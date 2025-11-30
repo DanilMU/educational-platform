@@ -1,8 +1,8 @@
 import axios, { type CreateAxiosDefaults } from 'axios'
-import { refresh } from './requests'
 
 import { errorCatch } from '../lib/utils'
-import { getAccessToken, removeTokens } from '../lib/cookies'
+import { getAccessToken, removeTokens, saveToken, saveRefreshToken } from '../lib/cookies'
+import type { AuthResponse } from '../api/types/authResponse'
 
 const options: CreateAxiosDefaults = {
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -12,9 +12,18 @@ const options: CreateAxiosDefaults = {
     withCredentials: true
 }
 
-export const api = axios.create(options)
+const uninterceptedAxios = axios.create(options);
 
 export const instance = axios.create(options)
+
+const refresh = async () =>
+    await uninterceptedAxios.post<AuthResponse>('/auth/refresh').then(res => {
+        if (res.data.accessToken) saveToken(res.data.accessToken)
+        if (res.data.refreshToken) saveRefreshToken(res.data.refreshToken)
+
+        return res.data
+    })
+
 
 instance.interceptors.request.use(config => {
     const accessToken = getAccessToken()

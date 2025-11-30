@@ -4,7 +4,7 @@ import { useGetSubjectsQuery } from '@/src/api/hooks/useGetSubjectsQuery'
 import { SubjectCard, SubjectCardSkeleton } from './subject-card'
 
 export function SubjectList() {
-	const { data: subjects, isLoading, isError } = useGetSubjectsQuery()
+	const { data: paginatedData, isLoading, isError } = useGetSubjectsQuery()
 
 	if (isLoading) {
 		return (
@@ -26,6 +26,8 @@ export function SubjectList() {
 		)
 	}
 
+	const subjects = paginatedData?.data || [];
+
 	if (!subjects || subjects.length === 0) {
 		return (
 			<div className='flex justify-center items-center h-64'>
@@ -33,12 +35,12 @@ export function SubjectList() {
 					Курсы не найдены.
 				</p>
 			</div>
-		)
+	)
 	}
 
 	return (
 		<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-			{subjects.map(subject => (
+			{subjects.map((subject) => (
 				<SubjectCard key={subject.id} subject={subject} />
 			))}
 		</div>

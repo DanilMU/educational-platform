@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -17,15 +18,18 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
+	ApiQuery,
+	// Add this import
 	ApiTags
 } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Role, Subject as SubjectModel } from '@prisma/client';
 import { Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { LearningPathDto } from '../lessons/dto/learning-path.dto';
 
 import { CreateSubjectDto, UpdateSubjectDto } from './dto';
+import { PaginatedSubjectsDto } from './dto/paginated-subjects.dto';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
 
@@ -55,10 +59,27 @@ export class SubjectsController {
 	@ApiOperation({ summary: 'Получить все предметы (курсы)' })
 	@ApiOkResponse({
 		description: 'Список всех предметов.',
-		type: [Subject]
+		type: PaginatedSubjectsDto
 	})
-	findAll() {
-		return this.subjectsService.findAll();
+	@ApiQuery({
+		name: 'skip',
+		required: false,
+		type: String,
+		description: 'Количество пропускаемых элементов'
+	}) // Add this
+	@ApiQuery({
+		name: 'take',
+		required: false,
+		type: String,
+		description: 'Количество возвращаемых элементов'
+	}) // Add this
+	findAll(
+		@Query('skip') skip?: string,
+		@Query('take') take?: string
+	): Promise<{ subjects: SubjectModel[]; total: number }> {
+		const skipNum = skip ? parseInt(skip, 10) : 0;
+		const takeNum = take ? parseInt(take, 10) : 10; // default to 10 items
+		return this.subjectsService.findAll(skipNum, takeNum);
 	}
 
 	@Get(':id')

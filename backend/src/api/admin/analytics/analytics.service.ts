@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { AnalyticsDto } from './dto/analytics.dto';
+import { CourseAnalyticsDto } from './dto/course-analytics.dto';
+import { UserProgressOverTimeDto } from './dto/user-progress-over-time.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -173,5 +175,114 @@ export class AnalyticsService {
 			lessonId: item.lessonId,
 			completions: item._count.lessonId
 		}));
+	}
+
+	async getCourseAnalytics(courseId: string): Promise<CourseAnalyticsDto> {
+		const uniqueUsers = await this.prisma.userProgress.groupBy({
+			by: ['userId'],
+			where: {
+				lesson: {
+					topic: {
+						subjectId: courseId
+					}
+				}
+			}
+		});
+		const totalStudents = uniqueUsers.length;
+
+		const completedLessonsCount = await this.prisma.userProgress.count({
+			where: {
+				lesson: {
+					topic: {
+						subjectId: courseId
+					}
+				},
+				isCompleted: true
+			}
+		});
+
+		const totalLessonsInCourse = await this.prisma.lesson.count({
+			where: {
+				topic: {
+					subjectId: courseId
+				}
+			}
+		});
+
+		const averageCompletionRate =
+			totalLessonsInCourse > 0 && totalStudents > 0
+				? (completedLessonsCount /
+						(totalLessonsInCourse * totalStudents)) *
+					100
+				: 0;
+
+		const quizScores = await this.prisma.userProgress.findMany({
+			where: {
+				lesson: {
+					topic: {
+						subjectId: courseId
+					}
+				},
+				score: {
+					not: null
+				}
+			},
+			select: {
+				score: true
+			}
+		});
+
+		const totalScore = quizScores.reduce(
+			(sum, entry) => sum + (entry.score || 0),
+			0
+		);
+		const averageScore =
+			quizScores.length > 0 ? totalScore / quizScores.length : 0;
+
+		return {
+			courseId,
+			numberOfStudents: totalStudents,
+			averageCompletionRate: parseFloat(averageCompletionRate.toFixed(2)),
+			averageScore: parseFloat(averageScore.toFixed(2))
+		};
+	}
+
+	async getUserProgressOverTime(
+		userId: string,
+		months: number = 6
+	): Promise<UserProgressOverTimeDto> {
+		const monthlyProgress: { name: string; progress: number }[] = [];
+		const now = new Date();
+
+		for (let i = months - 1; i >= 0; i--) {
+			const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+			const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+
+			const monthName = date.toLocaleString('ru-RU', { month: 'short' });
+
+			const completedLessonsInMonth = await this.prisma.userProgress.count({
+				where: {
+					userId: userId,
+					isCompleted: true,
+					completedAt: {
+						gte: date,
+						lt: nextMonth,
+					},
+				},
+			});
+
+			const totalLessonsCount = await this.prisma.lesson.count();
+			const progress =
+				totalLessonsCount > 0
+					? Math.round((completedLessonsInMonth / totalLessonsCount) * 100)
+					: 0;
+
+			monthlyProgress.push({ name: monthName, progress });
+		}
+
+		return {
+			userId,
+			monthlyProgress,
+		};
 	}
 }

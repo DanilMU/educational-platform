@@ -1,10 +1,12 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Patch,
 	Post,
+	Query,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -16,7 +18,8 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
-	ApiTags
+	ApiTags,
+	ApiQuery // Add this import
 } from '@nestjs/swagger';
 import { Role, User as UserModel } from '@prisma/client';
 import { Authorized, Protected, Roles } from 'src/common/decorators';
@@ -28,6 +31,7 @@ import {
 	GetMeDto,
 	UpdateUserDto
 } from './dto';
+import { PaginatedUsersDto } from './dto/paginated-users.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -72,11 +76,16 @@ export class UsersController {
 	})
 	@ApiOkResponse({
 		description: 'Список всех пользователей.',
-		type: [User]
+		type: PaginatedUsersDto
 	})
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
-	public async getAllUsers(): Promise<UserModel[]> {
-		return this.usersService.getAllUsers();
+	@ApiQuery({ name: 'skip', required: false, type: String, description: 'Количество пропускаемых элементов' }) // Add this
+	@ApiQuery({ name: 'take', required: false, type: String, description: 'Количество возвращаемых элементов' }) // Add this
+	public async getAllUsers(
+		@Query('skip') skip: string,
+		@Query('take') take: string
+	): Promise<{ users: UserModel[]; total: number }> {
+		return this.usersService.getAllUsers(+skip, +take);
 	}
 
 	@Protected()
@@ -140,5 +149,21 @@ export class UsersController {
 		@Body() dto: UpdateUserDto
 	): Promise<UserModel> {
 		return this.usersService.update(id, dto);
+	}
+
+	@Delete(':id')
+	@Roles(Role.ADMIN)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@ApiTags('Users')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Удалить пользователя по ID (только для админов)'
+	})
+	@ApiParam({ name: 'id', description: 'ID пользователя', type: String })
+	@ApiOkResponse({ description: 'Пользователь успешно удален.', type: User })
+	@ApiNotFoundResponse({ description: 'Пользователь не найден.' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	public async remove(@Param('id') id: string): Promise<UserModel> {
+		return this.usersService.remove(id);
 	}
 }

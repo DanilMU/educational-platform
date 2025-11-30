@@ -4,12 +4,6 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
-import axios from 'axios';
-import type {
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
 import type {
   AnalyticsControllerGetPopularLessons200Item,
   AnalyticsControllerGetSuccessRate200,
@@ -19,6 +13,7 @@ import type {
   Certificate,
   ChangePasswordDto,
   CompleteSubjectDto,
+  CourseAnalyticsDto,
   CreateCertificateDto,
   CreateLessonDto,
   CreateProgressDto,
@@ -32,800 +27,988 @@ import type {
   LearningPathDto,
   Lesson,
   LessonDescriptionDto,
+  LessonsControllerFindAllParams,
   LoginRequest,
   NotificationDto,
+  PaginatedLessonsDto,
+  PaginatedSubjectsDto,
+  PaginatedTopicsDto,
+  PaginatedUsersDto,
   PrerequisitesDto,
   Progress,
   Quiz,
   RecommendationsDto,
   RegisterRequest,
   Subject,
+  SubjectsControllerFindAllParams,
   SubmitQuizDto,
   Topic,
+  TopicsControllerFindAllParams,
   UpdateLessonDto,
   UpdateProgressDto,
   UpdateQuizDto,
   UpdateSubjectDto,
   UpdateTopicDto,
   UpdateUserDto,
-  User
+  User,
+  UserProgressOverTimeDto,
+  UsersControllerGetAllUsersParams
 } from './types';
 
-export const appControllerGetHello = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/`,options
-    );
-  }
-
+import { customInstance } from './axios-instance-wrapper';
+export const getEducationPlatform = () => {
+const appControllerGetHello = (
+    
+ ) => {
+      return customInstance<void>(
+      {url: `/`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * Creates a new user account and returns an access token in the response
  * @summary Register a new user
  */
-export const authControllerRegister = <TData = AxiosResponse<AuthResponse>>(
-    registerRequest: RegisterRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/auth/register`,
-      registerRequest,options
-    );
-  }
-
+const authControllerRegister = (
+    registerRequest: RegisterRequest,
+ ) => {
+      return customInstance<AuthResponse>(
+      {url: `/auth/register`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: registerRequest
+    },
+      );
+    }
+  
 /**
  * Authenticates a user and returns an access token in the response
  * @summary Login an existing user
  */
-export const authControllerLogin = <TData = AxiosResponse<AuthResponse>>(
-    loginRequest: LoginRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/auth/login`,
-      loginRequest,options
-    );
-  }
-
+const authControllerLogin = (
+    loginRequest: LoginRequest,
+ ) => {
+      return customInstance<AuthResponse>(
+      {url: `/auth/login`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: loginRequest
+    },
+      );
+    }
+  
 /**
  * Generates a new access token based on the provided refresh token from cookies
  * @summary Refresh access token
  */
-export const authControllerRefresh = <TData = AxiosResponse<AuthResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/auth/refresh`,undefined,options
-    );
-  }
-
+const authControllerRefresh = (
+    
+ ) => {
+      return customInstance<AuthResponse>(
+      {url: `/auth/refresh`, method: 'POST'
+    },
+      );
+    }
+  
 /**
  * Clears authentication cookies
  * @summary Logout user
  */
-export const authControllerLogout = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/auth/logout`,undefined,options
-    );
-  }
-
+const authControllerLogout = (
+    
+ ) => {
+      return customInstance<void>(
+      {url: `/auth/logout`, method: 'POST'
+    },
+      );
+    }
+  
 /**
  * @summary Создать нового пользователя (только для админов)
  */
-export const usersControllerCreate = <TData = AxiosResponse<User>>(
-    createUserDto: CreateUserDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/users`,
-      createUserDto,options
-    );
-  }
-
+const usersControllerCreate = (
+    createUserDto: CreateUserDto,
+ ) => {
+      return customInstance<User>(
+      {url: `/users`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createUserDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить всех пользователей (только для админов)
  */
-export const usersControllerGetAllUsers = <TData = AxiosResponse<User[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/users`,options
-    );
-  }
-
+const usersControllerGetAllUsers = (
+    params?: UsersControllerGetAllUsersParams,
+ ) => {
+      return customInstance<PaginatedUsersDto>(
+      {url: `/users`, method: 'GET',
+        params
+    },
+      );
+    }
+  
 /**
  * @summary Получить информацию о текущем пользователе
  */
-export const usersControllerGetMe = <TData = AxiosResponse<GetMeDto>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/users/@me`,options
-    );
-  }
-
+const usersControllerGetMe = (
+    
+ ) => {
+      return customInstance<GetMeDto>(
+      {url: `/users/@me`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить информацию о текущем пользователе
  */
-export const usersControllerUpdateMe = <TData = AxiosResponse<User>>(
-    updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/users/@me`,
-      updateUserDto,options
-    );
-  }
-
+const usersControllerUpdateMe = (
+    updateUserDto: UpdateUserDto,
+ ) => {
+      return customInstance<User>(
+      {url: `/users/@me`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDto
+    },
+      );
+    }
+  
 /**
  * @summary Изменить пароль текущего пользователя
  */
-export const usersControllerChangePassword = <TData = AxiosResponse<void>>(
-    changePasswordDto: ChangePasswordDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/users/@me/password`,
-      changePasswordDto,options
-    );
-  }
-
+const usersControllerChangePassword = (
+    changePasswordDto: ChangePasswordDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/users/@me/password`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordDto
+    },
+      );
+    }
+  
 /**
  * @summary Обновить пользователя по ID (только для админов)
  */
-export const usersControllerUpdate = <TData = AxiosResponse<User>>(
+const usersControllerUpdate = (
     id: string,
-    updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/users/${id}`,
-      updateUserDto,options
-    );
-  }
-
+    updateUserDto: UpdateUserDto,
+ ) => {
+      return customInstance<User>(
+      {url: `/users/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDto
+    },
+      );
+    }
+  
+/**
+ * @summary Удалить пользователя по ID (только для админов)
+ */
+const usersControllerRemove = (
+    id: string,
+ ) => {
+      return customInstance<User>(
+      {url: `/users/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Создать новый предмет (курс) (только для админов/модераторов)
  */
-export const subjectsControllerCreate = <TData = AxiosResponse<Subject>>(
-    createSubjectDto: CreateSubjectDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/subjects`,
-      createSubjectDto,options
-    );
-  }
-
+const subjectsControllerCreate = (
+    createSubjectDto: CreateSubjectDto,
+ ) => {
+      return customInstance<Subject>(
+      {url: `/subjects`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createSubjectDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить все предметы (курсы)
  */
-export const subjectsControllerFindAll = <TData = AxiosResponse<Subject[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/subjects`,options
-    );
-  }
-
+const subjectsControllerFindAll = (
+    params?: SubjectsControllerFindAllParams,
+ ) => {
+      return customInstance<PaginatedSubjectsDto>(
+      {url: `/subjects`, method: 'GET',
+        params
+    },
+      );
+    }
+  
 /**
  * @summary Найти предмет (курс) по ID
  */
-export const subjectsControllerFindOne = <TData = AxiosResponse<Subject>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/subjects/${id}`,options
-    );
-  }
-
+const subjectsControllerFindOne = (
+    id: string,
+ ) => {
+      return customInstance<Subject>(
+      {url: `/subjects/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить предмет (курс) (только для админов/модераторов)
  */
-export const subjectsControllerUpdate = <TData = AxiosResponse<Subject>>(
+const subjectsControllerUpdate = (
     id: string,
-    updateSubjectDto: UpdateSubjectDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/subjects/${id}`,
-      updateSubjectDto,options
-    );
-  }
-
+    updateSubjectDto: UpdateSubjectDto,
+ ) => {
+      return customInstance<Subject>(
+      {url: `/subjects/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateSubjectDto
+    },
+      );
+    }
+  
 /**
  * @summary Удалить предмет (курс) (только для админов/модераторов)
  */
-export const subjectsControllerRemove = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/subjects/${id}`,options
-    );
-  }
-
+const subjectsControllerRemove = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/subjects/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Получить полный путь обучения по курсу с зависимостями
  */
-export const subjectsControllerGetLearningPath = <TData = AxiosResponse<LearningPathDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/subjects/${id}/learning-path`,options
-    );
-  }
-
+const subjectsControllerGetLearningPath = (
+    id: string,
+ ) => {
+      return customInstance<LearningPathDto>(
+      {url: `/subjects/${id}/learning-path`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить полный путь обучения по курсу с зависимостями
  */
-export const learningPathControllerGetLearningPath = <TData = AxiosResponse<LearningPathDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/learning-path/subjects/${id}`,options
-    );
-  }
-
+const learningPathControllerGetLearningPath = (
+    id: string,
+ ) => {
+      return customInstance<LearningPathDto>(
+      {url: `/learning-path/subjects/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Создать новую тему (только для админов/модераторов)
  */
-export const topicsControllerCreate = <TData = AxiosResponse<Topic>>(
-    createTopicDto: CreateTopicDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/topics`,
-      createTopicDto,options
-    );
-  }
-
+const topicsControllerCreate = (
+    createTopicDto: CreateTopicDto,
+ ) => {
+      return customInstance<Topic>(
+      {url: `/topics`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createTopicDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить все темы
  */
-export const topicsControllerFindAll = <TData = AxiosResponse<Topic[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/topics`,options
-    );
-  }
-
+const topicsControllerFindAll = (
+    params?: TopicsControllerFindAllParams,
+ ) => {
+      return customInstance<PaginatedTopicsDto>(
+      {url: `/topics`, method: 'GET',
+        params
+    },
+      );
+    }
+  
 /**
  * @summary Найти тему по ID
  */
-export const topicsControllerFindOne = <TData = AxiosResponse<Topic>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/topics/${id}`,options
-    );
-  }
-
+const topicsControllerFindOne = (
+    id: string,
+ ) => {
+      return customInstance<Topic>(
+      {url: `/topics/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить тему (только для админов/модераторов)
  */
-export const topicsControllerUpdate = <TData = AxiosResponse<Topic>>(
+const topicsControllerUpdate = (
     id: string,
-    updateTopicDto: UpdateTopicDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/topics/${id}`,
-      updateTopicDto,options
-    );
-  }
-
+    updateTopicDto: UpdateTopicDto,
+ ) => {
+      return customInstance<Topic>(
+      {url: `/topics/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateTopicDto
+    },
+      );
+    }
+  
 /**
  * @summary Удалить тему (только для админов/модераторов)
  */
-export const topicsControllerRemove = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/topics/${id}`,options
-    );
-  }
-
+const topicsControllerRemove = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/topics/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Создать новый урок
  */
-export const lessonsControllerCreate = <TData = AxiosResponse<Lesson>>(
-    createLessonDto: CreateLessonDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/lessons`,
-      createLessonDto,options
-    );
-  }
-
+const lessonsControllerCreate = (
+    createLessonDto: CreateLessonDto,
+ ) => {
+      return customInstance<Lesson>(
+      {url: `/lessons`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createLessonDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить все уроки
  */
-export const lessonsControllerFindAll = <TData = AxiosResponse<Lesson[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/lessons`,options
-    );
-  }
-
+const lessonsControllerFindAll = (
+    params?: LessonsControllerFindAllParams,
+ ) => {
+      return customInstance<PaginatedLessonsDto>(
+      {url: `/lessons`, method: 'GET',
+        params
+    },
+      );
+    }
+  
 /**
  * @summary Найти урок по ID
  */
-export const lessonsControllerFindOne = <TData = AxiosResponse<Lesson>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/lessons/${id}`,options
-    );
-  }
-
+const lessonsControllerFindOne = (
+    id: string,
+ ) => {
+      return customInstance<Lesson>(
+      {url: `/lessons/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить урок
  */
-export const lessonsControllerUpdate = <TData = AxiosResponse<Lesson>>(
+const lessonsControllerUpdate = (
     id: string,
-    updateLessonDto: UpdateLessonDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/lessons/${id}`,
-      updateLessonDto,options
-    );
-  }
-
+    updateLessonDto: UpdateLessonDto,
+ ) => {
+      return customInstance<Lesson>(
+      {url: `/lessons/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateLessonDto
+    },
+      );
+    }
+  
 /**
  * @summary Удалить урок
  */
-export const lessonsControllerRemove = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/lessons/${id}`,options
-    );
-  }
-
+const lessonsControllerRemove = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/lessons/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Получить детальное описание урока с целями обучения и требованиями
  */
-export const lessonsControllerGetLessonDescription = <TData = AxiosResponse<LessonDescriptionDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/lessons/${id}/description`,options
-    );
-  }
-
+const lessonsControllerGetLessonDescription = (
+    id: string,
+ ) => {
+      return customInstance<LessonDescriptionDto>(
+      {url: `/lessons/${id}/description`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить список уроков, которые нужно пройти перед текущим
  */
-export const lessonsControllerGetLessonPrerequisites = <TData = AxiosResponse<PrerequisitesDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/lessons/${id}/prerequisites`,options
-    );
-  }
-
+const lessonsControllerGetLessonPrerequisites = (
+    id: string,
+ ) => {
+      return customInstance<PrerequisitesDto>(
+      {url: `/lessons/${id}/prerequisites`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Создать новый тест (только для админов/модераторов)
  */
-export const quizzesControllerCreate = <TData = AxiosResponse<Quiz>>(
-    createQuizDto: CreateQuizDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/quizzes`,
-      createQuizDto,options
-    );
-  }
-
+const quizzesControllerCreate = (
+    createQuizDto: CreateQuizDto,
+ ) => {
+      return customInstance<Quiz>(
+      {url: `/quizzes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createQuizDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить все тесты
  */
-export const quizzesControllerFindAll = <TData = AxiosResponse<Quiz[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/quizzes`,options
-    );
-  }
-
+const quizzesControllerFindAll = (
+    
+ ) => {
+      return customInstance<Quiz[]>(
+      {url: `/quizzes`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Найти тест по ID
  */
-export const quizzesControllerFindOne = <TData = AxiosResponse<Quiz>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/quizzes/${id}`,options
-    );
-  }
-
+const quizzesControllerFindOne = (
+    id: string,
+ ) => {
+      return customInstance<Quiz>(
+      {url: `/quizzes/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить тест (только для админов/модераторов)
  */
-export const quizzesControllerUpdate = <TData = AxiosResponse<Quiz>>(
+const quizzesControllerUpdate = (
     id: string,
-    updateQuizDto: UpdateQuizDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/quizzes/${id}`,
-      updateQuizDto,options
-    );
-  }
-
+    updateQuizDto: UpdateQuizDto,
+ ) => {
+      return customInstance<Quiz>(
+      {url: `/quizzes/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateQuizDto
+    },
+      );
+    }
+  
 /**
  * @summary Удалить тест (только для админов/модераторов)
  */
-export const quizzesControllerRemove = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/quizzes/${id}`,options
-    );
-  }
-
+const quizzesControllerRemove = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/quizzes/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Найти тест по ID урока
  */
-export const quizzesControllerFindByLessonId = <TData = AxiosResponse<Quiz>>(
-    lessonId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/quizzes/lesson/${lessonId}`,options
-    );
-  }
-
+const quizzesControllerFindByLessonId = (
+    lessonId: string,
+ ) => {
+      return customInstance<Quiz>(
+      {url: `/quizzes/lesson/${lessonId}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Отправить ответы на тест
  */
-export const quizzesControllerSubmit = <TData = AxiosResponse<void>>(
+const quizzesControllerSubmit = (
     id: string,
-    submitQuizDto: SubmitQuizDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/quizzes/${id}/submit`,
-      submitQuizDto,options
-    );
-  }
-
+    submitQuizDto: SubmitQuizDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/quizzes/${id}/submit`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: submitQuizDto
+    },
+      );
+    }
+  
 /**
  * @summary Создать запись о прогрессе (только для админов/модераторов)
  */
-export const progressControllerCreate = <TData = AxiosResponse<Progress>>(
-    createProgressDto: CreateProgressDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/progress`,
-      createProgressDto,options
-    );
-  }
-
+const progressControllerCreate = (
+    createProgressDto: CreateProgressDto,
+ ) => {
+      return customInstance<Progress>(
+      {url: `/progress`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createProgressDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить весь прогресс для текущего пользователя
  */
-export const progressControllerFindAll = <TData = AxiosResponse<Progress[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/progress`,options
-    );
-  }
-
+const progressControllerFindAll = (
+    
+ ) => {
+      return customInstance<Progress[]>(
+      {url: `/progress`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить прогресс по конкретному уроку для текущего пользователя
  */
-export const progressControllerFindOne = <TData = AxiosResponse<Progress>>(
-    lessonId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/progress/${lessonId}`,options
-    );
-  }
-
+const progressControllerFindOne = (
+    lessonId: string,
+ ) => {
+      return customInstance<Progress>(
+      {url: `/progress/${lessonId}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Обновить прогресс по уроку (только для админов/модераторов)
  */
-export const progressControllerUpdate = <TData = AxiosResponse<Progress>>(
+const progressControllerUpdate = (
     lessonId: string,
-    updateProgressDto: UpdateProgressDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.patch(
-      `/progress/${lessonId}`,
-      updateProgressDto,options
-    );
-  }
-
+    updateProgressDto: UpdateProgressDto,
+ ) => {
+      return customInstance<Progress>(
+      {url: `/progress/${lessonId}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateProgressDto
+    },
+      );
+    }
+  
 /**
  * @summary Удалить прогресс по уроку (только для админов/модераторов)
  */
-export const progressControllerRemove = <TData = AxiosResponse<void>>(
-    lessonId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/progress/${lessonId}`,options
-    );
-  }
-
+const progressControllerRemove = (
+    lessonId: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/progress/${lessonId}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Завершить все уроки по предмету (только для админов/модераторов)
  */
-export const progressControllerCompleteSubject = <TData = AxiosResponse<void>>(
-    completeSubjectDto: CompleteSubjectDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/progress/complete-subject`,
-      completeSubjectDto,options
-    );
-  }
-
+const progressControllerCompleteSubject = (
+    completeSubjectDto: CompleteSubjectDto,
+ ) => {
+      return customInstance<void>(
+      {url: `/progress/complete-subject`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: completeSubjectDto
+    },
+      );
+    }
+  
 /**
  * @summary Создать новое уведомление
  */
-export const notificationsControllerCreateNotification = <TData = AxiosResponse<NotificationDto>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/notifications`,undefined,options
-    );
-  }
-
+const notificationsControllerCreateNotification = (
+    
+ ) => {
+      return customInstance<NotificationDto>(
+      {url: `/notifications`, method: 'POST'
+    },
+      );
+    }
+  
 /**
  * @summary Создать уведомление с рекомендацией
  */
-export const notificationsControllerCreateRecommendationNotification = <TData = AxiosResponse<NotificationDto>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/notifications/recommendation`,undefined,options
-    );
-  }
-
+const notificationsControllerCreateRecommendationNotification = (
+    
+ ) => {
+      return customInstance<NotificationDto>(
+      {url: `/notifications/recommendation`, method: 'POST'
+    },
+      );
+    }
+  
 /**
  * @summary Получить все уведомления для пользователя
  */
-export const notificationsControllerGetUserNotifications = <TData = AxiosResponse<NotificationDto[]>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/notifications/users/${id}`,options
-    );
-  }
-
+const notificationsControllerGetUserNotifications = (
+    id: string,
+ ) => {
+      return customInstance<NotificationDto[]>(
+      {url: `/notifications/users/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить уведомления для текущего авторизованного пользователя
  */
-export const notificationsControllerGetCurrentUserNotifications = <TData = AxiosResponse<NotificationDto[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/notifications/current-user`,options
-    );
-  }
-
+const notificationsControllerGetCurrentUserNotifications = (
+    
+ ) => {
+      return customInstance<NotificationDto[]>(
+      {url: `/notifications/current-user`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Отметить уведомление как прочитанное
  */
-export const notificationsControllerMarkAsRead = <TData = AxiosResponse<NotificationDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/notifications/${id}/read`,undefined,options
-    );
-  }
-
+const notificationsControllerMarkAsRead = (
+    id: string,
+ ) => {
+      return customInstance<NotificationDto>(
+      {url: `/notifications/${id}/read`, method: 'POST'
+    },
+      );
+    }
+  
 /**
  * @summary Удалить уведомление
  */
-export const notificationsControllerDeleteNotification = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/notifications/${id}`,options
-    );
-  }
-
+const notificationsControllerDeleteNotification = (
+    id: string,
+ ) => {
+      return customInstance<void>(
+      {url: `/notifications/${id}`, method: 'DELETE'
+    },
+      );
+    }
+  
 /**
  * @summary Создать новый сертификат
  */
-export const certificatesControllerCreate = <TData = AxiosResponse<Certificate>>(
-    createCertificateDto: CreateCertificateDto, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/certificates`,
-      createCertificateDto,options
-    );
-  }
-
+const certificatesControllerCreate = (
+    createCertificateDto: CreateCertificateDto,
+ ) => {
+      return customInstance<Certificate>(
+      {url: `/certificates`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createCertificateDto
+    },
+      );
+    }
+  
 /**
  * @summary Получить все сертификаты (только для админов)
  */
-export const certificatesControllerFindAll = <TData = AxiosResponse<Certificate[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/certificates`,options
-    );
-  }
-
+const certificatesControllerFindAll = (
+    
+ ) => {
+      return customInstance<Certificate[]>(
+      {url: `/certificates`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Найти сертификаты по ID пользователя
  */
-export const certificatesControllerFindByUser = <TData = AxiosResponse<Certificate[]>>(
-    userId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/certificates/user/${userId}`,options
-    );
-  }
-
+const certificatesControllerFindByUser = (
+    userId: string,
+ ) => {
+      return customInstance<Certificate[]>(
+      {url: `/certificates/user/${userId}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Найти сертификат по ID
  */
-export const certificatesControllerFindOne = <TData = AxiosResponse<Certificate>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/certificates/${id}`,options
-    );
-  }
-
+const certificatesControllerFindOne = (
+    id: string,
+ ) => {
+      return customInstance<Certificate>(
+      {url: `/certificates/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Скачать сертификат в формате PDF
  */
-export const certificatesControllerDownload = <TData = AxiosResponse<Blob>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/certificates/${id}/download`,{
-        responseType: 'blob',
-    ...options,}
-    );
-  }
-
+const certificatesControllerDownload = (
+    id: string,
+ ) => {
+      return customInstance<Blob>(
+      {url: `/certificates/${id}/download`, method: 'GET',
+        responseType: 'blob'
+    },
+      );
+    }
+  
 /**
  * @summary Загрузить файл
  */
-export const filesControllerUploadFile = <TData = AxiosResponse<FilesControllerUploadFile200>>(
-    filesControllerUploadFileBody: FilesControllerUploadFileBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
+const filesControllerUploadFile = (
+    filesControllerUploadFileBody: FilesControllerUploadFileBody,
+ ) => {const formData = new FormData();
 if(filesControllerUploadFileBody.file !== undefined) {
  formData.append(`file`, filesControllerUploadFileBody.file)
  }
 
-    return axios.post(
-      `/files/upload`,
-      formData,options
-    );
-  }
-
+      return customInstance<FilesControllerUploadFile200>(
+      {url: `/files/upload`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      );
+    }
+  
 /**
  * @summary Получить рекомендации следующих уроков на основе прогресса пользователя
  */
-export const recommendationsControllerGetRecommendationsForUser = <TData = AxiosResponse<RecommendationsDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/recommendations/users/${id}`,options
-    );
-  }
-
+const recommendationsControllerGetRecommendationsForUser = (
+    id: string,
+ ) => {
+      return customInstance<RecommendationsDto>(
+      {url: `/recommendations/users/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить рекомендации для текущего авторизованного пользователя
  */
-export const recommendationsControllerGetRecommendationsForCurrentUser = <TData = AxiosResponse<RecommendationsDto>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/recommendations/current-user`,options
-    );
-  }
-
+const recommendationsControllerGetRecommendationsForCurrentUser = (
+    
+ ) => {
+      return customInstance<RecommendationsDto>(
+      {url: `/recommendations/current-user`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить данные для дашборда админки
+ */
+const adminControllerGetDashboard = (
+    
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/dashboard`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить список пользователей админки
+ */
+const adminControllerGetUsers = (
+    
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/users`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить список курсов админки
+ */
+const adminControllerGetCourses = (
+    
+ ) => {
+      return customInstance<void>(
+      {url: `/admin/courses`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить статистику обучения: время, прогресс, сильные/слабые стороны
  */
-export const analyticsControllerGetUserAnalytics = <TData = AxiosResponse<AnalyticsDto>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/analytics/users/${id}`,options
-    );
-  }
-
+const analyticsControllerGetUserAnalytics = (
+    id: string,
+ ) => {
+      return customInstance<AnalyticsDto>(
+      {url: `/admin/analytics/users/${id}`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить аналитику для текущего авторизованного пользователя
  */
-export const analyticsControllerGetCurrentUserAnalytics = <TData = AxiosResponse<AnalyticsDto>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/analytics/current-user`,options
-    );
-  }
-
+const analyticsControllerGetCurrentUserAnalytics = (
+    
+ ) => {
+      return customInstance<AnalyticsDto>(
+      {url: `/admin/analytics/current-user`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить время, потраченное на обучение
  */
-export const analyticsControllerGetTimeSpent = <TData = AxiosResponse<AnalyticsControllerGetTimeSpent200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/analytics/user/${id}/time-spent`,options
-    );
-  }
-
+const analyticsControllerGetTimeSpent = (
+    id: string,
+ ) => {
+      return customInstance<AnalyticsControllerGetTimeSpent200>(
+      {url: `/admin/analytics/user/${id}/time-spent`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить успешность прохождения тестов
  */
-export const analyticsControllerGetSuccessRate = <TData = AxiosResponse<AnalyticsControllerGetSuccessRate200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/analytics/user/${id}/success-rate`,options
-    );
-  }
-
+const analyticsControllerGetSuccessRate = (
+    id: string,
+ ) => {
+      return customInstance<AnalyticsControllerGetSuccessRate200>(
+      {url: `/admin/analytics/user/${id}/success-rate`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить прогресс пользователя по месяцам за последние 6 месяцев
+ */
+const analyticsControllerGetUserProgressOverTime = (
+    id: string,
+ ) => {
+      return customInstance<UserProgressOverTimeDto>(
+      {url: `/admin/analytics/user/${id}/progress-over-time`, method: 'GET'
+    },
+      );
+    }
+  
 /**
  * @summary Получить популярные уроки в курсе
  */
-export const analyticsControllerGetPopularLessons = <TData = AxiosResponse<AnalyticsControllerGetPopularLessons200Item[]>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/analytics/course/${id}/popular-lessons`,options
-    );
-  }
-
-export type AppControllerGetHelloResult = AxiosResponse<void>
-export type AuthControllerRegisterResult = AxiosResponse<AuthResponse>
-export type AuthControllerLoginResult = AxiosResponse<AuthResponse>
-export type AuthControllerRefreshResult = AxiosResponse<AuthResponse>
-export type AuthControllerLogoutResult = AxiosResponse<void>
-export type UsersControllerCreateResult = AxiosResponse<User>
-export type UsersControllerGetAllUsersResult = AxiosResponse<User[]>
-export type UsersControllerGetMeResult = AxiosResponse<GetMeDto>
-export type UsersControllerUpdateMeResult = AxiosResponse<User>
-export type UsersControllerChangePasswordResult = AxiosResponse<void>
-export type UsersControllerUpdateResult = AxiosResponse<User>
-export type SubjectsControllerCreateResult = AxiosResponse<Subject>
-export type SubjectsControllerFindAllResult = AxiosResponse<Subject[]>
-export type SubjectsControllerFindOneResult = AxiosResponse<Subject>
-export type SubjectsControllerUpdateResult = AxiosResponse<Subject>
-export type SubjectsControllerRemoveResult = AxiosResponse<void>
-export type SubjectsControllerGetLearningPathResult = AxiosResponse<LearningPathDto>
-export type LearningPathControllerGetLearningPathResult = AxiosResponse<LearningPathDto>
-export type TopicsControllerCreateResult = AxiosResponse<Topic>
-export type TopicsControllerFindAllResult = AxiosResponse<Topic[]>
-export type TopicsControllerFindOneResult = AxiosResponse<Topic>
-export type TopicsControllerUpdateResult = AxiosResponse<Topic>
-export type TopicsControllerRemoveResult = AxiosResponse<void>
-export type LessonsControllerCreateResult = AxiosResponse<Lesson>
-export type LessonsControllerFindAllResult = AxiosResponse<Lesson[]>
-export type LessonsControllerFindOneResult = AxiosResponse<Lesson>
-export type LessonsControllerUpdateResult = AxiosResponse<Lesson>
-export type LessonsControllerRemoveResult = AxiosResponse<void>
-export type LessonsControllerGetLessonDescriptionResult = AxiosResponse<LessonDescriptionDto>
-export type LessonsControllerGetLessonPrerequisitesResult = AxiosResponse<PrerequisitesDto>
-export type QuizzesControllerCreateResult = AxiosResponse<Quiz>
-export type QuizzesControllerFindAllResult = AxiosResponse<Quiz[]>
-export type QuizzesControllerFindOneResult = AxiosResponse<Quiz>
-export type QuizzesControllerUpdateResult = AxiosResponse<Quiz>
-export type QuizzesControllerRemoveResult = AxiosResponse<void>
-export type QuizzesControllerFindByLessonIdResult = AxiosResponse<Quiz>
-export type QuizzesControllerSubmitResult = AxiosResponse<void>
-export type ProgressControllerCreateResult = AxiosResponse<Progress>
-export type ProgressControllerFindAllResult = AxiosResponse<Progress[]>
-export type ProgressControllerFindOneResult = AxiosResponse<Progress>
-export type ProgressControllerUpdateResult = AxiosResponse<Progress>
-export type ProgressControllerRemoveResult = AxiosResponse<void>
-export type ProgressControllerCompleteSubjectResult = AxiosResponse<void>
-export type NotificationsControllerCreateNotificationResult = AxiosResponse<NotificationDto>
-export type NotificationsControllerCreateRecommendationNotificationResult = AxiosResponse<NotificationDto>
-export type NotificationsControllerGetUserNotificationsResult = AxiosResponse<NotificationDto[]>
-export type NotificationsControllerGetCurrentUserNotificationsResult = AxiosResponse<NotificationDto[]>
-export type NotificationsControllerMarkAsReadResult = AxiosResponse<NotificationDto>
-export type NotificationsControllerDeleteNotificationResult = AxiosResponse<void>
-export type CertificatesControllerCreateResult = AxiosResponse<Certificate>
-export type CertificatesControllerFindAllResult = AxiosResponse<Certificate[]>
-export type CertificatesControllerFindByUserResult = AxiosResponse<Certificate[]>
-export type CertificatesControllerFindOneResult = AxiosResponse<Certificate>
-export type CertificatesControllerDownloadResult = AxiosResponse<Blob>
-export type FilesControllerUploadFileResult = AxiosResponse<FilesControllerUploadFile200>
-export type RecommendationsControllerGetRecommendationsForUserResult = AxiosResponse<RecommendationsDto>
-export type RecommendationsControllerGetRecommendationsForCurrentUserResult = AxiosResponse<RecommendationsDto>
-export type AnalyticsControllerGetUserAnalyticsResult = AxiosResponse<AnalyticsDto>
-export type AnalyticsControllerGetCurrentUserAnalyticsResult = AxiosResponse<AnalyticsDto>
-export type AnalyticsControllerGetTimeSpentResult = AxiosResponse<AnalyticsControllerGetTimeSpent200>
-export type AnalyticsControllerGetSuccessRateResult = AxiosResponse<AnalyticsControllerGetSuccessRate200>
-export type AnalyticsControllerGetPopularLessonsResult = AxiosResponse<AnalyticsControllerGetPopularLessons200Item[]>
+const analyticsControllerGetPopularLessons = (
+    id: string,
+ ) => {
+      return customInstance<AnalyticsControllerGetPopularLessons200Item[]>(
+      {url: `/admin/analytics/course/${id}/popular-lessons`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить аналитику для конкретного курса (только для админов)
+ */
+const analyticsControllerGetCourseAnalytics = (
+    id: string,
+ ) => {
+      return customInstance<CourseAnalyticsDto>(
+      {url: `/admin/analytics/courses/${id}`, method: 'GET'
+    },
+      );
+    }
+  
+/**
+ * @summary Получить аналитику для текущего авторизованного пользователя
+ */
+const userAnalyticsControllerGetCurrentUserAnalytics = (
+    
+ ) => {
+      return customInstance<AnalyticsDto>(
+      {url: `/analytics/current-user`, method: 'GET'
+    },
+      );
+    }
+  
+return {appControllerGetHello,authControllerRegister,authControllerLogin,authControllerRefresh,authControllerLogout,usersControllerCreate,usersControllerGetAllUsers,usersControllerGetMe,usersControllerUpdateMe,usersControllerChangePassword,usersControllerUpdate,usersControllerRemove,subjectsControllerCreate,subjectsControllerFindAll,subjectsControllerFindOne,subjectsControllerUpdate,subjectsControllerRemove,subjectsControllerGetLearningPath,learningPathControllerGetLearningPath,topicsControllerCreate,topicsControllerFindAll,topicsControllerFindOne,topicsControllerUpdate,topicsControllerRemove,lessonsControllerCreate,lessonsControllerFindAll,lessonsControllerFindOne,lessonsControllerUpdate,lessonsControllerRemove,lessonsControllerGetLessonDescription,lessonsControllerGetLessonPrerequisites,quizzesControllerCreate,quizzesControllerFindAll,quizzesControllerFindOne,quizzesControllerUpdate,quizzesControllerRemove,quizzesControllerFindByLessonId,quizzesControllerSubmit,progressControllerCreate,progressControllerFindAll,progressControllerFindOne,progressControllerUpdate,progressControllerRemove,progressControllerCompleteSubject,notificationsControllerCreateNotification,notificationsControllerCreateRecommendationNotification,notificationsControllerGetUserNotifications,notificationsControllerGetCurrentUserNotifications,notificationsControllerMarkAsRead,notificationsControllerDeleteNotification,certificatesControllerCreate,certificatesControllerFindAll,certificatesControllerFindByUser,certificatesControllerFindOne,certificatesControllerDownload,filesControllerUploadFile,recommendationsControllerGetRecommendationsForUser,recommendationsControllerGetRecommendationsForCurrentUser,adminControllerGetDashboard,adminControllerGetUsers,adminControllerGetCourses,analyticsControllerGetUserAnalytics,analyticsControllerGetCurrentUserAnalytics,analyticsControllerGetTimeSpent,analyticsControllerGetSuccessRate,analyticsControllerGetUserProgressOverTime,analyticsControllerGetPopularLessons,analyticsControllerGetCourseAnalytics,userAnalyticsControllerGetCurrentUserAnalytics}};
+export type AppControllerGetHelloResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['appControllerGetHello']>>>
+export type AuthControllerRegisterResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerRegister']>>>
+export type AuthControllerLoginResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerLogin']>>>
+export type AuthControllerRefreshResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerRefresh']>>>
+export type AuthControllerLogoutResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['authControllerLogout']>>>
+export type UsersControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerCreate']>>>
+export type UsersControllerGetAllUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerGetAllUsers']>>>
+export type UsersControllerGetMeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerGetMe']>>>
+export type UsersControllerUpdateMeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerUpdateMe']>>>
+export type UsersControllerChangePasswordResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerChangePassword']>>>
+export type UsersControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerUpdate']>>>
+export type UsersControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['usersControllerRemove']>>>
+export type SubjectsControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerCreate']>>>
+export type SubjectsControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerFindAll']>>>
+export type SubjectsControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerFindOne']>>>
+export type SubjectsControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerUpdate']>>>
+export type SubjectsControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerRemove']>>>
+export type SubjectsControllerGetLearningPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['subjectsControllerGetLearningPath']>>>
+export type LearningPathControllerGetLearningPathResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['learningPathControllerGetLearningPath']>>>
+export type TopicsControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerCreate']>>>
+export type TopicsControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerFindAll']>>>
+export type TopicsControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerFindOne']>>>
+export type TopicsControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerUpdate']>>>
+export type TopicsControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['topicsControllerRemove']>>>
+export type LessonsControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerCreate']>>>
+export type LessonsControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerFindAll']>>>
+export type LessonsControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerFindOne']>>>
+export type LessonsControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerUpdate']>>>
+export type LessonsControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerRemove']>>>
+export type LessonsControllerGetLessonDescriptionResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerGetLessonDescription']>>>
+export type LessonsControllerGetLessonPrerequisitesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['lessonsControllerGetLessonPrerequisites']>>>
+export type QuizzesControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerCreate']>>>
+export type QuizzesControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerFindAll']>>>
+export type QuizzesControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerFindOne']>>>
+export type QuizzesControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerUpdate']>>>
+export type QuizzesControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerRemove']>>>
+export type QuizzesControllerFindByLessonIdResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerFindByLessonId']>>>
+export type QuizzesControllerSubmitResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['quizzesControllerSubmit']>>>
+export type ProgressControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerCreate']>>>
+export type ProgressControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerFindAll']>>>
+export type ProgressControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerFindOne']>>>
+export type ProgressControllerUpdateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerUpdate']>>>
+export type ProgressControllerRemoveResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerRemove']>>>
+export type ProgressControllerCompleteSubjectResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['progressControllerCompleteSubject']>>>
+export type NotificationsControllerCreateNotificationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerCreateNotification']>>>
+export type NotificationsControllerCreateRecommendationNotificationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerCreateRecommendationNotification']>>>
+export type NotificationsControllerGetUserNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerGetUserNotifications']>>>
+export type NotificationsControllerGetCurrentUserNotificationsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerGetCurrentUserNotifications']>>>
+export type NotificationsControllerMarkAsReadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerMarkAsRead']>>>
+export type NotificationsControllerDeleteNotificationResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['notificationsControllerDeleteNotification']>>>
+export type CertificatesControllerCreateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['certificatesControllerCreate']>>>
+export type CertificatesControllerFindAllResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['certificatesControllerFindAll']>>>
+export type CertificatesControllerFindByUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['certificatesControllerFindByUser']>>>
+export type CertificatesControllerFindOneResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['certificatesControllerFindOne']>>>
+export type CertificatesControllerDownloadResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['certificatesControllerDownload']>>>
+export type FilesControllerUploadFileResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['filesControllerUploadFile']>>>
+export type RecommendationsControllerGetRecommendationsForUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['recommendationsControllerGetRecommendationsForUser']>>>
+export type RecommendationsControllerGetRecommendationsForCurrentUserResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['recommendationsControllerGetRecommendationsForCurrentUser']>>>
+export type AdminControllerGetDashboardResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetDashboard']>>>
+export type AdminControllerGetUsersResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetUsers']>>>
+export type AdminControllerGetCoursesResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['adminControllerGetCourses']>>>
+export type AnalyticsControllerGetUserAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetUserAnalytics']>>>
+export type AnalyticsControllerGetCurrentUserAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetCurrentUserAnalytics']>>>
+export type AnalyticsControllerGetTimeSpentResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetTimeSpent']>>>
+export type AnalyticsControllerGetSuccessRateResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetSuccessRate']>>>
+export type AnalyticsControllerGetUserProgressOverTimeResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetUserProgressOverTime']>>>
+export type AnalyticsControllerGetPopularLessonsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetPopularLessons']>>>
+export type AnalyticsControllerGetCourseAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['analyticsControllerGetCourseAnalytics']>>>
+export type UserAnalyticsControllerGetCurrentUserAnalyticsResult = NonNullable<Awaited<ReturnType<ReturnType<typeof getEducationPlatform>['userAnalyticsControllerGetCurrentUserAnalytics']>>>

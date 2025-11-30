@@ -3,9 +3,11 @@
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
 import { Skeleton } from '@/src/components/ui/skeleton'
+import { useAuth } from '@/src/hooks/useAuth'
 
 export function ActiveCoursesSection() {
-  const { data: enrolledSubjects, isLoading, isError } = useGetEnrolledSubjectsQuery()
+  const { user } = useAuth();
+  const { data: enrolledSubjects, isLoading, isError } = useGetEnrolledSubjectsQuery(user?.id || '')
 
   if (isLoading) {
     return (
@@ -33,14 +35,14 @@ export function ActiveCoursesSection() {
     )
   }
 
-  // Преобразуем данные в формат, ожидаемый SubjectCard
-  const subjectsForCard = enrolledSubjects?.map(subject => ({
-    id: subject.id,
-    title: subject.title,
-    description: subject.description ? String(subject.description) : 'Описание отсутствует',
-    progress: subject.progress || 0,
-    lessons: subject.topics ? subject.topics.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) : 0,
-    category: 'Курс'
+  // Используем topics из LearningPathDto для отображения активных курсов
+  const subjectsForCard = enrolledSubjects?.topics?.map(topic => ({
+    id: topic.id || '',
+    title: topic.title || '',
+    description: 'Описание отсутствует', // Пока что ставим заглушку, т.к. поля description нет в типе
+    progress: 0, // Пока что ставим заглушку, т.к. поля progress нет в типе
+    lessons: Array.isArray(topic.lessons) ? topic.lessons.length : 0,
+    category: 'Тема'
   })) || []
 
   return (

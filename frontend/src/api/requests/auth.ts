@@ -1,5 +1,5 @@
 import { removeTokens, saveToken, saveRefreshToken } from "@/src/lib/cookies"
-import { api } from "../instance"
+import { api } from "../api"
 import type { AuthResponse, LoginRequest, RegisterRequest } from "../types"
 
 export const register = async (data: RegisterRequest) =>
@@ -12,14 +12,6 @@ export const register = async (data: RegisterRequest) =>
 
 export const login = async (data: LoginRequest) =>
     await api.post<AuthResponse>('/auth/login', data).then(res => {
-        if (res.data.accessToken) saveToken(res.data.accessToken)
-        if (res.data.refreshToken) saveRefreshToken(res.data.refreshToken)
-
-        return res.data
-    })
-
-export const refresh = async () =>
-    await api.post<AuthResponse>('/auth/refresh').then(res => {
         if (res.data.accessToken) saveToken(res.data.accessToken)
         if (res.data.refreshToken) saveRefreshToken(res.data.refreshToken)
 

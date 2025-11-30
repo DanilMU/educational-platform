@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Lesson } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateLessonDto, UpdateLessonDto } from './dto';
@@ -13,8 +14,19 @@ export class LessonsService {
 		return this.prisma.lesson.create({ data: createLessonDto });
 	}
 
-	findAll() {
-		return this.prisma.lesson.findMany();
+	findAll(
+		skip: number,
+		take: number
+	): Promise<{ lessons: Lesson[]; total: number }> {
+		return this.prisma
+			.$transaction([
+				this.prisma.lesson.findMany({
+					skip: isNaN(skip) ? undefined : skip,
+					take: isNaN(take) ? undefined : take
+				}),
+				this.prisma.lesson.count()
+			])
+			.then(([lessons, total]) => ({ lessons, total }));
 	}
 
 	findOne(id: string) {

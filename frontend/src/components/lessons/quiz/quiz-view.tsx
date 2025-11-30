@@ -115,16 +115,17 @@ export function QuizView({ lessonId }: QuizViewProps) {
           <p className="text-2xl font-bold">
             Ваш результат: {quizResult.score} из {quizResult.totalQuestions}
           </p>
-          {isPassed ? (
+          <p className="text-xl font-semibold">
+            {quizResult.message}
+          </p>
+          <div className="flex justify-around text-lg">
             <p className="text-green-600">
-              Отлично! Тест пройден. Урок будет отмечен как завершенный.
+              Правильных: {quizResult.correctAnswers}
             </p>
-          ) : (
             <p className="text-red-600">
-              Тест не пройден. Пожалуйста, просмотрите материал и попробуйте
-              еще раз.
+              Неправильных: {quizResult.incorrectAnswers}
             </p>
-          )}
+          </div>
         </CardContent>
         <CardFooter className="flex-col gap-2 sm:flex-row">
           {isPassed ? (

@@ -8,12 +8,14 @@ import Link from 'next/link'
 
 import { Skeleton } from '../ui/skeleton'
 import { Button } from '../ui/button'
+import { useAuth } from '@/src/hooks/useAuth'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
 
 export function EnrolledSubjects() {
-	const { data: subjects, isLoading } = useGetEnrolledSubjectsQuery()
+	const { user } = useAuth();
+	const { data: subjects, isLoading } = useGetEnrolledSubjectsQuery(user?.id || '')
 
 	if (isLoading) {
 		return (
@@ -59,12 +61,12 @@ export function EnrolledSubjects() {
 				</div>
 			</CardHeader>
 			<CardContent>
-				{subjects && subjects.length > 0 ? (
+				{subjects?.topics && subjects.topics.length > 0 ? (
 					<ul className='space-y-4'>
-						{subjects.map(subject => (
-							<li key={subject.id}>
+						{subjects.topics.map(topic => (
+							<li key={topic.id}>
 								<Link
-									href={`/subjects/${subject.id}`}
+									href={`/subjects/${topic.id}`}
 									className='block rounded-lg border p-4 transition-all hover:bg-accent hover:shadow-sm'
 								>
 									<div className='flex items-center justify-between'>
@@ -74,10 +76,10 @@ export function EnrolledSubjects() {
 											</div>
 											<div>
 												<h4 className='font-semibold text-foreground'>
-													{subject.title || (typeof subject.name === 'string' ? subject.name : 'Без названия')}
+													{topic.title || 'Без названия'}
 												</h4>
 												<p className='text-sm text-muted-foreground'>
-													Прогресс: {subject.progress}%
+													Прогресс: 0%
 												</p>
 											</div>
 										</div>

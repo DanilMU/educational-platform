@@ -43,7 +43,7 @@ export function SubjectDetails({ subjectId }: SubjectDetailsProps) {
 			<div>
 				<h1 className='text-4xl font-bold'>{subject.title}</h1>
 				<p className='mt-2 text-lg text-gray-600'>
-					{subject.description || ''}
+					{String(subject.description || '')}
 				</p>
 			</div>
 

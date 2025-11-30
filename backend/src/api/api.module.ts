@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { AnalyticsModule } from './analytics/analytics.module';
+import { AdminModule } from './admin/admin.module';
+import { UserAnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
 import { CertificatesModule } from './certificates/certificates.module';
 import { FilesModule } from './files/files.module';
 import { LearningPathModule } from './learning-path/learning-path.module';
 import { LessonsModule } from './lessons/lessons.module';
-import { NotificationsModule } from './notifications/notifications.module';
 import { ProgressModule } from './progress/progress.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
@@ -26,9 +26,9 @@ import { UsersModule } from './users/users.module';
 		CertificatesModule,
 		FilesModule,
 		RecommendationsModule,
-		AnalyticsModule,
-		NotificationsModule,
-		LearningPathModule
+		LearningPathModule,
+		AdminModule,
+		UserAnalyticsModule
 	]
 })
 export class ApiModule {}
