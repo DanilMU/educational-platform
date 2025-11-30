@@ -28,7 +28,10 @@ import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 import { CreateLessonDto, UpdateLessonDto } from '../lessons/dto';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { CreateSubjectDto, UpdateSubjectDto } from '../subjects/dto';
+import { UpdateSubjectStatusDto } from '../subjects/dto/update-subject-status.dto';
 import { Subject } from '../subjects/entities/subject.entity';
+import { CreateTopicDto, UpdateTopicDto } from '../topics/dto';
+import { Topic } from '../topics/entities/topic.entity';
 import { CreateUserDto, UpdateUserDto } from '../users/dto';
 import { User } from '../users/entities/user.entity';
 
@@ -169,6 +172,21 @@ export class AdminController {
 		return this.adminService.updateCourse(id, courseData);
 	}
 
+	@Patch('courses/:id/status')
+	@ApiOperation({ summary: 'Обновить статус курса' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID курса', type: String })
+	@ApiBody({ type: UpdateSubjectStatusDto })
+	@ApiOkResponse({ description: 'Статус курса обновлен', type: Subject })
+	@ApiNotFoundResponse({ description: 'Курс не найден' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async updateCourseStatus(
+		@Param('id') id: string,
+		@Body() updateStatusDto: UpdateSubjectStatusDto
+	) {
+		return this.adminService.updateCourseStatus(id, updateStatusDto.status);
+	}
+
 	@Delete('courses/:id')
 	@ApiOperation({ summary: 'Удалить курс' })
 	@ApiBearerAuth()
@@ -245,5 +263,72 @@ export class AdminController {
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
 	async deleteLesson(@Param('id') id: string) {
 		return this.adminService.deleteLesson(id);
+	}
+
+	// CRUD для тем
+	@Get('topics')
+	@ApiOperation({ summary: 'Получить список тем админки' })
+	@ApiBearerAuth()
+	@ApiOkResponse({ description: 'Список тем', type: [Topic] })
+	@ApiQuery({
+		name: 'skip',
+		required: false,
+		type: String,
+		description: 'Количество пропускаемых элементов'
+	})
+	@ApiQuery({
+		name: 'take',
+		required: false,
+		type: String,
+		description: 'Количество возвращаемых элементов'
+	})
+	async getTopics(@Query('skip') skip: string, @Query('take') take: string) {
+		return this.adminService.getAllTopics(+skip, +take);
+	}
+
+	@Get('topics/:id')
+	@ApiOperation({ summary: 'Получить тему по ID' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID темы', type: String })
+	@ApiOkResponse({ description: 'Данные темы', type: Topic })
+	@ApiNotFoundResponse({ description: 'Тема не найдена' })
+	async getTopicById(@Param('id') id: string) {
+		return this.adminService.getTopicById(id);
+	}
+
+	@Post('topics')
+	@ApiOperation({ summary: 'Создать новую тему' })
+	@ApiBearerAuth()
+	@ApiBody({ type: CreateTopicDto })
+	@ApiCreatedResponse({ description: 'Тема создана', type: Topic })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async createTopic(@Body() topicData: CreateTopicDto) {
+		return this.adminService.createTopic(topicData);
+	}
+
+	@Patch('topics/:id')
+	@ApiOperation({ summary: 'Обновить тему' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID темы', type: String })
+	@ApiBody({ type: UpdateTopicDto })
+	@ApiOkResponse({ description: 'Тема обновлена', type: Topic })
+	@ApiNotFoundResponse({ description: 'Тема не найдена' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async updateTopic(
+		@Param('id') id: string,
+		@Body() topicData: UpdateTopicDto
+	) {
+		return this.adminService.updateTopic(id, topicData);
+	}
+
+	@Delete('topics/:id')
+	@ApiOperation({ summary: 'Удалить тему' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID темы', type: String })
+	@ApiOkResponse({ description: 'Тема удалена', type: Topic })
+	@ApiNotFoundResponse({ description: 'Тема не найдена' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async deleteTopic(@Param('id') id: string) {
+		return this.adminService.deleteTopic(id);
 	}
 }

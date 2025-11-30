@@ -20,6 +20,7 @@ import { MagicCard } from '@/src/components/ui/magic-card' // Import MagicCard
 // I'll assume the subject type based on the usage in the card.
 // This should be replaced with the actual type from the API client later.
 import type { SubjectDescription } from '@/src/api/types'
+import { useEnrollInSubjectMutation } from '@/src/api/hooks'
 
 type Subject = {
   id: string
@@ -27,13 +28,45 @@ type Subject = {
   description?: string | SubjectDescription
   progress?: number
   lessons?: number | string
-  category?: string
+ category?: string
   studentCount?: number
   rating?: number
+  isEnrolled?: boolean
 }
 
 interface SubjectCardProps {
   subject: Subject
+}
+
+// Компонент кнопки записи на курс
+function EnrollButton({ subjectId }: { subjectId: string }) {
+  const mutation = useEnrollInSubjectMutation();
+
+  const handleEnroll = () => {
+    mutation.mutate(subjectId);
+  };
+
+  return (
+    <Button
+      className="w-full"
+      size="sm"
+      variant="outline"
+      onClick={handleEnroll}
+      disabled={mutation.isPending}
+    >
+      {mutation.isPending ? (
+        <>
+          <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+          Записываем...
+        </>
+      ) : (
+        <>
+          <BookOpen className="w-4 h-4 mr-2" />
+          Записаться на курс
+        </>
+      )}
+    </Button>
+  );
 }
 
 const SubjectCard = memo(({ subject }: SubjectCardProps) => {
@@ -122,16 +155,20 @@ const SubjectCard = memo(({ subject }: SubjectCardProps) => {
       </CardContent>
       
       <CardFooter>
-        <Button 
-          className="w-full" 
-          asChild
-          size="sm"
-        >
-          <Link href={`/subjects/${subject.id}`}>
-            <PlayCircle className="w-4 h-4 mr-2" />
-            Начать обучение
-          </Link>
-        </Button>
+        {subject.isEnrolled ? (
+          <Button
+            className="w-full"
+            asChild
+            size="sm"
+          >
+            <Link href={`/subjects/${subject.id}`}>
+              <PlayCircle className="w-4 h-4 mr-2" />
+              Продолжить обучение
+            </Link>
+          </Button>
+        ) : (
+          <EnrollButton subjectId={subject.id} />
+        )}
       </CardFooter>
     </MagicCard>
   )

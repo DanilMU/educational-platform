@@ -9,7 +9,7 @@ import { Input } from '@/src/components/ui/input';
 import { useCreateAdminLessonMutation, useUpdateAdminLessonMutation } from '@/src/api/hooks/useAdminLessons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Textarea } from '@/src/components/ui/textarea';
-import { useGetTopicsQuery } from '@/src/api/hooks/useGetTopicsQuery';
+import { useAdminTopicsQuery } from '@/src/api/hooks/useAdminTopics';
 import type { Lesson, CreateLessonDto, UpdateLessonDto } from '@/src/api/types';
 
 
@@ -42,7 +42,7 @@ interface LessonFormProps {
 export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
   const createLessonMutation = useCreateAdminLessonMutation();
   const updateLessonMutation = useUpdateAdminLessonMutation();
-  const { data: topicsData, isLoading: isLoadingTopics } = useGetTopicsQuery({ skip: 0, take: 100 }); // Fetch all topics for dropdown
+  const { data: topicsData, isLoading: isLoadingTopics } = useAdminTopicsQuery({ skip: 0, take: 10 }); // Fetch all topics for dropdown
   const topics = topicsData?.data || [];
 
   const form = useForm<LessonFormValues>({

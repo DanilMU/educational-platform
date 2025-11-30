@@ -23,13 +23,14 @@ import {
 	ApiTags
 } from '@nestjs/swagger';
 import { Role, Subject as SubjectModel } from '@prisma/client';
-import { Roles } from 'src/common/decorators';
+import { Authorized, Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { LearningPathDto } from '../lessons/dto/learning-path.dto';
 
 import { CreateSubjectDto, UpdateSubjectDto } from './dto';
 import { PaginatedSubjectsDto } from './dto/paginated-subjects.dto';
+import { UpdateSubjectStatusDto } from './dto/update-subject-status.dto';
 import { Subject } from './entities/subject.entity';
 import { SubjectsService } from './subjects.service';
 
@@ -113,6 +114,29 @@ export class SubjectsController {
 		return this.subjectsService.update(id, updateSubjectDto);
 	}
 
+	@Patch(':id/status')
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Roles(Role.ADMIN, Role.MODERATOR)
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary:
+			'Обновить статус предмета (курса) (только для админов/модераторов)'
+	})
+	@ApiParam({ name: 'id', description: 'ID предмета', type: String })
+	@ApiBody({ type: UpdateSubjectStatusDto })
+	@ApiOkResponse({
+		description: 'Статус предмета успешно обновлен.',
+		type: Subject
+	})
+	@ApiNotFoundResponse({ description: 'Предмет не найден.' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	updateStatus(
+		@Param('id') id: string,
+		@Body() updateStatusDto: UpdateSubjectStatusDto
+	) {
+		return this.subjectsService.updateStatus(id, updateStatusDto.status);
+	}
+
 	@Delete(':id')
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Roles(Role.ADMIN, Role.MODERATOR)
@@ -153,5 +177,25 @@ export class SubjectsController {
 	})
 	findByUserId(@Param('userId') userId: string) {
 		return this.subjectsService.findByUserId(userId);
+	}
+
+	@Post(':subjectId/enroll')
+	@UseGuards(JwtAuthGuard)
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Записаться на курс'
+	})
+	@ApiParam({ name: 'subjectId', description: 'ID курса', type: String })
+	@ApiOkResponse({
+		description: 'Пользователь успешно записан на курс.',
+		type: Subject
+	})
+	@ApiNotFoundResponse({ description: 'Курс не найден.' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async enrollInSubject(
+		@Param('subjectId') subjectId: string,
+		@Authorized('id') userId: string
+	) {
+		return this.subjectsService.enrollUserInSubject(userId, subjectId);
 	}
 }

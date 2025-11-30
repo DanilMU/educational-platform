@@ -1,7 +1,8 @@
 import { adminUsersApi, adminCoursesApi, adminLessonsApi } from './admin-wrapper';
 import { PaginatedUsersDto, PaginatedSubjectsDto, PaginatedLessonsDto } from '../types';
-import { AdminPaginatedUsersDto, AdminPaginatedSubjectsDto, AdminPaginatedLessonsDto, AdminSubject } from '../types/admin-paginated-dto';
+import { AdminPaginatedUsersDto, AdminPaginatedSubjectsDto, AdminPaginatedLessonsDto, AdminSubject, AdminPaginatedTopicsDto } from '../types/admin-paginated-dto';
 import { getAdminDashboardData as getAdminDashboardDataRaw } from './admin';
+import { adminTopicsApi } from './admin-wrapper';
 
 // Адаптеры для преобразования ответов админского API к формату, ожидаемому компонентами
 export const adminApiAdapter = {
@@ -47,5 +48,16 @@ export const adminApiAdapter = {
  },
   
   // Dashboard
-  getDashboardData: getAdminDashboardDataRaw
+  getDashboardData: getAdminDashboardDataRaw,
+  
+  // Topics
+ getAllTopics: async (params?: { skip?: string; take?: string }) => {
+    const result = await adminTopicsApi.getAll(params);
+    // В админ-сервисе возвращается { topics, total }, а не { data, total }
+    // Поэтому преобразуем к правильному формату
+    return {
+      data: result.topics || result.data,
+      total: result.total
+    };
+ }
 };

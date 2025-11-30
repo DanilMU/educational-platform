@@ -19,3 +19,9 @@ export const getEnrolledSubjects = async (userId: string) => {
 export const getLearningPath = async (subjectId: string) => {
 	return await subjectsControllerGetLearningPath(subjectId);
 }
+
+// Новая функция для записи на курс
+export const enrollInSubject = async (subjectId: string) => {
+	const response = await instance.post(`/subjects/${subjectId}/enroll`);
+	return response.data; // возвращаем только данные, а не весь объект ответа
+}

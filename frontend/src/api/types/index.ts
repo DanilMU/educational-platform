@@ -7,6 +7,7 @@
 
 export * from './adminControllerGetCoursesParams';
 export * from './adminControllerGetLessonsParams';
+export * from './adminControllerGetTopicsParams';
 export * from './adminControllerGetUsersParams';
 export * from './analyticsControllerGetPopularLessons200Item';
 export * from './analyticsControllerGetSuccessRate200';

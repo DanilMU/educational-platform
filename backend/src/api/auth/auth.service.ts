@@ -117,6 +117,13 @@ export class AuthService {
 			});
 
 			if (!user) {
+				// Удаляем старый токен из куки, если пользователь не найден
+				res.clearCookie('refreshToken', {
+					httpOnly: true,
+					domain: this.COOKIES_DOMAIN,
+					secure: !isDev(this.configService),
+					sameSite: 'lax'
+				});
 				throw new UnauthorizedException('User not found');
 			}
 

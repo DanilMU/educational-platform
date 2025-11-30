@@ -1,9 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { $Enums, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateLessonDto, UpdateLessonDto } from '../lessons/dto';
 import { CreateSubjectDto, UpdateSubjectDto } from '../subjects/dto';
+import { CreateTopicDto, UpdateTopicDto } from '../topics/dto';
 import { CreateUserDto, UpdateUserDto } from '../users/dto';
 
 @Injectable()
@@ -96,8 +97,10 @@ export class AdminService {
 		}
 
 		// Проверяем длину пароля
-		if (password && password.length < 6) {
-			throw new Error('Password must be at least 6 characters long');
+		if (password && password.length < 8) {
+			throw new ConflictException(
+				'Password must be at least 8 characters long'
+			);
 		}
 
 		const argon2 = await import('argon2');
@@ -146,7 +149,7 @@ export class AdminService {
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
-					throw new Error('User not found');
+					throw new ConflictException('User not found');
 				}
 			}
 			throw error;
@@ -157,17 +160,21 @@ export class AdminService {
 	async getAllCourses(skip: number = 0, take: number = 10) {
 		const limitedTake = Math.min(take, 100); // Максимум 100 записей за раз
 
-		// Сначала получаем курсы с основной информацией
+		// Сначала получаем курсы с полной информацией о темах и уроках
 		const [subjects, total] = await this.prisma.$transaction([
 			this.prisma.subject.findMany({
 				skip: isNaN(skip) ? 0 : Math.max(0, skip),
 				take: isNaN(limitedTake) ? 10 : Math.max(1, limitedTake),
-				select: {
-					id: true,
-					title: true,
-					description: true,
-					createdAt: true,
-					updatedAt: true
+				include: {
+					topics: {
+						include: {
+							lessons: {
+								include: {
+									quiz: true
+								}
+							}
+						}
+					}
 				}
 			}),
 			this.prisma.subject.count()
@@ -175,7 +182,7 @@ export class AdminService {
 
 		// Для каждого курса получаем количество тем и уроков
 		const subjectsWithStats = await Promise.all(
-			subjects.map(async (subject) => {
+			subjects.map(async subject => {
 				const [topicsCount, lessonsCount] = await Promise.all([
 					this.prisma.topic.count({
 						where: {
@@ -205,20 +212,29 @@ export class AdminService {
 	async getCourseById(id: string) {
 		return this.prisma.subject.findUnique({
 			where: { id },
-			select: {
-				id: true,
-				title: true,
-				description: true,
-				createdAt: true,
-				updatedAt: true
+			include: {
+				topics: {
+					include: {
+						lessons: {
+							include: {
+								quiz: true
+							}
+						}
+					}
+				}
 			}
 		});
 	}
 
 	async createCourse(courseData: CreateSubjectDto) {
 		try {
+			// Устанавливаем статус по умолчанию как PUBLISHED при создании курса
+			const data = {
+				...courseData,
+				status: 'PUBLISHED' as const
+			};
 			return this.prisma.subject.create({
-				data: courseData
+				data
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -235,10 +251,25 @@ export class AdminService {
 
 	async updateCourse(id: string, courseData: UpdateSubjectDto) {
 		try {
-			return this.prisma.subject.update({
-				where: { id },
-				data: courseData
-			});
+			// Разделяем статус от остальных данных для корректной обработки
+			const { status, ...updateData } = courseData;
+
+			// Если статус предоставлен, обновляем его отдельно
+			if (status !== undefined) {
+				return this.prisma.subject.update({
+					where: { id },
+					data: {
+						...updateData,
+						status: status
+					}
+				});
+			} else {
+				// Обновляем только остальные поля без изменения статуса
+				return this.prisma.subject.update({
+					where: { id },
+					data: updateData
+				});
+			}
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
@@ -249,7 +280,24 @@ export class AdminService {
 				}
 				if (error.code === 'P2025') {
 					// Record not found
-					throw new Error('Course not found');
+					throw new ConflictException('Course not found');
+				}
+			}
+			throw error;
+		}
+	}
+
+	async updateCourseStatus(id: string, status: $Enums.SubjectStatus) {
+		try {
+			return this.prisma.subject.update({
+				where: { id },
+				data: { status }
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Course not found');
 				}
 			}
 			throw error;
@@ -265,11 +313,57 @@ export class AdminService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					// Record not found
-					throw new Error('Course not found');
+					throw new ConflictException('Course not found');
 				}
 			}
 			throw error;
 		}
+	}
+
+	// CRUD для тем
+	async getAllTopics(skip: number = 0, take: number = 10) {
+		const limitedTake = Math.min(take, 100); // Максимум 100 записей за раз
+
+		return this.prisma
+			.$transaction([
+				this.prisma.topic.findMany({
+					skip: isNaN(skip) ? 0 : Math.max(0, skip),
+					take: isNaN(limitedTake) ? 10 : Math.max(1, limitedTake),
+					include: {
+						subject: true // Включаем информацию о курсе, которому принадлежит тема
+					}
+				}),
+				this.prisma.topic.count()
+			])
+			.then(([topics, total]) => ({ topics, total }));
+	}
+
+	async getTopicById(id: string) {
+		return this.prisma.topic.findUnique({
+			where: { id },
+			include: {
+				subject: true
+			}
+		});
+	}
+
+	async createTopic(topicData: CreateTopicDto) {
+		return this.prisma.topic.create({
+			data: topicData
+		});
+	}
+
+	async updateTopic(id: string, topicData: UpdateTopicDto) {
+		return this.prisma.topic.update({
+			where: { id },
+			data: topicData
+		});
+	}
+
+	async deleteTopic(id: string) {
+		return this.prisma.topic.delete({
+			where: { id }
+		});
 	}
 
 	// CRUD для уроков
@@ -324,7 +418,7 @@ export class AdminService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2003') {
 					// Foreign key constraint error
-					throw new Error('Invalid topic ID provided');
+					throw new ConflictException('Invalid topic ID provided');
 				}
 			}
 			throw error;
@@ -341,11 +435,11 @@ export class AdminService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2003') {
 					// Foreign key constraint error
-					throw new Error('Invalid topic ID provided');
+					throw new ConflictException('Invalid topic ID provided');
 				}
 				if (error.code === 'P2025') {
 					// Record not found
-					throw new Error('Lesson not found');
+					throw new ConflictException('Lesson not found');
 				}
 			}
 			throw error;
@@ -361,7 +455,7 @@ export class AdminService {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					// Record not found
-					throw new Error('Lesson not found');
+					throw new ConflictException('Lesson not found');
 				}
 			}
 			throw error;

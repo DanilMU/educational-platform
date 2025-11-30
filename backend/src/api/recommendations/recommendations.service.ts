@@ -8,6 +8,7 @@ type RecommendedLesson = Lesson & {
 	reason: string;
 	topic: {
 		subject: {
+			id: string;
 			title: string;
 		};
 		title: string;
@@ -199,8 +200,8 @@ export class RecommendationsService {
 		lessons: RecommendedLesson[]
 	): RecommendationsDto {
 		const recommendations = lessons.slice(0, 3).map(lesson => ({
-			id: lesson.id,
-			title: lesson.title,
+			id: lesson.topic.subject.id, // Используем ID курса, а не урока
+			title: lesson.topic.subject.title, // Используем название курса
 			subject: lesson.topic.subject.title,
 			topic: lesson.topic.title,
 			estimatedTime: lesson.estimatedTime || undefined,

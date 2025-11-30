@@ -1,14 +1,15 @@
 'use client'
 
 import { useAuth } from '@/src/hooks/useAuth'
-import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks'
+import { useGetEnrolledSubjectsQuery, useGetMeQuery } from '@/src/api/hooks'
 import { BookOpen } from 'lucide-react'
 import { Button } from '@/src/components/ui/button'
 import Link from 'next/link'
 import { EnrolledSubjectCard, EnrolledSubjectCardSkeleton } from './enrolled-subject-card'
 
 export function EnrolledSubjectsList() {
-	const { user } = useAuth()
+	const { isAuthorized } = useAuth()
+	const { data: user } = useGetMeQuery();
 	const { data: subjects = [], isLoading, isError } = useGetEnrolledSubjectsQuery(user?.id || '')
 
 	if (isLoading) {

@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Topic } from 'src/api/topics/entities/topic.entity';
 
+// Определяем возможные статусы курса
+export enum SubjectStatus {
+	DRAFT = 'DRAFT',
+	PUBLISHED = 'PUBLISHED',
+	ARCHIVED = 'ARCHIVED'
+}
+
 export class Subject {
 	@ApiProperty({
 		description: 'Уникальный идентификатор предмета',
@@ -17,6 +24,14 @@ export class Subject {
 		example: 'Курс по основам охраны труда на предприятии.'
 	})
 	description?: string | null;
+
+	@ApiProperty({
+		description: 'Статус курса',
+		enum: SubjectStatus,
+		example: SubjectStatus.PUBLISHED,
+		default: SubjectStatus.PUBLISHED
+	})
+	status!: SubjectStatus;
 
 	@ApiProperty({ description: 'Список тем в предмете', type: [Topic] })
 	topics!: Topic[];

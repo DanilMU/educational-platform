@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Topic } from '@prisma/client';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { Prisma, Topic } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateTopicDto, UpdateTopicDto } from './dto';
@@ -9,7 +9,17 @@ export class TopicsService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	create(createTopicDto: CreateTopicDto) {
-		return this.prisma.topic.create({ data: createTopicDto });
+		try {
+			return this.prisma.topic.create({ data: createTopicDto });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2003') {
+					// Foreign key constraint error
+					throw new ConflictException('Invalid subject ID provided');
+				}
+			}
+			throw error;
+		}
 	}
 
 	findAll(
@@ -28,17 +38,51 @@ export class TopicsService {
 	}
 
 	findOne(id: string) {
-		return this.prisma.topic.findUnique({ where: { id } });
+		try {
+			return this.prisma.topic.findUnique({ where: { id } });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Topic not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	update(id: string, updateTopicDto: UpdateTopicDto) {
-		return this.prisma.topic.update({
-			where: { id },
-			data: updateTopicDto
-		});
+		try {
+			return this.prisma.topic.update({
+				where: { id },
+				data: updateTopicDto
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2003') {
+					// Foreign key constraint error
+					throw new ConflictException('Invalid subject ID provided');
+				}
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Topic not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	remove(id: string) {
-		return this.prisma.topic.delete({ where: { id } });
+		try {
+			return this.prisma.topic.delete({ where: { id } });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Topic not found');
+				}
+			}
+			throw error;
+		}
 	}
 }

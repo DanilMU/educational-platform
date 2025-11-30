@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Subject } from '@prisma/client';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { $Enums, Prisma, Subject } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { LearningPathService } from '../learning-path/learning-path.service';
@@ -14,27 +14,67 @@ export class SubjectsService {
 	) {}
 
 	create(createSubjectDto: CreateSubjectDto) {
-		return this.prisma.subject.create({ data: createSubjectDto });
+		try {
+			// Устанавливаем статус по умолчанию как PUBLISHED при создании курса
+			const data = {
+				...createSubjectDto,
+				status: 'PUBLISHED' as const
+			};
+			return this.prisma.subject.create({ data });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					// Unique constraint error
+					throw new ConflictException(
+						'Course with this title already exists'
+					);
+				}
+			}
+			throw error;
+		}
 	}
 
 	findAll(
 		skip: number = 0,
-		take: number = 10
+		take: number = 10,
+		includeDrafts: boolean = false
 	): Promise<{ subjects: Subject[]; total: number }> {
+		const whereClause = includeDrafts
+			? undefined
+			: {
+					status: 'PUBLISHED' as const
+				};
+
 		return this.prisma
 			.$transaction([
 				this.prisma.subject.findMany({
 					skip: isNaN(skip) || skip < 0 ? 0 : skip,
-					take: isNaN(take) || take < 0 ? 10 : take
+					take: isNaN(take) || take < 0 ? 10 : take,
+					where: whereClause,
+					include: {
+						topics: {
+							include: {
+								lessons: {
+									include: {
+										quiz: true
+									}
+								}
+							}
+						}
+					}
 				}),
-				this.prisma.subject.count()
+				this.prisma.subject.count({ where: whereClause })
 			])
 			.then(([subjects, total]) => ({ subjects, total }));
 	}
 
-	findOne(id: string) {
+	findOne(id: string, includeDraft: boolean = false) {
+		const whereClause = includeDraft
+			? { id }
+			: { id, status: 'PUBLISHED' as const };
+
 		return this.prisma.subject.findUnique({
-			where: { id },
+			where: whereClause,
 			include: {
 				topics: {
 					include: {
@@ -50,14 +90,72 @@ export class SubjectsService {
 	}
 
 	update(id: string, updateSubjectDto: UpdateSubjectDto) {
-		return this.prisma.subject.update({
-			where: { id },
-			data: updateSubjectDto
-		});
+		try {
+			// Разделяем статус от остальных данных для корректной обработки
+			const { status, ...updateData } = updateSubjectDto;
+
+			// Если статус предоставлен, обновляем его отдельно
+			if (status !== undefined) {
+				return this.prisma.subject.update({
+					where: { id },
+					data: {
+						...updateData,
+						status: status
+					}
+				});
+			} else {
+				// Обновляем только остальные поля без изменения статуса
+				return this.prisma.subject.update({
+					where: { id },
+					data: updateData
+				});
+			}
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					// Unique constraint error
+					throw new ConflictException(
+						'Course with this title already exists'
+					);
+				}
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Course not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	remove(id: string) {
-		return this.prisma.subject.delete({ where: { id } });
+		try {
+			return this.prisma.subject.delete({ where: { id } });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Course not found');
+				}
+			}
+			throw error;
+		}
+	}
+
+	updateStatus(id: string, status: $Enums.SubjectStatus) {
+		try {
+			return this.prisma.subject.update({
+				where: { id },
+				data: { status }
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Course not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	getLearningPath(id: string) {
@@ -65,6 +163,7 @@ export class SubjectsService {
 	}
 
 	async findByUserId(userId: string): Promise<Subject[]> {
+		// Находим курсы, на которые пользователь записан через прогресс
 		const progress = await this.prisma.userProgress.findMany({
 			where: {
 				userId: userId
@@ -82,20 +181,120 @@ export class SubjectsService {
 			}
 		});
 
-		// Получаем уникальные курсы из прогресса пользователя
-		const subjectsMap = new Map<string, Subject>();
-		progress.forEach(item => {
-			const subject = item.lesson.topic.subject;
-			if (!subjectsMap.has(subject.id)) {
-				subjectsMap.set(subject.id, {
-					id: subject.id,
-					title: subject.title,
-					description: subject.description,
-					createdAt: subject.createdAt,
-					updatedAt: subject.updatedAt
-				});
+		// Получаем уникальные ID курсов из прогресса пользователя
+		const subjectIdsFromProgress = Array.from(
+			new Set(
+				progress
+					.filter(
+						item =>
+							item.lesson.topic.subject &&
+							item.lesson.topic.subject.status === 'PUBLISHED'
+					)
+					.map(item => item.lesson.topic.subject.id)
+			)
+		);
+
+		// Возвращаем все опубликованные курсы, на которые пользователь имеет доступ
+		// В текущей системе это курсы, по которым есть прогресс
+		if (subjectIdsFromProgress.length === 0) {
+			return []; // Если нет прогресса, возвращаем пустой массив
+		}
+
+		// Загружаем полные данные курсов с темами и уроками
+		return await this.prisma.subject.findMany({
+			where: {
+				id: { in: subjectIdsFromProgress },
+				status: 'PUBLISHED'
+			},
+			include: {
+				topics: {
+					include: {
+						lessons: {
+							include: {
+								quiz: true
+							}
+						}
+					}
+				}
 			}
 		});
-		return Array.from(subjectsMap.values());
+	}
+
+	async enrollUserInSubject(userId: string, subjectId: string) {
+		// Проверяем, существует ли курс
+		const subject = await this.prisma.subject.findUnique({
+			where: { id: subjectId },
+			include: {
+				topics: {
+					include: {
+						lessons: true
+					}
+				}
+			}
+		});
+
+		if (!subject) {
+			throw new ConflictException(`Subject with ID ${subjectId} not found`);
+		}
+
+		if (subject.status !== 'PUBLISHED') {
+			throw new ConflictException('Subject is not published');
+		}
+
+		// Проверяем, есть ли уже у пользователя прогресс по этому курсу
+		const existingProgress = await this.prisma.userProgress.findFirst({
+			where: {
+				userId: userId,
+				lesson: {
+					topic: {
+						subjectId: subjectId
+					}
+				}
+			}
+		});
+
+		// Если прогресса нет, создаем запись для первого урока курса
+		if (!existingProgress) {
+			// Находим первый урок в курсе
+			const firstTopic = subject.topics.sort(
+				(a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+			)[0];
+
+			if (firstTopic && firstTopic.lessons.length > 0) {
+				const firstLesson = firstTopic.lessons.sort(
+					(a, b) =>
+						(a.order || 0) - (b.order || 0) ||
+						a.createdAt.getTime() - b.createdAt.getTime()
+				)[0];
+
+				if (firstLesson) {
+					await this.prisma.userProgress.create({
+						data: {
+							userId: userId,
+							lessonId: firstLesson.id,
+							isCompleted: false,
+							score: null,
+							timeSpent: 0
+						}
+					});
+				}
+			}
+		}
+
+		// Возвращаем обновленный курс
+		return await this.prisma.subject.findUnique({
+			where: { id: subjectId },
+			include: {
+				topics: {
+					include: {
+						lessons: {
+							include: {
+								quiz: true
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 }

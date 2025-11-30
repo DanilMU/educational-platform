@@ -57,9 +57,19 @@ export class UsersService {
 	}
 
 	public async remove(id: string): Promise<User> {
-		return this.prismaService.user.delete({
-			where: { id }
-		});
+		try {
+			return this.prismaService.user.delete({
+				where: { id }
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('User not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	public getMe(user: User): GetMeDto {
@@ -129,7 +139,7 @@ export class UsersService {
 		});
 
 		if (!user) {
-			throw new Error('Пользователь не найден');
+			throw new ConflictException('User not found');
 		}
 
 		const isCurrentPasswordValid = await this.validatePassword(
@@ -138,7 +148,7 @@ export class UsersService {
 		);
 
 		if (!isCurrentPasswordValid) {
-			throw new Error('Неверный текущий пароль');
+			throw new ConflictException('Invalid current password');
 		}
 
 		const hashedNewPassword = await hash(newPassword);

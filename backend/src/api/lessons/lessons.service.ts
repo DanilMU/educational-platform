@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Lesson } from '@prisma/client';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { Lesson, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateLessonDto, UpdateLessonDto } from './dto';
@@ -11,7 +11,17 @@ export class LessonsService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async create(createLessonDto: CreateLessonDto) {
-		return this.prisma.lesson.create({ data: createLessonDto });
+		try {
+			return this.prisma.lesson.create({ data: createLessonDto });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2003') {
+					// Foreign key constraint error
+					throw new ConflictException('Invalid topic ID provided');
+				}
+			}
+			throw error;
+		}
 	}
 
 	findAll(
@@ -30,19 +40,53 @@ export class LessonsService {
 	}
 
 	findOne(id: string) {
-		console.log(`Searching for lesson with ID: ${id}`);
-		return this.prisma.lesson.findUnique({ where: { id } });
+		try {
+			console.log(`Searching for lesson with ID: ${id}`);
+			return this.prisma.lesson.findUnique({ where: { id } });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Lesson not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	update(id: string, updateLessonDto: UpdateLessonDto) {
-		return this.prisma.lesson.update({
-			where: { id },
-			data: updateLessonDto
-		});
+		try {
+			return this.prisma.lesson.update({
+				where: { id },
+				data: updateLessonDto
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2003') {
+					// Foreign key constraint error
+					throw new ConflictException('Invalid topic ID provided');
+				}
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Lesson not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	remove(id: string) {
-		return this.prisma.lesson.delete({ where: { id } });
+		try {
+			return this.prisma.lesson.delete({ where: { id } });
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					// Record not found
+					throw new ConflictException('Lesson not found');
+				}
+			}
+			throw error;
+		}
 	}
 
 	async getLessonDescription(id: string): Promise<LessonDescriptionDto> {
@@ -51,7 +95,7 @@ export class LessonsService {
 		});
 
 		if (!lesson) {
-			throw new Error(`Lesson with ID ${id} not found`);
+			throw new ConflictException('Lesson not found');
 		}
 
 		return {
@@ -86,7 +130,7 @@ export class LessonsService {
 		});
 
 		if (!lesson) {
-			throw new Error(`Lesson with ID ${id} not found`);
+			throw new ConflictException('Lesson not found');
 		}
 
 		// For now, return an empty array as prerequisites

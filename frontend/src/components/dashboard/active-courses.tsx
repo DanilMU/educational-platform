@@ -2,11 +2,13 @@
 
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
+import { useGetMeQuery } from '@/src/api/hooks'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { useAuth } from '@/src/hooks/useAuth'
 
 export function ActiveCoursesSection() {
-  const { user } = useAuth();
+  const { isAuthorized } = useAuth();
+  const { data: user } = useGetMeQuery();
   const { data: enrolledSubjects, isLoading, isError } = useGetEnrolledSubjectsQuery(user?.id || '')
 
   if (isLoading) {
@@ -36,14 +38,14 @@ export function ActiveCoursesSection() {
   }
 
   // Теперь enrolledSubjects - это массив курсов (Subject[])
-  const subjectsForCard = enrolledSubjects?.map(subject => ({
+  const subjectsForCard = enrolledSubjects && Array.isArray(enrolledSubjects) ? enrolledSubjects.map(subject => ({
     id: subject.id || '',
     title: subject.title || '',
     description: subject.description || 'Описание отсутствует',
     progress: 0, // Пока что ставим заглушку, т.к. поля progress нет в типе
     lessons: 0, // Пока что ставим заглушку
     category: 'Курс'
-  })) || []
+  })) : []
 
   return (
     <div>

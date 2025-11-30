@@ -7,181 +7,172 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Пользовательская модель
 model User {
-	id                     String          @id @default(cuid())
-	firstName              String?
-	lastName               String?
-	email                  String          @unique
-	password               String
-	role                   Role
-	avatarUrl              String?
-	receiveNotifications   Boolean         @default(true)
-	createdAt              DateTime        @default(now())
-	updatedAt              DateTime        @updatedAt
-	progress               UserProgress[]
-	certificates           Certificate[]
-	notifications          Notification[]
+  id                   String         @id @default(cuid())
+  firstName            String?
+  lastName             String?
+  email                String         @unique
+  password             String
+  role                 Role
+  avatarUrl            String?
+  receiveNotifications Boolean        @default(true)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  certificates         Certificate[]
+  notifications        Notification[]
+  progress             UserProgress[]
 }
 
-// Роли пользователей
+model Subject {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  status       SubjectStatus @default(PUBLISHED)
+  certificates Certificate[]
+  topics       Topic[]
+
+  @@map("subjects")
+}
+
+model Topic {
+  id        String   @id @default(cuid())
+  title     String
+  subjectId String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  parentId  String?
+  lessons   Lesson[]
+  parent    Topic?   @relation("TopicHierarchy", fields: [parentId], references: [id])
+  children  Topic[]  @relation("TopicHierarchy")
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@map("topics")
+}
+
+model Lesson {
+  id                 String         @id @default(cuid())
+  title              String
+  content            String
+  topicId            String
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  attachments        String[]
+  difficulty         Int?
+  estimatedTime      Int?
+  learningObjectives String?
+  order              Int?
+  prerequisites      String?
+  videoUrl           String?
+  topic              Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  quiz               Quiz?
+  progress           UserProgress[]
+
+  @@map("lessons")
+}
+
+model Quiz {
+  id               String     @id @default(cuid())
+  title            String
+  lessonId         String     @unique
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  maxAttempts      Int        @default(3)
+  passingScore     Int        @default(70)
+  shuffleAnswers   Boolean    @default(false)
+  shuffleQuestions Boolean    @default(false)
+  timeLimit        Int?
+  questions        Question[]
+  lesson           Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@map("quizzes")
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  text      String
+  type      QuestionType
+  quizId    String
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+  answers   Answer[]
+  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("questions")
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  text       String
+  isCorrect  Boolean
+  questionId String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("answers")
+}
+
+model UserProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  lessonId    String
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  score       Int?
+  timeSpent   Int?
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("user_progress")
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  subjectId String
+  issuedAt  DateTime @default(now())
+  url       String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
 enum Role {
   STUDENT
   ADMIN
   MODERATOR
 }
 
-// Модель предмета (курса)
-model Subject {
-  id           String        @id @default(cuid())
-  title        String
-  description String?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  topics       Topic[]
-  certificates Certificate[]
-
-  @@map("subjects")
+enum SubjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }
 
-// Модель темы
-model Topic {
-  id        String   @id @default(cuid())
-  title     String
-  subjectId String
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  lessons   Lesson[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  parentId String?
-  parent    Topic?   @relation("TopicHierarchy", fields: [parentId], references: [id])
-  children  Topic[]  @relation("TopicHierarchy")
-
-  @@map("topics")
-}
-
-// Модель урока
-model Lesson {
-  id                 String         @id @default(cuid())
-  title              String
-  content            String
-  topicId            String
-  topic              Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  quiz               Quiz?
-  progress           UserProgress[]
-  createdAt          DateTime       @default(now()) @map("created_at")
-  updatedAt          DateTime       @updatedAt @map("updated_at")
-  // Новые поля для улучшенного процесса обучения
-  estimatedTime      Int? // Ориентировочное время прохождения (в минутах)
- difficulty         Int? // Сложность урока (1-5)
- learningObjectives String? // Цели обучения
-  prerequisites      String? // Требования для прохождения
- videoUrl           String? // Ссылка на видеоурок
- attachments        String[] // Список вложений (PDF, документы и т.д.)
-  order              Int? // Порядковый номер урока в теме
-
-  @@map("lessons")
-}
-
-// Модель теста
-model Quiz {
-  id        String     @id @default(cuid())
-  title     String
-  lessonId  String     @unique
-  lesson    Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
- questions Question[]
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  // Новые поля
-  timeLimit    Int?       // Ограничение времени (в минутах)
-  maxAttempts  Int        @default(3) // Максимальное количество попыток
-  passingScore Int        @default(70) // Процент для прохождения
-  shuffleQuestions Boolean  @default(false) // Перемешивать вопросы
-  shuffleAnswers Boolean  @default(false) // Перемешивать ответы
-
-  @@map("quizzes")
-}
-
-// Модель вопроса
-model Question {
-  id        String       @id @default(cuid())
-  text      String
-  type      QuestionType
-  quizId    String
-  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  answers   Answer[]
-  createdAt DateTime     @default(now()) @map("created_at")
-  updatedAt DateTime     @updatedAt @map("updated_at")
-
-  @@map("questions")
-}
-
-// Типы вопросов
 enum QuestionType {
   SINGLE_CHOICE
   MULTIPLE_CHOICE
-}
-
-// Модель ответа
-model Answer {
-  id         String   @id @default(cuid())
-  text       String
-  isCorrect  Boolean
-  questionId String
- question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  @@map("answers")
-}
-
-// Модель прогресса пользователя
-model UserProgress {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lessonId    String
- lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-  score       Int? // Балл за тест (если есть)
-  timeSpent   Int? // Время, потраченное на урок (в минутах)
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  @@unique([userId, lessonId])
-
-  @@map("user_progress")
-}
-
-// Модель сертификата
-model Certificate {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subjectId String
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  issuedAt  DateTime @default(now())
-  url       String
- createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("certificates")
-}
-
-// Модель уведомлений
-model Notification {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String   // Тип уведомления (lesson-completed, quiz-result, recommendation, course-completed, deadline-reminder)
-  title     String   // Заголовок уведомления
- message   String   // Содержание уведомления
-  data      Json?    // Дополнительные данные уведомления
-  isRead    Boolean  @default(false) // Статус прочтения уведомления
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("notifications")
 }

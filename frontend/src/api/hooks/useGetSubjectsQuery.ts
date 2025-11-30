@@ -8,7 +8,14 @@ export function useGetSubjectsQuery(
 ) {
 	return useQuery({
 		queryKey: ['get all subjects'],
-		queryFn: () => getAllSubjects('0', '10'), // Default pagination
+		queryFn: async () => {
+			const response = await getAllSubjects('0', '10'); // Default pagination
+			// Преобразуем ответ к формату PaginatedSubjectsDto
+			return {
+				data: response.subjects,
+				total: response.total
+			};
+		},
 		...options
 	})
 }
