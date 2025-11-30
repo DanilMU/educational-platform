@@ -157,22 +157,49 @@ export class AdminService {
 	async getAllCourses(skip: number = 0, take: number = 10) {
 		const limitedTake = Math.min(take, 100); // Максимум 100 записей за раз
 
-		return this.prisma
-			.$transaction([
-				this.prisma.subject.findMany({
-					skip: isNaN(skip) ? 0 : Math.max(0, skip),
-					take: isNaN(limitedTake) ? 10 : Math.max(1, limitedTake),
-					select: {
-						id: true,
-						title: true,
-						description: true,
-						createdAt: true,
-						updatedAt: true
-					}
-				}),
-				this.prisma.subject.count()
-			])
-			.then(([subjects, total]) => ({ subjects, total }));
+		// Сначала получаем курсы с основной информацией
+		const [subjects, total] = await this.prisma.$transaction([
+			this.prisma.subject.findMany({
+				skip: isNaN(skip) ? 0 : Math.max(0, skip),
+				take: isNaN(limitedTake) ? 10 : Math.max(1, limitedTake),
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					createdAt: true,
+					updatedAt: true
+				}
+			}),
+			this.prisma.subject.count()
+		]);
+
+		// Для каждого курса получаем количество тем и уроков
+		const subjectsWithStats = await Promise.all(
+			subjects.map(async (subject) => {
+				const [topicsCount, lessonsCount] = await Promise.all([
+					this.prisma.topic.count({
+						where: {
+							subjectId: subject.id
+						}
+					}),
+					this.prisma.lesson.count({
+						where: {
+							topic: {
+								subjectId: subject.id
+							}
+						}
+					})
+				]);
+
+				return {
+					...subject,
+					topicsCount,
+					lessonsCount
+				};
+			})
+		);
+
+		return { subjects: subjectsWithStats, total };
 	}
 
 	async getCourseById(id: string) {

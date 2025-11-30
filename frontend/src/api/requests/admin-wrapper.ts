@@ -1,5 +1,6 @@
 import { instance } from '../instance';
 import { User, Subject, Lesson, CreateUserDto, UpdateUserDto, CreateSubjectDto, UpdateSubjectDto, CreateLessonDto, UpdateLessonDto, PaginatedUsersDto, PaginatedSubjectsDto, PaginatedLessonsDto } from '../types';
+import { AdminPaginatedUsersDto, AdminPaginatedSubjectsDto, AdminPaginatedLessonsDto } from '../types/admin-paginated-dto';
 
 // Users
 export const adminUsersApi = {
@@ -7,7 +8,7 @@ export const adminUsersApi = {
     const queryParams = new URLSearchParams();
     if (params?.skip) queryParams.append('skip', params.skip);
     if (params?.take) queryParams.append('take', params.take);
-    return instance.get<PaginatedUsersDto>(`/admin/users?${queryParams.toString()}`).then(res => res.data);
+    return instance.get<AdminPaginatedUsersDto>(`/admin/users?${queryParams.toString()}`).then(res => res.data);
   },
   getById: (id: string) => instance.get<User>(`/admin/users/${id}`).then(res => res.data),
   create: (userData: CreateUserDto) => instance.post<User>('/admin/users', userData).then(res => res.data),
@@ -21,7 +22,7 @@ export const adminCoursesApi = {
     const queryParams = new URLSearchParams();
     if (params?.skip) queryParams.append('skip', params.skip);
     if (params?.take) queryParams.append('take', params.take);
-    return instance.get<PaginatedSubjectsDto>(`/admin/courses?${queryParams.toString()}`).then(res => res.data);
+    return instance.get<AdminPaginatedSubjectsDto>(`/admin/courses?${queryParams.toString()}`).then(res => res.data);
   },
   getById: (id: string) => instance.get<Subject>(`/admin/courses/${id}`).then(res => res.data),
   create: (courseData: CreateSubjectDto) => instance.post<Subject>('/admin/courses', courseData).then(res => res.data),
@@ -35,7 +36,7 @@ export const adminLessonsApi = {
     const queryParams = new URLSearchParams();
     if (params?.skip) queryParams.append('skip', params.skip);
     if (params?.take) queryParams.append('take', params.take);
-    return instance.get<PaginatedLessonsDto>(`/admin/lessons?${queryParams.toString()}`).then(res => res.data);
+    return instance.get<AdminPaginatedLessonsDto>(`/admin/lessons?${queryParams.toString()}`).then(res => res.data);
   },
   getById: (id: string) => instance.get<Lesson>(`/admin/lessons/${id}`).then(res => res.data),
   create: (lessonData: CreateLessonDto) => instance.post<Lesson>('/admin/lessons', lessonData).then(res => res.data),

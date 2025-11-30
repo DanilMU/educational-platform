@@ -1,4 +1,6 @@
-// Этот файл заменен на admin-wrapper.ts
-// Все функции перенесены в admin-wrapper.ts для корректной типизации
-// Используйте admin-wrapper.ts для прямого доступа к API администратора
-// Или используйте хуки в папке hooks для работы с React Query
+import { instance } from '../instance'
+import { DashboardDataDto } from '../types';
+
+export const getAdminDashboardData = async (): Promise<DashboardDataDto> => {
+  return await instance.get('/admin/dashboard').then(res => res.data);
+};

@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/ui/table"
-import { useGetUsersQuery } from "@/src/api/hooks/useGetUsersQuery"
-import { useCreateUserMutation, useUpdateUserMutation, useDeleteUserMutation } from "@/src/api/hooks/useUserMutations"
+import { useAdminUsersQuery } from "@/src/api/hooks/useAdminUsers"
+import { useCreateAdminUserMutation, useUpdateAdminUserMutation, useDeleteAdminUserMutation } from "@/src/api/hooks/useAdminUsers"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
@@ -36,10 +36,10 @@ const ITEMS_PER_PAGE = 10;
 export function UsersTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
-  const { data, isLoading, isError } = useGetUsersQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
+  const { data, isLoading, isError } = useAdminUsersQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
   const users = data?.data;
   const totalUsers = data?.total || 0;
-  const deleteUserMutation = useDeleteUserMutation();
+  const deleteUserMutation = useDeleteAdminUserMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 

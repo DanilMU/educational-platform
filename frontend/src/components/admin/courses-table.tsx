@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/ui/table"
-import { useGetCoursesQuery } from "@/src/api/hooks/useGetCoursesQuery"
-import { useCreateSubjectMutation, useUpdateSubjectMutation, useDeleteSubjectMutation } from "@/src/api/hooks/useSubjectMutations"
+import { useAdminExtendedCoursesQuery } from "@/src/api/hooks/useAdminExtendedCourses"
+import { useCreateAdminCourseMutation, useUpdateAdminCourseMutation, useDeleteAdminCourseMutation } from "@/src/api/hooks/useAdminCourses"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
@@ -36,10 +36,10 @@ const ITEMS_PER_PAGE = 10;
 export function CoursesTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
-  const { data, isLoading, isError } = useGetCoursesQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
-  const courses = data?.data;
+  const { data, isLoading, isError } = useAdminExtendedCoursesQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
+  const courses = data?.subjects;
   const totalCourses = data?.total || 0;
-  const deleteSubjectMutation = useDeleteSubjectMutation();
+  const deleteSubjectMutation = useDeleteAdminCourseMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
 
@@ -136,8 +136,8 @@ export function CoursesTable() {
             {courses?.map((course) => (
               <TableRow key={course.id}>
                 <TableCell>{course.title}</TableCell>
-                <TableCell>{course.topics?.length || 0}</TableCell>
-                <TableCell>{course.topics?.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) || 0}</TableCell>
+                <TableCell>{course.topicsCount || 0}</TableCell>
+                <TableCell>{course.lessonsCount || 0}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

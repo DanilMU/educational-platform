@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/ui/table"
-import { useGetLessonsQuery } from "@/src/api/hooks/useGetLessonsQuery"
-import { useCreateLessonMutation, useUpdateLessonMutation, useDeleteLessonMutation } from "@/src/api/hooks/useLessonMutations"
+import { useAdminLessonsQuery } from "@/src/api/hooks/useAdminLessons"
+import { useCreateAdminLessonMutation, useUpdateAdminLessonMutation, useDeleteAdminLessonMutation } from "@/src/api/hooks/useAdminLessons"
 import { Skeleton } from "@/src/components/ui/skeleton"
 import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
@@ -37,10 +37,10 @@ const ITEMS_PER_PAGE = 10;
 export function LessonsTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
-  const { data, isLoading, isError } = useGetLessonsQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
+  const { data, isLoading, isError } = useAdminLessonsQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
   const lessons = data?.data;
   const totalLessons = data?.total || 0;
-  const deleteLessonMutation = useDeleteLessonMutation();
+  const deleteLessonMutation = useDeleteAdminLessonMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
 

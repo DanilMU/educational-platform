@@ -6,7 +6,7 @@ import z from 'zod';
 import { Button } from '@/src/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form';
 import { Input } from '@/src/components/ui/input';
-import { useCreateLessonMutation, useUpdateLessonMutation } from '@/src/api/hooks/useLessonMutations';
+import { useCreateAdminLessonMutation, useUpdateAdminLessonMutation } from '@/src/api/hooks/useAdminLessons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Textarea } from '@/src/components/ui/textarea';
 import { useGetTopicsQuery } from '@/src/api/hooks/useGetTopicsQuery';
@@ -40,8 +40,8 @@ interface LessonFormProps {
 }
 
 export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
-  const createLessonMutation = useCreateLessonMutation();
-  const updateLessonMutation = useUpdateLessonMutation();
+  const createLessonMutation = useCreateAdminLessonMutation();
+  const updateLessonMutation = useUpdateAdminLessonMutation();
   const { data: topicsData, isLoading: isLoadingTopics } = useGetTopicsQuery({ skip: 0, take: 100 }); // Fetch all topics for dropdown
   const topics = topicsData?.data || [];
 
@@ -76,7 +76,7 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
     };
     
     if (lesson) {
-      updateLessonMutation.mutate({ id: lesson.id, data: data as UpdateLessonDto }, { onSuccess });
+      updateLessonMutation.mutate({ id: lesson.id, lessonData: data as UpdateLessonDto }, { onSuccess });
     } else {
       createLessonMutation.mutate(data as CreateLessonDto, { onSuccess });
     }

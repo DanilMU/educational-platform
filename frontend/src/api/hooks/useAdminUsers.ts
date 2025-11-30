@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminUsersApi } from '../requests/admin-wrapper';
 import { User, PaginatedUsersDto, UpdateUserDto } from '../types';
+import { adminApiAdapter } from '../requests/admin-adapter';
 
 interface GetAdminUsersQueryProps {
   skip?: number;
@@ -11,8 +12,7 @@ export function useAdminUsersQuery({ skip, take }: GetAdminUsersQueryProps) {
   return useQuery<PaginatedUsersDto>({
     queryKey: ['admin-users', skip, take],
     queryFn: async () => {
-      const result = await adminUsersApi.getAll({ skip: skip?.toString(), take: take?.toString() });
-      return result;
+      return await adminApiAdapter.getAllUsers({ skip: skip?.toString(), take: take?.toString() });
     },
     staleTime: 5 * 60 * 1000, // 5 минут
   });

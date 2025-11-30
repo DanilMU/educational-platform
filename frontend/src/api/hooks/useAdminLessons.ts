@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminLessonsApi } from '../requests/admin-wrapper';
 import { Lesson, PaginatedLessonsDto, UpdateLessonDto } from '../types';
+import { adminApiAdapter } from '../requests/admin-adapter';
 
 interface GetAdminLessonsQueryProps {
   skip?: number;
@@ -11,8 +12,7 @@ export function useAdminLessonsQuery({ skip, take }: GetAdminLessonsQueryProps) 
   return useQuery<PaginatedLessonsDto>({
     queryKey: ['admin-lessons', skip, take],
     queryFn: async () => {
-      const result = await adminLessonsApi.getAll({ skip: skip?.toString(), take: take?.toString() });
-      return result;
+      return await adminApiAdapter.getAllLessons({ skip: skip?.toString(), take: take?.toString() });
     },
     staleTime: 5 * 60 * 1000, // 5 минут
   });
