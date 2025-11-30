@@ -35,14 +35,14 @@ export function ActiveCoursesSection() {
     )
   }
 
-  // Используем topics из LearningPathDto для отображения активных курсов
-  const subjectsForCard = enrolledSubjects?.topics?.map(topic => ({
-    id: topic.id || '',
-    title: topic.title || '',
-    description: 'Описание отсутствует', // Пока что ставим заглушку, т.к. поля description нет в типе
+  // Теперь enrolledSubjects - это массив курсов (Subject[])
+  const subjectsForCard = enrolledSubjects?.map(subject => ({
+    id: subject.id || '',
+    title: subject.title || '',
+    description: subject.description || 'Описание отсутствует',
     progress: 0, // Пока что ставим заглушку, т.к. поля progress нет в типе
-    lessons: Array.isArray(topic.lessons) ? topic.lessons.length : 0,
-    category: 'Тема'
+    lessons: 0, // Пока что ставим заглушку
+    category: 'Курс'
   })) || []
 
   return (

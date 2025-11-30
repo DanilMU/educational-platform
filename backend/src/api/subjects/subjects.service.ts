@@ -63,4 +63,39 @@ export class SubjectsService {
 	getLearningPath(id: string) {
 		return this.learningPathService.getLearningPath(id);
 	}
+
+	async findByUserId(userId: string): Promise<Subject[]> {
+		const progress = await this.prisma.userProgress.findMany({
+			where: {
+				userId: userId
+			},
+			include: {
+				lesson: {
+					include: {
+						topic: {
+							include: {
+								subject: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		// Получаем уникальные курсы из прогресса пользователя
+		const subjectsMap = new Map<string, Subject>();
+		progress.forEach(item => {
+			const subject = item.lesson.topic.subject;
+			if (!subjectsMap.has(subject.id)) {
+				subjectsMap.set(subject.id, {
+					id: subject.id,
+					title: subject.title,
+					description: subject.description,
+					createdAt: subject.createdAt,
+					updatedAt: subject.updatedAt
+				});
+			}
+		});
+		return Array.from(subjectsMap.values());
+	}
 }

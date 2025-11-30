@@ -11,6 +11,11 @@ export const getSubjectById = async (id: string) => {
 	return await subjectsControllerFindOne(id);
 }
 
-export const getEnrolledSubjects = async (id: string) => {
-	return await subjectsControllerGetLearningPath(id);
+export const getEnrolledSubjects = async (userId: string) => {
+	const response = await instance.get(`/subjects/user/${userId}`);
+	return response.data; // возвращаем только данные, а не весь объект ответа
+}
+
+export const getLearningPath = async (subjectId: string) => {
+	return await subjectsControllerGetLearningPath(subjectId);
 }

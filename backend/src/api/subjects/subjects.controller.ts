@@ -141,4 +141,17 @@ export class SubjectsController {
 	getLearningPath(@Param('id') id: string) {
 		return this.subjectsService.getLearningPath(id);
 	}
+
+	@Get('user/:userId')
+	@ApiOperation({
+		summary: 'Получить курсы, в которых участвует пользователь'
+	})
+	@ApiParam({ name: 'userId', description: 'ID пользователя', type: String })
+	@ApiOkResponse({
+		description: 'Список курсов пользователя.',
+		type: [Subject]
+	})
+	findByUserId(@Param('userId') userId: string) {
+		return this.subjectsService.findByUserId(userId);
+	}
 }

@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
 export function EnrolledSubjects() {
 	const { user } = useAuth();
-	const { data: subjects, isLoading } = useGetEnrolledSubjectsQuery(user?.id || '')
+	const { data: subjects = [], isLoading } = useGetEnrolledSubjectsQuery(user?.id || '')
 
 	if (isLoading) {
 		return (
@@ -61,12 +61,12 @@ export function EnrolledSubjects() {
 				</div>
 			</CardHeader>
 			<CardContent>
-				{subjects?.topics && subjects.topics.length > 0 ? (
+				{subjects && subjects.length > 0 ? (
 					<ul className='space-y-4'>
-						{subjects.topics.map(topic => (
-							<li key={topic.id}>
+						{subjects.map(subject => (
+							<li key={subject.id}>
 								<Link
-									href={`/subjects/${topic.id}`}
+									href={`/subjects/${subject.id}`}
 									className='block rounded-lg border p-4 transition-all hover:bg-accent hover:shadow-sm'
 								>
 									<div className='flex items-center justify-between'>
@@ -76,7 +76,7 @@ export function EnrolledSubjects() {
 											</div>
 											<div>
 												<h4 className='font-semibold text-foreground'>
-													{topic.title || 'Без названия'}
+													{subject.title || 'Без названия'}
 												</h4>
 												<p className='text-sm text-muted-foreground'>
 													Прогресс: 0%

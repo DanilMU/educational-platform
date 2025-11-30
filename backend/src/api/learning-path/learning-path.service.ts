@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { LearningPathDto } from '../lessons/dto/learning-path.dto';
@@ -27,7 +27,9 @@ export class LearningPathService {
 		});
 
 		if (!subject) {
-			throw new Error(`Subject with ID ${subjectId} not found`);
+			throw new NotFoundException(
+				`Subject with ID ${subjectId} not found`
+			);
 		}
 
 		const topics = subject.topics.map(topic => ({

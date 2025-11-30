@@ -36,16 +36,16 @@ export default function DashboardPage() {
   <p>Progress error: {isProgressError ? 'Да' : 'Нет'}</p>
         <p>Progress data: {progressData ? 'Есть' : 'Нет'}</p>
         <p>Enrolled subjects: {enrolledSubjects ? 'Есть' : 'Нет'}</p>
-        <p>Enrolled subjects length: {enrolledSubjects?.topics?.length || 0}</p>
+        <p>Enrolled subjects length: {enrolledSubjects?.length || 0}</p>
         <p>Progress Over Time error: {isProgressOverTimeError ? 'Да' : 'Нет'}</p>
         <p>Progress Over Time data: {userProgressOverTime ? 'Есть' : 'Нет'}</p>
       </div>
     );
   }
 
-  // Определяем текущий курс (первый незавершенный курс или курс с наименьшим прогрессом)
-  const currentCourse = enrolledSubjects?.topics && enrolledSubjects.topics.length > 0
-    ? enrolledSubjects.topics[0] // Используем первый топик в пути обучения как текущий курс
+  // Определяем текущий курс (первый курс из списка записанных)
+  const currentCourse = enrolledSubjects && enrolledSubjects.length > 0
+    ? enrolledSubjects[0] // Используем первый курс как текущий
     : null;
 
   return (
@@ -71,7 +71,7 @@ export default function DashboardPage() {
            icon={BookOpen}
          />
          <TimeSpentCard timeSpent={analytics?.totalTimeSpent} />
-         <LearningStatisticsCard analytics={analytics} progress={progressData || []} enrolledSubjects={[]} />
+         <LearningStatisticsCard analytics={analytics} progress={progressData || []} enrolledSubjects={enrolledSubjects || []} />
          <CurrentCourseCard currentCourse={currentCourse ? { id: currentCourse.id!, title: currentCourse.title || "" } : undefined} />
        </motion.div>
 

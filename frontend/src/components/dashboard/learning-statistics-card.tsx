@@ -2,13 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { BookOpen, GraduationCap, FileText, TestTube } from 'lucide-react'
-import { AnalyticsDto, Progress } from '@/src/api/types'
-import { EnrolledSubject } from '@/src/api/types/enrolled-subject'
+import { AnalyticsDto, Progress, Subject } from '@/src/api/types'
 
 interface LearningStatisticsCardProps {
   analytics: AnalyticsDto
   progress: Progress[]
-  enrolledSubjects: EnrolledSubject[]
+  enrolledSubjects: Subject[]
 }
 
 export function LearningStatisticsCard({ analytics, progress, enrolledSubjects }: LearningStatisticsCardProps) {
@@ -33,17 +32,15 @@ export function LearningStatisticsCard({ analytics, progress, enrolledSubjects }
 		progress?.filter(p => p.isCompleted).map(p => p.lessonId) || []
 	);
 
-	const subjectsCompleted = enrolledSubjects?.filter(s => s.progress === 100).length || 0;
+	// Так как у нас теперь просто список предметов (Subject[]), а не с прогрессом,
+	// вычисляем статистику на основе прогресса пользователя
+	const subjectsCompleted = 0; // Временно, пока нет информации о завершенных курсах
 
-	const topicsCompleted = enrolledSubjects?.reduce((acc, subject) => {
-			return acc + (subject.topics || []).filter(topic => {
-					const lessonIds = topic.lessons?.map(l => l.id) || [];
-					return lessonIds.length > 0 && lessonIds.every(id => completedLessonIds.has(id));
-			}).length;
-	}, 0) || 0;
+	// Количество тем не может быть вычислено из Subject[], так как в Subject нет информации о темах
+	const topicsCompleted = 0; // Временно
 	
-  const lessonsCompleted = analytics?.lessonsCompleted || 0;
-  const testsPassed = progress?.filter(p => p.isCompleted && p.score != null).length || 0;
+	 const lessonsCompleted = analytics?.lessonsCompleted || 0;
+	 const testsPassed = progress?.filter(p => p.isCompleted && p.score != null).length || 0;
 
   return (
     <Card>
