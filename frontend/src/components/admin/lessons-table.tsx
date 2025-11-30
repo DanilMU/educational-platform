@@ -28,7 +28,9 @@ import {
   PaginationEllipsis
 } from "@/src/components/ui/pagination"
 
-import { LessonForm } from "./lesson-form"
+import dynamic from 'next/dynamic';
+
+const LazyLessonForm = dynamic(() => import('./lazy-lesson-form'), { ssr: false });
 
 const ITEMS_PER_PAGE = 10;
 
@@ -117,7 +119,7 @@ export function LessonsTable() {
             <DialogHeader>
               <DialogTitle>{selectedLesson ? 'Редактировать урок' : 'Создать урок'}</DialogTitle>
             </DialogHeader>
-            <LessonForm lesson={selectedLesson} onSuccess={() => setIsFormOpen(false)} />
+            <LazyLessonForm lesson={selectedLesson} onSuccess={() => setIsFormOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>

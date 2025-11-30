@@ -1,12 +1,15 @@
 'use client'
 
 import { StatsCards } from '@/src/components/admin/stats-cards'
-import { LearningProgressChart } from '@/src/components/analytics/learning-progress-chart'
-import { PopularCoursesChart } from '@/src/components/analytics/popular-courses-chart'
-import { UserActivityChart } from '@/src/components/analytics/user-activity-chart'
+import dynamic from 'next/dynamic'
 import { useAdminDashboardData } from '@/src/api/hooks/useAdminDashboardData'
 import { useAdminUserAnalytics, useAdminCourseAnalytics } from '@/src/api/hooks/useAdminAnalyticsData'
 import { Skeleton } from '@/src/components/ui/skeleton'
+
+// Ленивая загрузка тяжелых компонентов
+const LazyLearningProgressChart = dynamic(() => import('@/src/components/analytics/lazy-learning-progress-chart'), { ssr: false });
+const LazyPopularCoursesChart = dynamic(() => import('@/src/components/analytics/lazy-popular-courses-chart'), { ssr: false });
+const LazyUserActivityChart = dynamic(() => import('@/src/components/analytics/lazy-user-activity-chart'), { ssr: false });
 
 export default function AdminDashboard() {
   const { data: dashboardData, isLoading: isLoadingDashboard, isError: isErrorDashboard } = useAdminDashboardData();
@@ -42,7 +45,7 @@ export default function AdminDashboard() {
     );
   }
 
-  const learningProgressData = [
+ const learningProgressData = [
     { date: '2024-01-01', completed: 100, started: 200, averageScore: 80 },
     { date: '2024-01-02', completed: 150, started: 250, averageScore: 82 },
     { date: '2024-01-03', completed: 200, started: 300, averageScore: 85 },
@@ -69,11 +72,11 @@ export default function AdminDashboard() {
       />
       
       <div className="grid gap-6 md:grid-cols-2">
-        <LearningProgressChart data={learningProgressData} />
-        <PopularCoursesChart data={dashboardData?.popularCourses || []} />
+        <LazyLearningProgressChart data={learningProgressData} />
+        <LazyPopularCoursesChart data={dashboardData?.popularCourses || []} />
       </div>
       
-      <UserActivityChart data={userActivityData} />
+      <LazyUserActivityChart data={userActivityData} />
     </div>
   )
 }

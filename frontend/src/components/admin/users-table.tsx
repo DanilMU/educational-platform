@@ -15,7 +15,7 @@ import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import { MoreHorizontal, PlusCircle } from "lucide-react"
 import { useState } from "react"
-import { UserForm } from "./user-form"
+import dynamic from 'next/dynamic';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/src/components/ui/alert-dialog"
 import type { User } from "@/src/api/types"
@@ -28,6 +28,8 @@ import {
   PaginationNext,
   PaginationEllipsis
 } from "@/src/components/ui/pagination"
+
+const LazyUserForm = dynamic(() => import('./lazy-user-form'), { ssr: false });
 
 const ITEMS_PER_PAGE = 10;
 
@@ -117,7 +119,7 @@ export function UsersTable() {
             <DialogHeader>
               <DialogTitle>{selectedUser ? 'Редактировать пользователя' : 'Создать пользователя'}</DialogTitle>
             </DialogHeader>
-            <UserForm user={selectedUser} onSuccess={() => setIsFormOpen(false)} />
+            <LazyUserForm user={selectedUser} onSuccess={() => setIsFormOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>

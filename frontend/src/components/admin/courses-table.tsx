@@ -15,7 +15,7 @@ import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import { MoreHorizontal, PlusCircle } from "lucide-react"
 import { useState } from "react"
-import { SubjectForm } from "./subject-form"
+import dynamic from 'next/dynamic';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/src/components/ui/alert-dialog"
 import type { Subject } from "@/src/api/types"
@@ -28,6 +28,8 @@ import {
   PaginationNext,
   PaginationEllipsis
 } from "@/src/components/ui/pagination"
+
+const LazySubjectForm = dynamic(() => import('./lazy-subject-form'), { ssr: false });
 
 const ITEMS_PER_PAGE = 10;
 
@@ -116,7 +118,7 @@ export function CoursesTable() {
             <DialogHeader>
               <DialogTitle>{selectedSubject ? 'Редактировать курс' : 'Создать курс'}</DialogTitle>
             </DialogHeader>
-            <SubjectForm subject={selectedSubject} onSuccess={() => setIsFormOpen(false)} />
+            <LazySubjectForm subject={selectedSubject} onSuccess={() => setIsFormOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
