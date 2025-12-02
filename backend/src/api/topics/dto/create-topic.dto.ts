@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateTopicDto {
 	@ApiProperty({
@@ -26,4 +26,14 @@ export class CreateTopicDto {
 	@IsString()
 	@IsOptional()
 	parentId?: string;
+
+	@ApiProperty({
+		example: ['/uploads/file1.pdf', '/uploads/file2.zip'],
+		description: 'List of URLs to attachments',
+		required: false
+	})
+	@IsArray()
+	@IsString({ each: true })
+	@IsOptional()
+	attachments?: string[];
 }

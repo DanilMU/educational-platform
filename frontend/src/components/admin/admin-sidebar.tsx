@@ -10,7 +10,8 @@ import {
   BarChart3,
   Bell,
   Settings,
-  FileText
+  FileText,
+  ClipboardList
 } from 'lucide-react'
 
 const adminNavItems = [
@@ -30,26 +31,26 @@ const adminNavItems = [
     icon: BookOpen,
   },
   {
+    title: 'Темы',
+    href: '/admin/topics',
+    icon: FileText,
+  },
+  {
     title: 'Уроки',
     href: '/admin/lessons',
     icon: FileText,
+  },
+  {
+    title: 'Тесты',
+    href: '/admin/quizzes',
+    icon: ClipboardList,
   },
   {
     title: 'Аналитика',
     href: '/admin/analytics',
     icon: BarChart3,
   },
-  {
-    title: 'Уведомления',
-    href: '/admin/notifications',
-    icon: Bell,
-  },
-  {
-    title: 'Настройки',
-    href: '/admin/settings',
-    icon: Settings,
-  },
-]
+];
 
 export function AdminSidebar() {
   const pathname = usePathname()

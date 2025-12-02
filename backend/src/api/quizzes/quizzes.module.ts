@@ -10,6 +10,7 @@ import { QuizzesService } from './quizzes.service';
 @Module({
 	imports: [PrismaModule, ProgressModule, NotificationsModule],
 	controllers: [QuizzesController],
-	providers: [QuizzesService]
+	providers: [QuizzesService],
+	exports: [QuizzesService]
 })
 export class QuizzesModule {}

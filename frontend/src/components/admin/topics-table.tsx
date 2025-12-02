@@ -1,206 +1,278 @@
 'use client'
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/src/components/ui/table"
-import { useGetTopicsQuery } from "@/src/api/hooks/useGetTopicsQuery"
-import { useCreateTopicMutation, useUpdateTopicMutation, useDeleteTopicMutation } from "@/src/api/hooks/useTopicMutations"
-import { Skeleton } from "@/src/components/ui/skeleton"
-import { Button } from "@/src/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
-import { MoreHorizontal, PlusCircle } from "lucide-react"
-import { useState } from "react"
-import dynamic from 'next/dynamic';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/src/components/ui/dialog"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/src/components/ui/alert-dialog"
-import type { Topic } from "@/src/api/types"
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/src/components/ui/table'
+import { useAdminTopicsQuery } from '@/src/api/hooks/useAdminTopics'
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-  PaginationEllipsis
-} from "@/src/components/ui/pagination"
+	useCreateTopicMutation,
+	useUpdateTopicMutation,
+	useDeleteTopicMutation,
+} from '@/src/api/hooks/useTopicMutations'
+import { Skeleton } from '@/src/components/ui/skeleton'
+import { Button } from '@/src/components/ui/button'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/src/components/ui/dropdown-menu'
+import { MoreHorizontal, PlusCircle } from 'lucide-react'
+import React, { useState, useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/src/components/ui/dialog'
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/src/components/ui/alert-dialog'
+import type { Topic } from '@/src/api/types'
 
-const LazyTopicForm = dynamic(() => import('./lazy-topic-form'), { ssr: false });
-
-const ITEMS_PER_PAGE = 10;
+const LazyTopicForm = dynamic(() => import('./lazy-topic-form'), {
+	ssr: false,
+})
 
 export function TopicsTable() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
-  const { data, isLoading, isError } = useGetTopicsQuery({ skip: (currentPage - 1) * pageSize, take: pageSize });
-  const topics = data?.data;
-  const totalTopics = data?.total || 0;
-  const deleteTopicMutation = useDeleteTopicMutation();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+	// Fetch all topics by not passing skip/take
+	const { data, isLoading, isError } = useAdminTopicsQuery({})
+	const topics = data?.data || []
+	const deleteTopicMutation = useDeleteTopicMutation()
+	const [isFormOpen, setIsFormOpen] = useState(false)
+	const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null)
 
-  const totalPages = Math.ceil(totalTopics / pageSize);
+	const hierarchicalTopics = useMemo(() => {
+		const topicMap: Record<string, Topic & { children: Topic[] }> = {}
+		const topLevelTopics: (Topic & { children: Topic[] })[] = []
 
-  const handleEdit = (topic: Topic) => {
-    setSelectedTopic(topic);
-    setIsFormOpen(true);
-  };
+		// Initialize map and children array
+		topics.forEach(topic => {
+			topicMap[topic.id] = { ...topic, children: [] }
+		})
 
-  const handleCreate = () => {
-    setSelectedTopic(null);
-    setIsFormOpen(true);
-  };
+		// Populate children and identify top-level topics
+		topics.forEach(topic => {
+			if (topic.parentId && topicMap[topic.parentId]) {
+				topicMap[topic.parentId].children.push(topicMap[topic.id])
+			} else {
+				topLevelTopics.push(topicMap[topic.id])
+			}
+		})
 
-  const handleDelete = (id: string) => {
-    deleteTopicMutation.mutate(id);
-  };
+		return topLevelTopics
+	}, [topics])
 
-  const getPaginationItems = () => {
-    const pages = [];
-    const maxPagesToShow = 5; // e.g., 1, 2, 3, 4, 5, ..., 10
+	const handleEdit = (topic: Topic) => {
+		setSelectedTopic(topic)
+		setIsFormOpen(true)
+	}
 
-    if (totalPages <= maxPagesToShow) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-      if (currentPage > 3) {
-        pages.push('...');
-      }
-      if (currentPage > 2 && currentPage < totalPages - 1) {
-        pages.push(currentPage - 1);
-      }
-      if (currentPage !== 1 && currentPage !== totalPages) {
-        pages.push(currentPage);
-      }
-      if (currentPage < totalPages - 2) {
-        pages.push(currentPage + 1);
-      }
-      if (currentPage < totalPages - 1) {
-        pages.push('...');
-      }
-      pages.push(totalPages);
-    }
-    return pages.filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
-  };
+	const handleCreate = () => {
+		setSelectedTopic(null)
+		setIsFormOpen(true)
+	}
 
-  if (isLoading) {
-    return (
-      <div className="rounded-lg border bg-card p-4">
-        <Skeleton className="h-10 w-full mb-4" />
-        <Skeleton className="h-10 w-full mb-2" />
-        <Skeleton className="h-10 w-full mb-2" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-    )
-  }
+	const handleDelete = (id: string) => {
+		deleteTopicMutation.mutate(id)
+	}
 
-  if (isError) {
-    return <div className="text-red-500">Ошибка загрузки тем.</div>
-  }
+	if (isLoading) {
+		return (
+			<div className='rounded-lg border bg-card p-4'>
+				<Skeleton className='mb-4 h-10 w-full' />
+				<Skeleton className='mb-2 h-10 w-full' />
+				<Skeleton className='mb-2 h-10 w-full' />
+				<Skeleton className='h-10 w-full' />
+			</div>
+		)
+	}
 
-  return (
-    <>
-      <div className="flex justify-end mb-4">
-        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleCreate}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Создать тему
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{selectedTopic ? 'Редактировать тему' : 'Создать тему'}</DialogTitle>
-            </DialogHeader>
-            <LazyTopicForm topic={selectedTopic} onSuccess={() => setIsFormOpen(false)} />
-          </DialogContent>
-        </Dialog>
-      </div>
-      <div className="rounded-lg border bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Название темы</TableHead>
-              <TableHead className="text-right">Действия</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {topics?.map((topic) => (
-              <TableRow key={topic.id}>
-                <TableCell>{topic.title}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Открыть меню</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEdit(topic)}>
-                        Редактировать
-                      </DropdownMenuItem>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Удалить</DropdownMenuItem>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Это действие нельзя отменить. Тема будет удалена навсегда.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Отмена</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(topic.id)}>Удалить</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage > 1}
-            />
-          </PaginationItem>
-          {getPaginationItems().map((page, index) => (
-            <PaginationItem key={index}>
-              {page === '...' ? (
-                <PaginationEllipsis />
-              ) : (
-                <PaginationLink
-                  onClick={() => setCurrentPage(page as number)}
-                  isActive={page === currentPage}
-                >
-                  {page}
-                </PaginationLink>
-              )}
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              isActive={currentPage < totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </>
-  )
+	if (isError) {
+		return <div className='text-red-500'>Ошибка загрузки тем.</div>
+	}
+
+	return (
+		<>
+			<div className='mb-4 flex justify-end'>
+				<Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+					<DialogTrigger asChild>
+						<Button onClick={handleCreate}>
+							<PlusCircle className='mr-2 h-4 w-4' />
+							Создать тему/раздел
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>
+								{selectedTopic
+									? 'Редактировать тему/раздел'
+									: 'Создать тему/раздел'}
+							</DialogTitle>
+						</DialogHeader>
+						<LazyTopicForm
+							topic={selectedTopic}
+							onSuccess={() => setIsFormOpen(false)}
+						/>
+					</DialogContent>
+				</Dialog>
+			</div>
+			<div className='rounded-lg border bg-card'>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>Название</TableHead>
+							<TableHead>Курс</TableHead>
+							<TableHead className='text-right'>Действия</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{hierarchicalTopics.map(topic => (
+							<React.Fragment key={topic.id}>
+								<TableRow className='bg-muted/50'>
+									<TableCell className='font-semibold'>
+										{topic.title}
+									</TableCell>
+									<TableCell>{topic.subject.title}</TableCell>
+									<TableCell className='text-right'>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button variant='ghost' className='h-8 w-8 p-0'>
+													<span className='sr-only'>
+														Открыть меню
+													</span>
+													<MoreHorizontal className='h-4 w-4' />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align='end'>
+												<DropdownMenuItem
+													onClick={() => handleEdit(topic)}
+												>
+													Редактировать
+												</DropdownMenuItem>
+												<AlertDialog>
+													<AlertDialogTrigger asChild>
+														<DropdownMenuItem
+															onSelect={e =>
+																e.preventDefault()
+															}
+														>
+															Удалить
+														</DropdownMenuItem>
+													</AlertDialogTrigger>
+													<AlertDialogContent>
+														<AlertDialogHeader>
+															<AlertDialogTitle>
+																Вы уверены?
+															</AlertDialogTitle>
+															<AlertDialogDescription>
+																Это действие нельзя отменить.
+																Раздел и все вложенные темы будут
+																удалены.
+															</AlertDialogDescription>
+														</AlertDialogHeader>
+														<AlertDialogFooter>
+															<AlertDialogCancel>
+																Отмена
+															</AlertDialogCancel>
+															<AlertDialogAction
+																onClick={() =>
+																	handleDelete(topic.id)
+																}
+															>
+																Удалить
+															</AlertDialogAction>
+														</AlertDialogFooter>
+													</AlertDialogContent>
+												</AlertDialog>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
+								</TableRow>
+								{topic.children.map(child => (
+									<TableRow key={child.id}>
+										<TableCell className='pl-8'>
+											{child.title}
+										</TableCell>
+										<TableCell>{child.subject.title}</TableCell>
+										<TableCell className='text-right'>
+											<DropdownMenu>
+												<DropdownMenuTrigger asChild>
+													<Button
+														variant='ghost'
+														className='h-8 w-8 p-0'
+													>
+														<span className='sr-only'>
+															Открыть меню
+														</span>
+														<MoreHorizontal className='h-4 w-4' />
+													</Button>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent align='end'>
+													<DropdownMenuItem
+														onClick={() => handleEdit(child)}
+													>
+														Редактировать
+													</DropdownMenuItem>
+													<AlertDialog>
+														<AlertDialogTrigger asChild>
+															<DropdownMenuItem
+																onSelect={e =>
+																	e.preventDefault()
+																}
+															>
+																Удалить
+															</DropdownMenuItem>
+														</AlertDialogTrigger>
+														<AlertDialogContent>
+															<AlertDialogHeader>
+																<AlertDialogTitle>
+																	Вы уверены?
+																</AlertDialogTitle>
+																<AlertDialogDescription>
+																	Это действие нельзя отменить.
+																	Тема будет удалена навсегда.
+																</AlertDialogDescription>
+															</AlertDialogHeader>
+															<AlertDialogFooter>
+																<AlertDialogCancel>
+																	Отмена
+																</AlertDialogCancel>
+																<AlertDialogAction
+																	onClick={() =>
+																		handleDelete(child.id)
+																	}
+																>
+																	Удалить
+																</AlertDialogAction>
+															</AlertDialogFooter>
+														</AlertDialogContent>
+													</AlertDialog>
+												</DropdownMenuContent>
+											</DropdownMenu>
+										</TableCell>
+									</TableRow>
+								))}
+							</React.Fragment>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		</>
+	)
 }

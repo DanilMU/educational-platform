@@ -12,4 +12,6 @@ export interface CreateTopicDto {
   subjectId: string;
   /** The ID of the parent topic, if this is a sub-topic */
   parentId?: string;
+  /** List of URLs to attachments */
+  attachments?: string[];
 }

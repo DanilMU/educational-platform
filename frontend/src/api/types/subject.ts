@@ -5,6 +5,7 @@
  * OpenAPI spec version: 0.0.1
  */
 import type { SubjectDescription } from './subjectDescription';
+import type { SubjectStatus } from './subjectStatus';
 import type { Topic } from './topic';
 
 export interface Subject {
@@ -14,6 +15,8 @@ export interface Subject {
   title: string;
   /** Описание предмета */
   description?: SubjectDescription;
+  /** Статус курса */
+  status: SubjectStatus;
   /** Список тем в предмете */
   topics: Topic[];
   /** Дата создания записи */

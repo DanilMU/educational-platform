@@ -27,6 +27,8 @@ import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { CreateLessonDto, UpdateLessonDto } from '../lessons/dto';
 import { Lesson } from '../lessons/entities/lesson.entity';
+import { CreateQuizDto, UpdateQuizDto } from '../quizzes/dto';
+import { Quiz } from '../quizzes/entities/quiz.entity';
 import { CreateSubjectDto, UpdateSubjectDto } from '../subjects/dto';
 import { UpdateSubjectStatusDto } from '../subjects/dto/update-subject-status.dto';
 import { Subject } from '../subjects/entities/subject.entity';
@@ -330,5 +332,57 @@ export class AdminController {
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
 	async deleteTopic(@Param('id') id: string) {
 		return this.adminService.deleteTopic(id);
+	}
+
+	// CRUD для тестов
+	@Get('quizzes')
+	@ApiOperation({ summary: 'Получить список тестов админки' })
+	@ApiBearerAuth()
+	@ApiOkResponse({ description: 'Список тестов', type: [Quiz] })
+	async getQuizzes() {
+		return this.adminService.getAllQuizzes();
+	}
+
+	@Get('quizzes/:id')
+	@ApiOperation({ summary: 'Получить тест по ID' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID теста', type: String })
+	@ApiOkResponse({ description: 'Данные теста', type: Quiz })
+	@ApiNotFoundResponse({ description: 'Тест не найден' })
+	async getQuizById(@Param('id') id: string) {
+		return this.adminService.getQuizById(id);
+	}
+
+	@Post('quizzes')
+	@ApiOperation({ summary: 'Создать новый тест' })
+	@ApiBearerAuth()
+	@ApiBody({ type: CreateQuizDto })
+	@ApiCreatedResponse({ description: 'Тест создан', type: Quiz })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async createQuiz(@Body() quizData: CreateQuizDto) {
+		return this.adminService.createQuiz(quizData);
+	}
+
+	@Patch('quizzes/:id')
+	@ApiOperation({ summary: 'Обновить тест' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID теста', type: String })
+	@ApiBody({ type: UpdateQuizDto })
+	@ApiOkResponse({ description: 'Тест обновлен', type: Quiz })
+	@ApiNotFoundResponse({ description: 'Тест не найден' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async updateQuiz(@Param('id') id: string, @Body() quizData: UpdateQuizDto) {
+		return this.adminService.updateQuiz(id, quizData);
+	}
+
+	@Delete('quizzes/:id')
+	@ApiOperation({ summary: 'Удалить тест' })
+	@ApiBearerAuth()
+	@ApiParam({ name: 'id', description: 'ID теста', type: String })
+	@ApiOkResponse({ description: 'Тест удален', type: Quiz })
+	@ApiNotFoundResponse({ description: 'Тест не найден' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	async deleteQuiz(@Param('id') id: string) {
+		return this.adminService.deleteQuiz(id);
 	}
 }

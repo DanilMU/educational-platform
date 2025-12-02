@@ -1,6 +1,7 @@
 import { instance } from '../instance';
-import { User, Subject, Lesson, Topic, CreateUserDto, UpdateUserDto, CreateSubjectDto, UpdateSubjectDto, CreateLessonDto, UpdateLessonDto, CreateTopicDto, UpdateTopicDto, PaginatedUsersDto, PaginatedSubjectsDto, PaginatedLessonsDto, PaginatedTopicsDto } from '../types';
+import { User, Subject, Lesson, Topic, CreateUserDto, UpdateUserDto, CreateSubjectDto, UpdateSubjectDto, CreateLessonDto, UpdateLessonDto, CreateTopicDto, UpdateTopicDto, PaginatedUsersDto, PaginatedSubjectsDto, PaginatedLessonsDto, PaginatedTopicsDto, Quiz, CreateQuizDto, UpdateQuizDto } from '../types';
 import { AdminPaginatedUsersDto, AdminPaginatedSubjectsDto, AdminPaginatedLessonsDto } from '../types/admin-paginated-dto';
+
 
 // Users
 export const adminUsersApi = {
@@ -56,4 +57,13 @@ export const adminLessonsApi = {
   create: (lessonData: CreateLessonDto) => instance.post<Lesson>('/admin/lessons', lessonData).then(res => res.data),
   update: (id: string, lessonData: UpdateLessonDto) => instance.patch<Lesson>(`/admin/lessons/${id}`, lessonData).then(res => res.data),
   delete: (id: string) => instance.delete<Lesson>(`/admin/lessons/${id}`).then(res => res.data),
+};
+
+// Quizzes
+export const adminQuizzesApi = {
+  getAll: () => instance.get<Quiz[]>('/admin/quizzes').then(res => res.data),
+  getById: (id: string) => instance.get<Quiz>(`/admin/quizzes/${id}`).then(res => res.data),
+  create: (quizData: CreateQuizDto) => instance.post<Quiz>('/admin/quizzes', quizData).then(res => res.data),
+  update: (id: string, quizData: UpdateQuizDto) => instance.patch<Quiz>(`/admin/quizzes/${id}`, quizData).then(res => res.data),
+  delete: (id: string) => instance.delete<Quiz>(`/admin/quizzes/${id}`).then(res => res.data),
 };

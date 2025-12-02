@@ -77,10 +77,10 @@ export class SubjectsController {
 	findAll(
 		@Query('skip') skip?: string,
 		@Query('take') take?: string
-	): Promise<{ subjects: SubjectModel[]; total: number }> {
-		const skipNum = skip ? parseInt(skip, 10) : 0;
-		const takeNum = take ? parseInt(take, 10) : 10; // default to 10 items
-		return this.subjectsService.findAll(skipNum, takeNum);
+	): Promise<PaginatedSubjectsDto> {
+		const skipNum = skip ? parseInt(skip, 10) : 0
+		const takeNum = take ? parseInt(take, 10) : 10 // default to 10 items
+		return this.subjectsService.findAll(skipNum, takeNum)
 	}
 
 	@Get(':id')

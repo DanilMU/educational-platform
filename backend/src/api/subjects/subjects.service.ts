@@ -34,38 +34,37 @@ export class SubjectsService {
 		}
 	}
 
-	findAll(
+	async findAll(
 		skip: number = 0,
 		take: number = 10,
 		includeDrafts: boolean = false
-	): Promise<{ subjects: Subject[]; total: number }> {
+	): Promise<PaginatedSubjectsDto> {
 		const whereClause = includeDrafts
 			? undefined
 			: {
-					status: 'PUBLISHED' as const
-				};
+					status: 'PUBLISHED' as const,
+			  };
 
-		return this.prisma
-			.$transaction([
-				this.prisma.subject.findMany({
-					skip: isNaN(skip) || skip < 0 ? 0 : skip,
-					take: isNaN(take) || take < 0 ? 10 : take,
-					where: whereClause,
-					include: {
-						topics: {
-							include: {
-								lessons: {
-									include: {
-										quiz: true
-									}
-								}
-							}
-						}
-					}
-				}),
-				this.prisma.subject.count({ where: whereClause })
-			])
-			.then(([subjects, total]) => ({ subjects, total }));
+		const [subjects, total] = await this.prisma.$transaction([
+			this.prisma.subject.findMany({
+				skip: isNaN(skip) || skip < 0 ? 0 : skip,
+				take: isNaN(take) || take < 0 ? 10 : take,
+				where: whereClause,
+				include: {
+					topics: {
+						include: {
+							lessons: {
+								include: {
+									quiz: true,
+								},
+							},
+						},
+					},
+				},
+			}),
+			this.prisma.subject.count({ where: whereClause }),
+		])
+		return { data: subjects, total }
 	}
 
 	findOne(id: string, includeDraft: boolean = false) {

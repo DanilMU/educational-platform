@@ -3,13 +3,18 @@ import { $Enums, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { CreateLessonDto, UpdateLessonDto } from '../lessons/dto';
+import { CreateQuizDto, UpdateQuizDto } from '../quizzes/dto';
+import { QuizzesService } from '../quizzes/quizzes.service';
 import { CreateSubjectDto, UpdateSubjectDto } from '../subjects/dto';
 import { CreateTopicDto, UpdateTopicDto } from '../topics/dto';
 import { CreateUserDto, UpdateUserDto } from '../users/dto';
 
 @Injectable()
 export class AdminService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private quizzesService: QuizzesService
+	) {}
 
 	async getDashboardData() {
 		const [totalUsers, activeUsers, totalCourses, totalLessons] =
@@ -460,5 +465,26 @@ export class AdminService {
 			}
 			throw error;
 		}
+	}
+
+	// CRUD для тестов
+	async getAllQuizzes() {
+		return this.quizzesService.findAll();
+	}
+
+	async getQuizById(id: string) {
+		return this.quizzesService.findOne(id);
+	}
+
+	async createQuiz(quizData: CreateQuizDto) {
+		return this.quizzesService.create(quizData);
+	}
+
+	async updateQuiz(id: string, quizData: UpdateQuizDto) {
+		return this.quizzesService.update(id, quizData);
+	}
+
+	async deleteQuiz(id: string) {
+		return this.quizzesService.remove(id);
 	}
 }

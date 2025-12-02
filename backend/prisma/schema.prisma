@@ -43,6 +43,7 @@ model Topic {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   parentId  String?
+  attachments String[] @default([])
   lessons   Lesson[]
   parent    Topic?   @relation("TopicHierarchy", fields: [parentId], references: [id])
   children  Topic[]  @relation("TopicHierarchy")

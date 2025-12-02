@@ -4,5 +4,16 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
+import type { UpdateSubjectDtoStatus } from './updateSubjectDtoStatus';
 
-export interface UpdateSubjectDto { [key: string]: unknown }
+export interface UpdateSubjectDto {
+  /** The title of the subject */
+  title?: string;
+  /** A brief description of the subject */
+  description?: string;
+  /**
+   * Статус курса
+   * @nullable
+   */
+  status?: UpdateSubjectDtoStatus;
+}
