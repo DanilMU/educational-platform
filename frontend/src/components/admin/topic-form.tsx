@@ -24,8 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/src/components/ui/select'
-import type { Topic, CreateTopicDto, UpdateTopicDto } from '@/src/api/types'
-import { useGetAllCoursesQuery } from '@/src/api/hooks/useGetAllCoursesQuery'
+import { useAdminCoursesQuery } from '@/src/api/hooks/useAdminCourses'
 import { useAdminTopicsQuery } from '@/src/api/hooks/useAdminTopics'
 import { MultiFileUpload } from '../ui/multi-file-upload'
 import { uploadFile } from '@/src/api/requests/file'
@@ -47,7 +46,8 @@ interface TopicFormProps {
 export function TopicForm({ topic, onSuccess }: TopicFormProps) {
 	const createTopicMutation = useCreateTopicMutation()
 	const updateTopicMutation = useUpdateTopicMutation()
-	const { data: courses, isLoading: isLoadingCourses } = useGetAllCoursesQuery()
+	const { data: coursesData, isLoading: isLoadingCourses } = useAdminCoursesQuery({ take: 1000 })
+	const courses = coursesData?.data;
 	const { data: topicsData, isLoading: isLoadingTopics } = useAdminTopicsQuery(
 		{}
 	)
