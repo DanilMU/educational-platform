@@ -256,25 +256,32 @@ export class AnalyticsService {
 
 		for (let i = months - 1; i >= 0; i--) {
 			const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-			const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+			const nextMonth = new Date(
+				now.getFullYear(),
+				now.getMonth() - i + 1,
+				1
+			);
 
 			const monthName = date.toLocaleString('ru-RU', { month: 'short' });
 
-			const completedLessonsInMonth = await this.prisma.userProgress.count({
-				where: {
-					userId: userId,
-					isCompleted: true,
-					completedAt: {
-						gte: date,
-						lt: nextMonth,
-					},
-				},
-			});
+			const completedLessonsInMonth =
+				await this.prisma.userProgress.count({
+					where: {
+						userId: userId,
+						isCompleted: true,
+						completedAt: {
+							gte: date,
+							lt: nextMonth
+						}
+					}
+				});
 
 			const totalLessonsCount = await this.prisma.lesson.count();
 			const progress =
 				totalLessonsCount > 0
-					? Math.round((completedLessonsInMonth / totalLessonsCount) * 100)
+					? Math.round(
+							(completedLessonsInMonth / totalLessonsCount) * 100
+						)
 					: 0;
 
 			monthlyProgress.push({ name: monthName, progress });
@@ -282,7 +289,7 @@ export class AnalyticsService {
 
 		return {
 			userId,
-			monthlyProgress,
+			monthlyProgress
 		};
 	}
 }

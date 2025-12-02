@@ -1,10 +1,22 @@
 import { instance } from '../instance'
-import type { Progress, UpdateProgressDto } from '../types'
+import { Progress, UpdateProgressDto } from '../types'
 
-export const getProgress = async () => {
-	return await instance.get<Progress[]>('/progress').then(res => res.data)
+export const getUserProgress = async () => {
+	const response = await instance.get('/progress');
+	return response.data;
+}
+
+export const getProgressByLessonId = async (lessonId: string) => {
+	const response = await instance.get(`/progress/${lessonId}`);
+	return response.data;
 }
 
 export const updateProgress = async (lessonId: string, data: UpdateProgressDto) => {
-	return await instance.patch<Progress>(`/progress/${lessonId}`, data).then(res => res.data)
+	const response = await instance.patch(`/progress/${lessonId}`, data);
+	return response.data;
+}
+
+export const markLessonAsCompleted = async (lessonId: string) => {
+	const response = await instance.post(`/progress/${lessonId}/mark-completed`);
+	return response.data;
 }

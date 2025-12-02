@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { adminApiAdapter } from '../requests/admin-adapter';
 import { AdminPaginatedSubjectsDto } from '../types/admin-paginated-dto';
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { lessonsControllerFindAll } from '../generated-client';
-import { Lesson, PaginatedLessonsDto } from '../types';
+import { PaginatedLessonsDto } from '../types';
 
 interface GetLessonsQueryProps {
   skip: number;

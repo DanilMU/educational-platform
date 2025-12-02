@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAllTopicsPaginated } from '../requests/topic';
-import { Topic, PaginatedTopicsDto } from '../types';
+import { PaginatedTopicsDto } from '../types';
 
 interface GetTopicsQueryProps {
   skip: number;

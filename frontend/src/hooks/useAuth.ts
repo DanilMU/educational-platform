@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
-import { getAccessToken, removeTokens } from "../lib/cookies";
+import { useGetMeQuery } from '../api/hooks'
+import { getAccessToken, removeTokens } from '../lib/cookies'
 
 export function useAuth() {
-    const token = getAccessToken();
-    const [isAuthorized, setIsAuthorized] = useState(Boolean(token));
+	const { data: user, isLoading } = useGetMeQuery()
 
-    // Обновляем состояние авторизации при изменении токена
-    useEffect(() => {
-        setIsAuthorized(Boolean(token));
-    }, [token]);
+	const token = getAccessToken()
+	const isAuthorized = !!token
 
-    const logout = () => {
-        removeTokens();
-        setIsAuthorized(false);
-    }
+	const logout = () => {
+		removeTokens()
+		// Возможно, здесь потребуется перезагрузка страницы или редирект
+	}
 
-    // Возвращаем только isAuthorized и функцию logout, без данных пользователя
-    // Данные пользователя можно получить отдельно в компонентах, где они нужны
-    return { isAuthorized, logout };
+	return { user, isAuthorized, isLoading, logout }
 }

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminTopicsApi } from '../requests/admin-wrapper';
-import { Topic, PaginatedTopicsDto, CreateTopicDto, UpdateTopicDto } from '../types';
+import { Topic, PaginatedTopicsDto, UpdateTopicDto } from '../types';
 import { adminApiAdapter } from '../requests/admin-adapter';
 
 interface GetAdminTopicsQueryProps {

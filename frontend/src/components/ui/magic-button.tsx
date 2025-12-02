@@ -5,11 +5,7 @@ import { motion } from 'framer-motion'
 import { Button, ButtonProps } from '@/src/components/ui/button' // Re-import Button to extend its props
 import { cn } from '@/src/lib/utils'
 
-interface MagicButtonProps extends ButtonProps {
-  // Add any specific props for MagicButton here
-}
-
-export const MagicButton = forwardRef<HTMLButtonElement, MagicButtonProps>(
+export const MagicButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
     return (
       <motion.div

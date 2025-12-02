@@ -1,10 +1,12 @@
 'use client'
-
+ 
 import { Button } from '@/src/components/ui/button'
 import { ArrowLeft, ArrowRight, CheckCircle, FileQuestion } from 'lucide-react'
 import Link from 'next/link'
 import type { Lesson } from '@/src/api/types'
-
+import { useMarkLessonAsCompletedMutation } from '@/src/api/hooks/useMarkLessonAsCompletedMutation'
+import { toast } from 'sonner'
+ 
 interface LessonActionsProps {
   lesson: Lesson
   prevLessonId?: string
@@ -12,7 +14,7 @@ interface LessonActionsProps {
   isCompleted: boolean
   hasQuiz?: boolean
 }
-
+ 
 export function LessonActions({
   lesson,
   prevLessonId,
@@ -20,6 +22,19 @@ export function LessonActions({
   isCompleted,
   hasQuiz
 }: LessonActionsProps) {
+  const { mutate: markLessonAsCompleted, isPending } = useMarkLessonAsCompletedMutation({
+    onSuccess: () => {
+      toast.success('Урок успешно завершен!')
+    },
+    onError: () => {
+      toast.error('Ошибка при завершении урока')
+    }
+  })
+  
+  const handleCompleteLesson = () => {
+    markLessonAsCompleted({ lessonId: lesson.id })
+  }
+  
   return (
     <div className="mx-auto mt-8 flex max-w-4xl justify-between border-t p-6">
       <div>
@@ -46,7 +61,18 @@ export function LessonActions({
                 </Link>
             </Button>
         ) : (
-          <Button>Завершить урок</Button>
+          <Button onClick={handleCompleteLesson} disabled={isPending}>
+            {isPending ? (
+              <>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                Завершаем...
+              </>
+            ) : (
+              <>
+                Завершить урок
+              </>
+            )}
+          </Button>
         )}
         {nextLessonId && (
           <Button asChild variant="default">

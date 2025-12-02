@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAllUsersPaginated } from '../requests/user';
-import { User, PaginatedUsersDto } from '../types';
+import { PaginatedUsersDto } from '../types';
 
 interface GetUsersQueryProps {
   skip: number;

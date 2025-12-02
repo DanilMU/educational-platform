@@ -140,4 +140,22 @@ export class ProgressController {
 	completeSubject(@Body() dto: CompleteSubjectDto) {
 		return this.progressService.completeAllLessonsInSubject(dto);
 	}
+
+	@Post(':lessonId/mark-completed')
+	@ApiOperation({
+		summary: 'Отметить урок как завершенный'
+	})
+	@ApiParam({ name: 'lessonId', description: 'ID урока', type: String })
+	@ApiOkResponse({
+		description: 'Урок успешно отмечен как завершенный.',
+		type: Progress
+	})
+	@ApiNotFoundResponse({ description: 'Урок не найден.' })
+	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
+	markLessonAsCompleted(
+		@Authorized('id') userId: string,
+		@Param('lessonId') lessonId: string
+	) {
+		return this.progressService.markLessonAsCompleted(userId, lessonId);
+	}
 }

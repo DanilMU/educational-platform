@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { subjectsControllerFindAll } from '../generated-client';
-import { Subject, PaginatedSubjectsDto } from '../types';
+import { PaginatedSubjectsDto } from '../types';
 
 interface GetCoursesQueryProps {
   skip: number;

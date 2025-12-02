@@ -19,7 +19,11 @@ import { Authorized, GetUser, Roles } from 'src/common/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/common/guards';
 
 import { AnalyticsService } from './analytics.service';
-import { AnalyticsDto, CourseAnalyticsDto, UserProgressOverTimeDto } from './dto';
+import {
+	AnalyticsDto,
+	CourseAnalyticsDto,
+	UserProgressOverTimeDto
+} from './dto';
 
 // Corrected import for CourseAnalyticsDto
 
@@ -115,7 +119,8 @@ export class AnalyticsController {
 
 	@Get('user/:id/progress-over-time')
 	@ApiOperation({
-		summary: 'Получить прогресс пользователя по месяцам за последние 6 месяцев'
+		summary:
+			'Получить прогресс пользователя по месяцам за последние 6 месяцев'
 	})
 	@ApiParam({ name: 'id', description: 'ID пользователя', type: String })
 	@ApiOkResponse({
@@ -124,7 +129,10 @@ export class AnalyticsController {
 	})
 	@ApiNotFoundResponse({ description: 'Пользователь не найден.' })
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
-	async getUserProgressOverTime(@Param('id') id: string, @GetUser() user: User) {
+	async getUserProgressOverTime(
+		@Param('id') id: string,
+		@GetUser() user: User
+	) {
 		if (user.id !== id && user.role !== Role.ADMIN) {
 			throw new ForbiddenException(
 				'У вас нет прав на просмотр этой аналитики.'

@@ -18,8 +18,9 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
-	ApiTags,
-	ApiQuery // Add this import
+	ApiQuery,
+	// Add this import
+	ApiTags
 } from '@nestjs/swagger';
 import { Role, User as UserModel } from '@prisma/client';
 import { Authorized, Protected, Roles } from 'src/common/decorators';
@@ -79,8 +80,18 @@ export class UsersController {
 		type: PaginatedUsersDto
 	})
 	@ApiForbiddenResponse({ description: 'Отказано в доступе' })
-	@ApiQuery({ name: 'skip', required: false, type: String, description: 'Количество пропускаемых элементов' }) // Add this
-	@ApiQuery({ name: 'take', required: false, type: String, description: 'Количество возвращаемых элементов' }) // Add this
+	@ApiQuery({
+		name: 'skip',
+		required: false,
+		type: String,
+		description: 'Количество пропускаемых элементов'
+	}) // Add this
+	@ApiQuery({
+		name: 'take',
+		required: false,
+		type: String,
+		description: 'Количество возвращаемых элементов'
+	}) // Add this
 	public async getAllUsers(
 		@Query('skip') skip: string,
 		@Query('take') take: string

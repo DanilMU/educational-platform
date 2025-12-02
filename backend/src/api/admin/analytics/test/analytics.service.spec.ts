@@ -8,11 +8,11 @@ describe('AnalyticsService', () => {
 
 	const mockPrismaService = {
 		userProgress: {
-			count: jest.fn(),
+			count: jest.fn()
 		},
 		lesson: {
-			count: jest.fn(),
-		},
+			count: jest.fn()
+		}
 	};
 
 	beforeEach(async () => {
@@ -67,7 +67,7 @@ describe('AnalyticsService', () => {
 			mockPrismaService.userProgress.count.mockReset();
 			mockPrismaService.lesson.count.mockReset();
 		});
-	
+
 		it('should return progress for the last 6 months', async () => {
 			mockPrismaService.lesson.count.mockResolvedValue(100);
 			// Mock completed lessons for each of the last 6 months
@@ -78,47 +78,57 @@ describe('AnalyticsService', () => {
 				.mockResolvedValueOnce(25) // 2 months ago
 				.mockResolvedValueOnce(30) // 1 month ago
 				.mockResolvedValueOnce(35); // current month
-	
-			const result = await service.getUserProgressOverTime('some-user-id');
-	
+
+			const result =
+				await service.getUserProgressOverTime('some-user-id');
+
 			expect(result.monthlyProgress).toHaveLength(6);
-			expect(mockPrismaService.userProgress.count).toHaveBeenCalledTimes(6);
+			expect(mockPrismaService.userProgress.count).toHaveBeenCalledTimes(
+				6
+			);
 			expect(mockPrismaService.lesson.count).toHaveBeenCalledTimes(6);
 		});
-	
+
 		it('should return correct progress percentages', async () => {
 			mockPrismaService.lesson.count.mockResolvedValue(50);
 			mockPrismaService.userProgress.count
-				.mockResolvedValueOnce(5)   // 10%
-				.mockResolvedValueOnce(10)  // 20%
-				.mockResolvedValueOnce(15)  // 30%
-				.mockResolvedValueOnce(20)  // 40%
-				.mockResolvedValueOnce(25)  // 50%
+				.mockResolvedValueOnce(5) // 10%
+				.mockResolvedValueOnce(10) // 20%
+				.mockResolvedValueOnce(15) // 30%
+				.mockResolvedValueOnce(20) // 40%
+				.mockResolvedValueOnce(25) // 50%
 				.mockResolvedValueOnce(30); // 60%
-	
-			const result = await service.getUserProgressOverTime('some-user-id');
-	
+
+			const result =
+				await service.getUserProgressOverTime('some-user-id');
+
 			expect(result.monthlyProgress.map(p => p.progress)).toEqual([
 				10, 20, 30, 40, 50, 60
 			]);
 		});
-	
+
 		it('should return 0 progress if there are no completed lessons', async () => {
 			mockPrismaService.lesson.count.mockResolvedValue(100);
 			mockPrismaService.userProgress.count.mockResolvedValue(0);
-	
-			const result = await service.getUserProgressOverTime('some-user-id');
-	
-			expect(result.monthlyProgress.every(p => p.progress === 0)).toBe(true);
+
+			const result =
+				await service.getUserProgressOverTime('some-user-id');
+
+			expect(result.monthlyProgress.every(p => p.progress === 0)).toBe(
+				true
+			);
 		});
-	
+
 		it('should return 0 progress if there are no lessons in the system', async () => {
 			mockPrismaService.lesson.count.mockResolvedValue(0);
 			mockPrismaService.userProgress.count.mockResolvedValue(10); // This shouldn't happen in practice
-	
-			const result = await service.getUserProgressOverTime('some-user-id');
-	
-			expect(result.monthlyProgress.every(p => p.progress === 0)).toBe(true);
+
+			const result =
+				await service.getUserProgressOverTime('some-user-id');
+
+			expect(result.monthlyProgress.every(p => p.progress === 0)).toBe(
+				true
+			);
 		});
 	});
 });

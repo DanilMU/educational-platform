@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
 
 export function EnrolledSubjects() {
-	const { user } = useAuth();
+	const { user } = useAuth()
 	const { data: subjects = [], isLoading } = useGetEnrolledSubjectsQuery(user?.id || '')
 
 	if (isLoading) {

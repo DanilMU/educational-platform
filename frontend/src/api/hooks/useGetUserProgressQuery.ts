@@ -1,6 +1,6 @@
 import { type UseQueryOptions, useQuery } from '@tanstack/react-query'
 
-import { getProgress } from '../requests/progress'
+import { getUserProgress } from '../requests/progress'
 import type { Progress } from '../types'
 
 export function useGetUserProgressQuery(
@@ -8,7 +8,7 @@ export function useGetUserProgressQuery(
 ) {
 	return useQuery({
 		queryKey: ['get user progress'],
-		queryFn: getProgress,
+		queryFn: getUserProgress,
 		...options
 	})
 }

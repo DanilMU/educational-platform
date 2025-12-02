@@ -2,13 +2,11 @@
 
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
-import { useGetMeQuery } from '@/src/api/hooks'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { useAuth } from '@/src/hooks/useAuth'
 
 export function ActiveCoursesSection() {
-  const { isAuthorized } = useAuth();
-  const { data: user } = useGetMeQuery();
+  const { user } = useAuth();
   const { data: enrolledSubjects, isLoading, isError } = useGetEnrolledSubjectsQuery(user?.id || '')
 
   if (isLoading) {

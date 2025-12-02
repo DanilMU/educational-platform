@@ -30,12 +30,12 @@ export class AdminService {
 		};
 	}
 
-	async getUserAnalytics(period: string) {
+	getUserAnalytics() {
 		// Логика получения аналитики пользователей
 		return {};
 	}
 
-	async getCourseAnalytics() {
+	getCourseAnalytics() {
 		// Логика получения аналитики курсов
 		return {};
 	}

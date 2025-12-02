@@ -12,6 +12,7 @@ export function useGetEnrolledSubjectsQuery(
              const data = await getEnrolledSubjects(userId);
              return data; // данные уже извлечены в функции запроса
            },
+           enabled: !!userId,
            ...options
   })
 }
