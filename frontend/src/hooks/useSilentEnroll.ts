@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAuth } from '@/src/hooks/useAuth'
 import {
 	useGetEnrolledSubjectsQuery,
@@ -9,14 +9,37 @@ export function useSilentEnroll(subjectId: string) {
 	const { isAuthorized, user } = useAuth()
 	const { data: enrolledSubjects, isLoading: enrolledLoading } =
 		useGetEnrolledSubjectsQuery(user?.id || '', { enabled: isAuthorized })
-	const enrollMutation = useEnrollInSubjectMutation({ silent: true })
+	const { mutate: enroll, isPending } = useEnrollInSubjectMutation({
+		silent: true,
+	})
+
+	// Ref to prevent multiple enrollment attempts for the same subject
+	const attemptedEnrollment = useRef<Set<string>>(new Set())
 
 	useEffect(() => {
-		if (isAuthorized && !enrolledLoading && enrolledSubjects) {
-			const isEnrolled = enrolledSubjects.some(s => s.id === subjectId)
-			if (!isEnrolled) {
-				enrollMutation.mutate(subjectId)
-			}
+		// Don't do anything if not authorized, or data is loading, or already attempting to enroll
+		if (!isAuthorized || enrolledLoading || !enrolledSubjects || isPending) {
+			return
 		}
-	}, [isAuthorized, enrolledLoading, enrolledSubjects, subjectId, enrollMutation])
+
+		// Check if enrollment was already attempted for this subject ID in this component instance
+		if (attemptedEnrollment.current.has(subjectId)) {
+			return
+		}
+
+		const isEnrolled = enrolledSubjects.some(s => s.id === subjectId)
+
+		if (!isEnrolled) {
+			enroll(subjectId)
+			// Mark this subjectId as attempted for this component instance
+			attemptedEnrollment.current.add(subjectId)
+		}
+	}, [
+		isAuthorized,
+		enrolledLoading,
+		enrolledSubjects,
+		subjectId,
+		enroll,
+		isPending,
+	])
 }

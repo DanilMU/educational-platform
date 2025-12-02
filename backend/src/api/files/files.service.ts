@@ -4,7 +4,7 @@ import * as path from 'path';
 
 @Injectable()
 export class FilesService {
-	private readonly uploadDir = path.join(__dirname, '..', 'uploads');
+	private readonly uploadDir = path.join(process.cwd(), 'uploads');
 
 	constructor() {
 		if (!fs.existsSync(this.uploadDir)) {
