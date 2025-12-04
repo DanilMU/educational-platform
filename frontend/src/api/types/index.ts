@@ -48,6 +48,7 @@ export * from './notificationDtoData';
 export * from './notificationDtoType';
 export * from './paginatedLessonsDto';
 export * from './paginatedSubjectsDto';
+export * from './paginatedSubjectsDtoDataItem';
 export * from './paginatedTopicsDto';
 export * from './paginatedUsersDto';
 export * from './popularCourseDto';

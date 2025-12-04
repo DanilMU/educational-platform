@@ -27,17 +27,11 @@ import { Progress } from '@/src/components/ui/progress'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { MagicCard } from '@/src/components/ui/magic-card' // Import MagicCard
 
-// I'll assume the subject type based on the usage in the card.
-// This should be replaced with the actual type from the API client later.
-import type { SubjectDescription } from '@/src/api/types'
+import type { Subject as ApiSubject, SubjectDescription } from '@/src/api/types'
 
-type Subject = {
-	id: string
-	title: string
-	description?: string | SubjectDescription
+type Subject = ApiSubject & {
 	progress?: number
-	lessons?: number | string
-	category?: string
+	lessonsCount?: number
 	studentCount?: number
 	rating?: number
 	isEnrolled?: boolean
@@ -121,7 +115,7 @@ const SubjectCard = memo(({ subject }: SubjectCardProps) => {
 				<div className='flex items-center justify-between text-sm text-gray-600'>
 					<div className='flex items-center gap-1'>
 						<Clock className='w-4 h-4' />
-						<span>{subject.lessons || 0} уроков</span>
+						<span>{subject.lessonsCount || 0} уроков</span>
 					</div>
 					<div className='flex items-center gap-1'>
 						<Users className='w-4 h-4' />

@@ -46,10 +46,13 @@ export function SubjectList() {
 	return (
 		<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
 			{subjects.map((subject) => {
-				// Проверяем, записан ли пользователь на этот курс
 				const isEnrolled = enrolledSubjects.some(enrolledSubject => enrolledSubject.id === subject.id);
-				// Создаем обновленный объект subject с информацией о записи
-				const subjectWithEnrollmentStatus = { ...subject, isEnrolled };
+				
+				const subjectWithEnrollmentStatus = { 
+					...subject, 
+					isEnrolled,
+					lessonsCount: (subject as any).lessonsCount || subject.topics.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0)
+				};
 				return (
 					<SubjectCard key={subject.id} subject={subjectWithEnrollmentStatus} />
 				);

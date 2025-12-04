@@ -1,113 +1,1033 @@
-Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/subjects?skip=0&take=1000:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-forward-logs-shared.ts:95 [Fast Refresh] rebuilding
-forward-logs-shared.ts:95 [Fast Refresh] done in 293ms
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/subjects?skip=0&take=1000:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/auth/logout:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/users/@me:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/admin/analytics/current-user:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-:5000/progress:1 
- Failed to load resource: net::ERR_CONNECTION_REFUSED
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/users/@me net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getProfile	@	user.ts:9
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/users/@me net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-customInstance	@	axios-instance-wrapper.ts:6
-usersControllerGetMe	@	client.ts:163
-usersControllerGetMe	@	generated-client.ts:15
-useGetMeQuery.useQuery	@	useGetMeQuery.ts:9
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/admin/analytics/current-user net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getAnalytics	@	analytics.ts:5
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/progress net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getUserProgress	@	progress.ts:5
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/users/@me net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getProfile	@	user.ts:9
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/users/@me net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-customInstance	@	axios-instance-wrapper.ts:6
-usersControllerGetMe	@	client.ts:163
-usersControllerGetMe	@	generated-client.ts:15
-useGetMeQuery.useQuery	@	useGetMeQuery.ts:9
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/admin/analytics/current-user net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getAnalytics	@	analytics.ts:5
-main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281 
- GET http://localhost:5000/progress net::ERR_CONNECTION_REFUSED
-xhrSendProcessor	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4281
-send	@	main.js?attr=T7yTpUi…Z_AFNRbVfxTqsQ:4291
-Promise.then		
-getUserProgress	@	progress.ts:5
+            "createdAt": "2025-11-30T20:22:35.386Z",
+            "updatedAt": "2025-11-30T20:22:35.386Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1o000ov0lw1zzsdhrb",
+            "title": "1.3.5 Человеческий фактор",
+            "content": "Содержимое для урока \"1.3.5 Человеческий фактор\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.388Z",
+            "updatedAt": "2025-11-30T20:22:35.388Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s1r000qv0lwoz4yci99",
+        "title": "Раздел 2. Гигиена труда и производственная санитария",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.391Z",
+        "updatedAt": "2025-11-30T20:22:35.391Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s1u000sv0lwkr4dpm1k",
+        "title": "Тема 2.1. Факторы труда и производственной среды",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.394Z",
+        "updatedAt": "2025-11-30T20:22:35.394Z",
+        "parentId": "cmim62s1r000qv0lwoz4yci99",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s1x000uv0lwwdbhi3w5",
+            "title": "2.1.1 Факторы, влияющие на условия и безопасность труда.",
+            "content": "Содержимое для урока \"2.1.1 Факторы, влияющие на условия и безопасность труда.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.397Z",
+            "updatedAt": "2025-11-30T20:22:35.397Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1z000wv0lwgws4dbwx",
+            "title": "2.1.2 Виды и условия трудовой деятельности человека. Классификация условий труда по степени вредности и опасности",
+            "content": "Содержимое для урока \"2.1.2 Виды и условия трудовой деятельности человека. Классификация условий труда по степени вредности и опасности\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.400Z",
+            "updatedAt": "2025-11-30T20:22:35.400Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s21000yv0lw43a06fdk",
+            "title": "2.1.3 Производственная санитария. Причины профессиональных заболеваний и их профилактика.",
+            "content": "Содержимое для урока \"2.1.3 Производственная санитария. Причины профессиональных заболеваний и их профилактика.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.402Z",
+            "updatedAt": "2025-11-30T20:22:35.402Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s230010v0lw6g1jyz61",
+            "title": "2.1.4 Микроклимат производственной среды.",
+            "content": "Содержимое для урока \"2.1.4 Микроклимат производственной среды.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.404Z",
+            "updatedAt": "2025-11-30T20:22:35.404Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s260012v0lwm5aa9pnw",
+            "title": "2.1.5 Нормализация параметров производственной среды. Вентиляция, кондиционирование, отопление.",
+            "content": "Содержимое для урока \"2.1.5 Нормализация параметров производственной среды. Вентиляция, кондиционирование, отопление.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.406Z",
+            "updatedAt": "2025-11-30T20:22:35.406Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s280014v0lwmi2igenr",
+            "title": "2.1.6 Характеристика шума. Методы борьбы с шумом. Нормирование шума на рабочих местах",
+            "content": "Содержимое для урока \"2.1.6 Характеристика шума. Методы борьбы с шумом. Нормирование шума на рабочих местах\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.408Z",
+            "updatedAt": "2025-11-30T20:22:35.408Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2b0016v0lwc9i7v2l2",
+            "title": "2.1.7 Ультразвук, инфразвук, его влияние на организм и защита от него",
+            "content": "Содержимое для урока \"2.1.7 Ультразвук, инфразвук, его влияние на организм и защита от него\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.411Z",
+            "updatedAt": "2025-11-30T20:22:35.411Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2d0018v0lwjozwuqoa",
+            "title": "2.1.8 Излучения, источники, параметры, воздействие на организм человека, меры защиты",
+            "content": "Содержимое для урока \"2.1.8 Излучения, источники, параметры, воздействие на организм человека, меры защиты\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.414Z",
+            "updatedAt": "2025-11-30T20:22:35.414Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2g001av0lwwrg8fyak",
+            "title": "2.1.9 Характеристика промышленной пыли. Действие на организм человека и методы защиты.",
+            "content": "Содержимое для урока \"2.1.9 Характеристика промышленной пыли. Действие на организм человека и методы защиты.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.416Z",
+            "updatedAt": "2025-11-30T20:22:35.416Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2i001cv0lwg3jicdic",
+            "title": "2.1.10 Вредные химические вещества, их воздействие на организм человека. Основные вредные производственные факторы",
+            "content": "Содержимое для урока \"2.1.10 Вредные химические вещества, их воздействие на организм человека. Основные вредные производственные факторы\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.418Z",
+            "updatedAt": "2025-11-30T20:22:35.418Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2k001ev0lw8ab050r2",
+            "title": "2.1.11 Вибрация. Методы борьбы с вибрацией",
+            "content": "Содержимое для урока \"2.1.11 Вибрация. Методы борьбы с вибрацией\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.421Z",
+            "updatedAt": "2025-11-30T20:22:35.421Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2n001gv0lwpln0der0",
+            "title": "2.1.12 Производственное освещение. Вредные факторы световой среды. Нормализация параметров.",
+            "content": "Содержимое для урока \"2.1.12 Производственное освещение. Вредные факторы световой среды. Нормализация параметров.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.423Z",
+            "updatedAt": "2025-11-30T20:22:35.423Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2q001iv0lwpbkjfvja",
+            "title": "2.1.13 Средства индивидуальной и коллективной защиты.",
+            "content": "Содержимое для урока \"2.1.13 Средства индивидуальной и коллективной защиты.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.426Z",
+            "updatedAt": "2025-11-30T20:22:35.426Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2t001kv0lwfqrvzmx5",
+            "title": "2.1.14 Эргономика и организация рабочих мест",
+            "content": "Содержимое для урока \"2.1.14 Эргономика и организация рабочих мест\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.430Z",
+            "updatedAt": "2025-11-30T20:22:35.430Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s2x001mv0lwykrj6bvj",
+        "title": "Раздел 3. Основы пожарной безопасности",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.433Z",
+        "updatedAt": "2025-11-30T20:22:35.433Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s2z001ov0lwf7wi3pjt",
+        "title": "Тема 3.1. Основные причины пожаров. Мероприятия по предупреждению пожаров",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.436Z",
+        "updatedAt": "2025-11-30T20:22:35.436Z",
+        "parentId": "cmim62s2x001mv0lwykrj6bvj",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s33001qv0lwnl98t0pz",
+            "title": "3.1.1 Основные причины и источники загораний. Опасные и вредные факторы пожара.",
+            "content": "Содержимое для урока \"3.1.1 Основные причины и источники загораний. Опасные и вредные факторы пожара.\"",
+            "topicId": "cmim62s2z001ov0lwf7wi3pjt",
+            "createdAt": "2025-11-30T20:22:35.439Z",
+            "updatedAt": "2025-11-30T20:22:35.439Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s36001sv0lwpdq8fa0a",
+            "title": "3.1.2 Общие требования пожарной безопасности на производстве и в быту. Действия в случае пожара. Средства тушения пожаров",
+            "content": "Содержимое для урока \"3.1.2 Общие требования пожарной безопасности на производстве и в быту. Действия в случае пожара. Средства тушения пожаров\"",       
+            "topicId": "cmim62s2z001ov0lwf7wi3pjt",
+            "createdAt": "2025-11-30T20:22:35.443Z",
+            "updatedAt": "2025-11-30T20:22:35.443Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s3a001uv0lwgiwlbqg4",
+        "title": "Раздел 4. Обеспечение безопасных условий труда при работе за компьютером",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.446Z",
+        "updatedAt": "2025-11-30T20:22:35.446Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s3d001wv0lw2sju88cy",
+        "title": "Тема 4.1. Организация рабочего места оператора ПЭВМ",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.449Z",
+        "updatedAt": "2025-11-30T20:22:35.449Z",
+        "parentId": "cmim62s3a001uv0lwgiwlbqg4",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s3g001yv0lwml1we2of",
+            "title": "4.1.1 Требования к рабочему месту, монитору, освещению",
+            "content": "Содержимое для урока \"4.1.1 Требования к рабочему месту, монитору, освещению\"",
+            "topicId": "cmim62s3d001wv0lw2sju88cy",
+            "createdAt": "2025-11-30T20:22:35.453Z",
+            "updatedAt": "2025-11-30T20:22:35.453Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s3j0020v0lwm8yokp2u",
+            "title": "4.1.2 Режим работы и отдыха при работе за компьютером",
+            "content": "Содержимое для урока \"4.1.2 Режим работы и отдыха при работе за компьютером\"",
+            "topicId": "cmim62s3d001wv0lw2sju88cy",
+            "createdAt": "2025-11-30T20:22:35.455Z",
+            "updatedAt": "2025-11-30T20:22:35.455Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s3n0022v0lwjmh33xsb",
+        "title": "Раздел 5. Оказание первой (доврачебной) помощи",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.459Z",
+        "updatedAt": "2025-11-30T20:22:35.459Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s3p0024v0lwqk30uny2",
+        "title": "Тема 5.1. Основы первой помощи при несчастных случаях",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.462Z",
+        "updatedAt": "2025-11-30T20:22:35.462Z",
+        "parentId": "cmim62s3n0022v0lwjmh33xsb",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s3t0026v0lw7k78gtcd",
+            "title": "5.1.1 Общие принципы оказания первой помощи",
+            "content": "Содержимое для урока \"5.1.1 Общие принципы оказания первой помощи\"",
+            "topicId": "cmim62s3p0024v0lwqk30uny2",
+            "createdAt": "2025-11-30T20:22:35.465Z",
+            "updatedAt": "2025-11-30T20:22:35.465Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s3w0028v0lwkd8pytdk",
+            "title": "5.1.2 Первая помощь при отравлениях, ожогах, травмах",
+            "content": "Содержимое для урока \"5.1.2 Первая помощь при отравлениях, ожогах, травмах\"",
+            "topicId": "cmim62s3p0024v0lwqk30uny2",
+            "createdAt": "2025-11-30T20:22:35.468Z",
+            "updatedAt": "2025-11-30T20:22:35.468Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmirh9gm9002fv0u817k7nu08",
+        "title": "Labs",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-12-04T13:34:33.825Z",
+        "updatedAt": "2025-12-04T13:34:33.825Z",
+        "parentId": "cmim62s0f0002v0lwh99k53i4",
+        "attachments": [
+          "/uploads/1764855262241-Lab1.pdf"
+        ],
+        "lessons": []
+      }
+    ]
+  },
+  {
+    "id": "cmirjb4t0002gv0u8s754ps5v",
+    "title": "Менеджмент",
+    "description": "Основы",
+    "createdAt": "2025-12-04T14:31:51.061Z",
+    "updatedAt": "2025-12-04T14:31:51.061Z",
+    "status": "PUBLISHED",
+    "topics": []
+  }
+]
+DEBUG: Subjects from DB: [
+  {
+    "id": "cmim62ry80000v0lwwoft98fy",
+    "title": "Охрана труда",
+    "description": "Базовый курс по охране труда для всех специальностей. Включает в себя правовые основы, гигиену труда, пожарную безопасность и другие важные разделы.",
+    "createdAt": "2025-11-30T20:22:35.264Z",
+    "updatedAt": "2025-11-30T20:22:35.264Z",
+    "status": "PUBLISHED",
+    "topics": [
+      {
+        "id": "cmim62s0f0002v0lwh99k53i4",
+        "title": "Раздел 1. Правовые и организационные основы охраны труда",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.329Z",
+        "updatedAt": "2025-11-30T20:22:35.329Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s0k0004v0lw0gddzt2z",
+        "title": "Тема 1.1 Основы трудового законодательства в области охраны труда",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.349Z",
+        "updatedAt": "2025-11-30T20:22:35.349Z",
+        "parentId": "cmim62s0f0002v0lwh99k53i4",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s0p0006v0lwj9s6ip3g",
+            "title": "1.1.1 Права и гарантии прав работников по охране труда",
+            "content": "Содержимое для урока \"1.1.1 Права и гарантии прав работников по охране труда\"",
+            "topicId": "cmim62s0k0004v0lw0gddzt2z",
+            "createdAt": "2025-11-30T20:22:35.353Z",
+            "updatedAt": "2025-11-30T20:22:35.353Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s0w0008v0lwpdz56tmg",
+            "title": "1.1.2 Ответственность за нарушение законодательства по охране труда",
+            "content": "Содержимое для урока \"1.1.2 Ответственность за нарушение законодательства по охране труда\"",
+            "topicId": "cmim62s0k0004v0lw0gddzt2z",
+            "createdAt": "2025-11-30T20:22:35.360Z",
+            "updatedAt": "2025-11-30T20:22:35.360Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmioz4xi40001v0y8o42ffv0t",
+            "title": "Основы трудового законодательства в области охраны труда",
+            "content": "Урок посвящён ключевым положениям трудового законодательства РФ, касающимся охраны труда, включая права и обязанности работодателя и работника, правовые основы обеспечения безопасных условий труда и ответственность за нарушения.",
+            "topicId": "cmim62s0k0004v0lw0gddzt2z",
+            "createdAt": "2025-12-02T19:31:36.989Z",
+            "updatedAt": "2025-12-04T12:49:34.736Z",
+            "attachments": [
+              "https://example.com/materials/lesson1_slides.pdf",
+              "https://example.com/materials/ot_checklist.pdf"
+            ],
+            "difficulty": 2,
+            "estimatedTime": 15,
+            "learningObjectives": "Получить навыки",
+            "order": 1,
+            "prerequisites": "Базовые навыки",
+            "videoUrl": "https://www.youtube.com/?app=desktop&hl=ru"
+          }
+        ]
+      },
+      {
+        "id": "cmim62s0z000av0lwlu31aup5",
+        "title": "Тема 1.2. Организация управления охраной труда на предприятии",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.364Z",
+        "updatedAt": "2025-11-30T20:22:35.364Z",
+        "parentId": "cmim62s0f0002v0lwh99k53i4",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s13000cv0lw5dfuhzdn",
+            "title": "1.2.1 Порядок обучения по охране труда; инструктажи и проверка знаний по охране труда.",
+            "content": "Содержимое для урока \"1.2.1 Порядок обучения по охране труда; инструктажи и проверка знаний по охране труда.\"",
+            "topicId": "cmim62s0z000av0lwlu31aup5",
+            "createdAt": "2025-11-30T20:22:35.368Z",
+            "updatedAt": "2025-11-30T20:22:35.368Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s18000ev0lwk47f9h26",
+        "title": "Тема 1.3. Анализ производственного травматизма и профессиональных заболеваний",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.372Z",
+        "updatedAt": "2025-11-30T20:22:35.372Z",
+        "parentId": "cmim62s0f0002v0lwh99k53i4",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s1b000gv0lwy74hrhhe",
+            "title": "1.3.1 Производственная среда и взаимодействие в ней.",
+            "content": "Содержимое для урока \"1.3.1 Производственная среда и взаимодействие в ней.\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.376Z",
+            "updatedAt": "2025-11-30T20:22:35.376Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1f000iv0lwn908pcmx",
+            "title": "1.3.2 Классификация опасных и вредных производственных факторов.",
+            "content": "Содержимое для урока \"1.3.2 Классификация опасных и вредных производственных факторов.\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.379Z",
+            "updatedAt": "2025-11-30T20:22:35.379Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1i000kv0lwuhhka1wt",
+            "title": "1.3.3 Служебное и специальное расследования производственного травматизма и профзаболеваний.",
+            "content": "Содержимое для урока \"1.3.3 Служебное и специальное расследования производственного травматизма и профзаболеваний.\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.383Z",
+            "updatedAt": "2025-11-30T20:22:35.383Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1l000mv0lwi1vyilzg",
+            "title": "1.3.4 Анализ травматизма и профзаболеваний. Основные меры предупреждения травматизма и профзаболеваний.",
+            "content": "Содержимое для урока \"1.3.4 Анализ травматизма и профзаболеваний. Основные меры предупреждения травматизма и профзаболеваний.\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.386Z",
+            "updatedAt": "2025-11-30T20:22:35.386Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1o000ov0lw1zzsdhrb",
+            "title": "1.3.5 Человеческий фактор",
+            "content": "Содержимое для урока \"1.3.5 Человеческий фактор\"",
+            "topicId": "cmim62s18000ev0lwk47f9h26",
+            "createdAt": "2025-11-30T20:22:35.388Z",
+            "updatedAt": "2025-11-30T20:22:35.388Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s1r000qv0lwoz4yci99",
+        "title": "Раздел 2. Гигиена труда и производственная санитария",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.391Z",
+        "updatedAt": "2025-11-30T20:22:35.391Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s1u000sv0lwkr4dpm1k",
+        "title": "Тема 2.1. Факторы труда и производственной среды",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.394Z",
+        "updatedAt": "2025-11-30T20:22:35.394Z",
+        "parentId": "cmim62s1r000qv0lwoz4yci99",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s1x000uv0lwwdbhi3w5",
+            "title": "2.1.1 Факторы, влияющие на условия и безопасность труда.",
+            "content": "Содержимое для урока \"2.1.1 Факторы, влияющие на условия и безопасность труда.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.397Z",
+            "updatedAt": "2025-11-30T20:22:35.397Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s1z000wv0lwgws4dbwx",
+            "title": "2.1.2 Виды и условия трудовой деятельности человека. Классификация условий труда по степени вредности и опасности",
+            "content": "Содержимое для урока \"2.1.2 Виды и условия трудовой деятельности человека. Классификация условий труда по степени вредности и опасности\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.400Z",
+            "updatedAt": "2025-11-30T20:22:35.400Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s21000yv0lw43a06fdk",
+            "title": "2.1.3 Производственная санитария. Причины профессиональных заболеваний и их профилактика.",
+            "content": "Содержимое для урока \"2.1.3 Производственная санитария. Причины профессиональных заболеваний и их профилактика.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.402Z",
+            "updatedAt": "2025-11-30T20:22:35.402Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s230010v0lw6g1jyz61",
+            "title": "2.1.4 Микроклимат производственной среды.",
+            "content": "Содержимое для урока \"2.1.4 Микроклимат производственной среды.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.404Z",
+            "updatedAt": "2025-11-30T20:22:35.404Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s260012v0lwm5aa9pnw",
+            "title": "2.1.5 Нормализация параметров производственной среды. Вентиляция, кондиционирование, отопление.",
+            "content": "Содержимое для урока \"2.1.5 Нормализация параметров производственной среды. Вентиляция, кондиционирование, отопление.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.406Z",
+            "updatedAt": "2025-11-30T20:22:35.406Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s280014v0lwmi2igenr",
+            "title": "2.1.6 Характеристика шума. Методы борьбы с шумом. Нормирование шума на рабочих местах",
+            "content": "Содержимое для урока \"2.1.6 Характеристика шума. Методы борьбы с шумом. Нормирование шума на рабочих местах\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.408Z",
+            "updatedAt": "2025-11-30T20:22:35.408Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2b0016v0lwc9i7v2l2",
+            "title": "2.1.7 Ультразвук, инфразвук, его влияние на организм и защита от него",
+            "content": "Содержимое для урока \"2.1.7 Ультразвук, инфразвук, его влияние на организм и защита от него\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.411Z",
+            "updatedAt": "2025-11-30T20:22:35.411Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2d0018v0lwjozwuqoa",
+            "title": "2.1.8 Излучения, источники, параметры, воздействие на организм человека, меры защиты",
+            "content": "Содержимое для урока \"2.1.8 Излучения, источники, параметры, воздействие на организм человека, меры защиты\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.414Z",
+            "updatedAt": "2025-11-30T20:22:35.414Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2g001av0lwwrg8fyak",
+            "title": "2.1.9 Характеристика промышленной пыли. Действие на организм человека и методы защиты.",
+            "content": "Содержимое для урока \"2.1.9 Характеристика промышленной пыли. Действие на организм человека и методы защиты.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.416Z",
+            "updatedAt": "2025-11-30T20:22:35.416Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2i001cv0lwg3jicdic",
+            "title": "2.1.10 Вредные химические вещества, их воздействие на организм человека. Основные вредные производственные факторы",
+            "content": "Содержимое для урока \"2.1.10 Вредные химические вещества, их воздействие на организм человека. Основные вредные производственные факторы\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.418Z",
+            "updatedAt": "2025-11-30T20:22:35.418Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2k001ev0lw8ab050r2",
+            "title": "2.1.11 Вибрация. Методы борьбы с вибрацией",
+            "content": "Содержимое для урока \"2.1.11 Вибрация. Методы борьбы с вибрацией\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.421Z",
+            "updatedAt": "2025-11-30T20:22:35.421Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2n001gv0lwpln0der0",
+            "title": "2.1.12 Производственное освещение. Вредные факторы световой среды. Нормализация параметров.",
+            "content": "Содержимое для урока \"2.1.12 Производственное освещение. Вредные факторы световой среды. Нормализация параметров.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.423Z",
+            "updatedAt": "2025-11-30T20:22:35.423Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2q001iv0lwpbkjfvja",
+            "title": "2.1.13 Средства индивидуальной и коллективной защиты.",
+            "content": "Содержимое для урока \"2.1.13 Средства индивидуальной и коллективной защиты.\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.426Z",
+            "updatedAt": "2025-11-30T20:22:35.426Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s2t001kv0lwfqrvzmx5",
+            "title": "2.1.14 Эргономика и организация рабочих мест",
+            "content": "Содержимое для урока \"2.1.14 Эргономика и организация рабочих мест\"",
+            "topicId": "cmim62s1u000sv0lwkr4dpm1k",
+            "createdAt": "2025-11-30T20:22:35.430Z",
+            "updatedAt": "2025-11-30T20:22:35.430Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s2x001mv0lwykrj6bvj",
+        "title": "Раздел 3. Основы пожарной безопасности",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.433Z",
+        "updatedAt": "2025-11-30T20:22:35.433Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s2z001ov0lwf7wi3pjt",
+        "title": "Тема 3.1. Основные причины пожаров. Мероприятия по предупреждению пожаров",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.436Z",
+        "updatedAt": "2025-11-30T20:22:35.436Z",
+        "parentId": "cmim62s2x001mv0lwykrj6bvj",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s33001qv0lwnl98t0pz",
+            "title": "3.1.1 Основные причины и источники загораний. Опасные и вредные факторы пожара.",
+            "content": "Содержимое для урока \"3.1.1 Основные причины и источники загораний. Опасные и вредные факторы пожара.\"",
+            "topicId": "cmim62s2z001ov0lwf7wi3pjt",
+            "createdAt": "2025-11-30T20:22:35.439Z",
+            "updatedAt": "2025-11-30T20:22:35.439Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s36001sv0lwpdq8fa0a",
+            "title": "3.1.2 Общие требования пожарной безопасности на производстве и в быту. Действия в случае пожара. Средства тушения пожаров",
+            "content": "Содержимое для урока \"3.1.2 Общие требования пожарной безопасности на производстве и в быту. Действия в случае пожара. Средства тушения пожаров\"",       
+            "topicId": "cmim62s2z001ov0lwf7wi3pjt",
+            "createdAt": "2025-11-30T20:22:35.443Z",
+            "updatedAt": "2025-11-30T20:22:35.443Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s3a001uv0lwgiwlbqg4",
+        "title": "Раздел 4. Обеспечение безопасных условий труда при работе за компьютером",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.446Z",
+        "updatedAt": "2025-11-30T20:22:35.446Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s3d001wv0lw2sju88cy",
+        "title": "Тема 4.1. Организация рабочего места оператора ПЭВМ",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.449Z",
+        "updatedAt": "2025-11-30T20:22:35.449Z",
+        "parentId": "cmim62s3a001uv0lwgiwlbqg4",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s3g001yv0lwml1we2of",
+            "title": "4.1.1 Требования к рабочему месту, монитору, освещению",
+            "content": "Содержимое для урока \"4.1.1 Требования к рабочему месту, монитору, освещению\"",
+            "topicId": "cmim62s3d001wv0lw2sju88cy",
+            "createdAt": "2025-11-30T20:22:35.453Z",
+            "updatedAt": "2025-11-30T20:22:35.453Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s3j0020v0lwm8yokp2u",
+            "title": "4.1.2 Режим работы и отдыха при работе за компьютером",
+            "content": "Содержимое для урока \"4.1.2 Режим работы и отдыха при работе за компьютером\"",
+            "topicId": "cmim62s3d001wv0lw2sju88cy",
+            "createdAt": "2025-11-30T20:22:35.455Z",
+            "updatedAt": "2025-11-30T20:22:35.455Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmim62s3n0022v0lwjmh33xsb",
+        "title": "Раздел 5. Оказание первой (доврачебной) помощи",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.459Z",
+        "updatedAt": "2025-11-30T20:22:35.459Z",
+        "parentId": null,
+        "attachments": [],
+        "lessons": []
+      },
+      {
+        "id": "cmim62s3p0024v0lwqk30uny2",
+        "title": "Тема 5.1. Основы первой помощи при несчастных случаях",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-11-30T20:22:35.462Z",
+        "updatedAt": "2025-11-30T20:22:35.462Z",
+        "parentId": "cmim62s3n0022v0lwjmh33xsb",
+        "attachments": [],
+        "lessons": [
+          {
+            "id": "cmim62s3t0026v0lw7k78gtcd",
+            "title": "5.1.1 Общие принципы оказания первой помощи",
+            "content": "Содержимое для урока \"5.1.1 Общие принципы оказания первой помощи\"",
+            "topicId": "cmim62s3p0024v0lwqk30uny2",
+            "createdAt": "2025-11-30T20:22:35.465Z",
+            "updatedAt": "2025-11-30T20:22:35.465Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          },
+          {
+            "id": "cmim62s3w0028v0lwkd8pytdk",
+            "title": "5.1.2 Первая помощь при отравлениях, ожогах, травмах",
+            "content": "Содержимое для урока \"5.1.2 Первая помощь при отравлениях, ожогах, травмах\"",
+            "topicId": "cmim62s3p0024v0lwqk30uny2",
+            "createdAt": "2025-11-30T20:22:35.468Z",
+            "updatedAt": "2025-11-30T20:22:35.468Z",
+            "attachments": [],
+            "difficulty": null,
+            "estimatedTime": null,
+            "learningObjectives": null,
+            "order": null,
+            "prerequisites": null,
+            "videoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "cmirh9gm9002fv0u817k7nu08",
+        "title": "Labs",
+        "subjectId": "cmim62ry80000v0lwwoft98fy",
+        "createdAt": "2025-12-04T13:34:33.825Z",
+        "updatedAt": "2025-12-04T13:34:33.825Z",
+        "parentId": "cmim62s0f0002v0lwh99k53i4",
+        "attachments": [
+          "/uploads/1764855262241-Lab1.pdf"
+        ],
+        "lessons": []
+      }
+    ]
+  },
+  {
+    "id": "cmirjb4t0002gv0u8s754ps5v",
+    "title": "Менеджмент",
+    "description": "Основы",
+    "createdAt": "2025-12-04T14:31:51.061Z",
+    "updatedAt": "2025-12-04T14:31:51.061Z",
+    "status": "PUBLISHED",
+    "topics": []
+  }
+]

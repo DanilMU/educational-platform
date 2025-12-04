@@ -4,11 +4,11 @@
  * Education platform
  * OpenAPI spec version: 0.0.1
  */
-import type { Subject } from './subject';
+import type { PaginatedSubjectsDtoDataItem } from './paginatedSubjectsDtoDataItem';
 
 export interface PaginatedSubjectsDto {
   /** Массив элементов */
-  data: Subject[];
+  data: PaginatedSubjectsDtoDataItem[];
   /** Общее количество элементов */
   total: number;
 }

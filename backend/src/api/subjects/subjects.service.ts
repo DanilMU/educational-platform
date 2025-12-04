@@ -40,34 +40,30 @@ export class SubjectsService {
 
 	async findAll(
 		skip: number = 0,
-		take: number = 10,
-		includeDrafts: boolean = false
+		take: number = 10
 	): Promise<PaginatedSubjectsDto> {
-		const whereClause = includeDrafts
-			? undefined
-			: {
-					status: 'PUBLISHED' as const
-				};
+		const whereClause = {
+			NOT: {
+				status: 'ARCHIVED' as const,
+			},
+		};
 
 		const [subjects, total] = await this.prisma.$transaction([
 			this.prisma.subject.findMany({
-				skip: isNaN(skip) || skip < 0 ? 0 : skip,
-				take: isNaN(take) || take < 0 ? 10 : take,
+				skip: isNaN(skip) ? 0 : skip,
+				take: isNaN(take) ? 10 : take,
 				where: whereClause,
 				include: {
 					topics: {
 						include: {
-							lessons: {
-								include: {
-									quiz: true
-								}
-							}
-						}
-					}
-				}
+							lessons: true,
+						},
+					},
+				},
 			}),
-			this.prisma.subject.count({ where: whereClause })
+			this.prisma.subject.count({ where: whereClause }),
 		]);
+
 		return new PaginatedSubjectsDto(subjects, total);
 	}
 
@@ -190,7 +186,7 @@ export class SubjectsService {
 		const enrolledSubjects = enrollments
 			.map(enrollment => enrollment.subject)
 			.filter(subject => subject.status === 'PUBLISHED');
-		
+
 		return enrolledSubjects;
 	}
 
@@ -229,12 +225,12 @@ export class SubjectsService {
 						include: {
 							lessons: {
 								include: {
-									quiz: true,
-								},
-							},
-						},
-					},
-				},
+									quiz: true
+								}
+							}
+						}
+					}
+				}
 			});
 		}
 
@@ -242,8 +238,8 @@ export class SubjectsService {
 		await this.prisma.enrollment.create({
 			data: {
 				userId,
-				subjectId,
-			},
+				subjectId
+			}
 		});
 
 		// Возвращаем обновленный курс
@@ -254,12 +250,12 @@ export class SubjectsService {
 					include: {
 						lessons: {
 							include: {
-								quiz: true,
-							},
-						},
-					},
-				},
-			},
+								quiz: true
+							}
+						}
+					}
+				}
+			}
 		});
 	}
 }
