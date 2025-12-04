@@ -32,12 +32,17 @@ export function LearningStatisticsCard({ analytics, progress, enrolledSubjects }
 		progress?.filter(p => p.isCompleted).map(p => p.lessonId) || []
 	);
 
-	// Так как у нас теперь просто список предметов (Subject[]), а не с прогрессом,
-	// вычисляем статистику на основе прогресса пользователя
-	const subjectsCompleted = 0; // Временно, пока нет информации о завершенных курсах
+	const subjectsCompleted = enrolledSubjects.filter(subject => {
+		const allLessonsInSubject = subject.topics?.flatMap(topic => topic.lessons || []) || [];
+		if (allLessonsInSubject.length === 0) return false;
+		return allLessonsInSubject.every(lesson => completedLessonIds.has(lesson.id));
+	}).length;
 
-	// Количество тем не может быть вычислено из Subject[], так как в Subject нет информации о темах
-	const topicsCompleted = 0; // Временно
+	const topicsCompleted = enrolledSubjects.flatMap(subject => subject.topics || []).filter(topic => {
+		const allLessonsInTopic = topic.lessons || [];
+		if (allLessonsInTopic.length === 0) return false;
+		return allLessonsInTopic.every(lesson => completedLessonIds.has(lesson.id));
+	}).length;
 	
 	 const lessonsCompleted = analytics?.lessonsCompleted || 0;
 	 const testsPassed = progress?.filter(p => p.isCompleted && p.score != null).length || 0;

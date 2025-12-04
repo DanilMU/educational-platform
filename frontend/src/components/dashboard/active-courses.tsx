@@ -1,63 +1,55 @@
 'use client'
 
 import { SubjectCard } from '@/src/components/subjects/subject-card'
-import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks/useGetEnrolledSubjectsQuery'
 import { Skeleton } from '@/src/components/ui/skeleton'
-import { useAuth } from '@/src/hooks/useAuth'
+import type { Subject, Progress } from '@/src/api/types'
 
-export function ActiveCoursesSection() {
-  const { user } = useAuth();
-  const { data: enrolledSubjects, isLoading, isError } = useGetEnrolledSubjectsQuery(user?.id || '')
+interface ActiveCoursesSectionProps {
+  enrolledSubjects: Subject[]
+  progressData: Progress[]
+}
 
-  if (isLoading) {
+export function ActiveCoursesSection({ enrolledSubjects, progressData }: ActiveCoursesSectionProps) {
+  if (!enrolledSubjects || enrolledSubjects.length === 0) {
     return (
       <div>
         <h2 className="mb-4 text-2xl font-bold">Активные курсы</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-lg border p-4">
-              <Skeleton className="h-32 w-full" />
-            </div>
-          ))}
+        <div className="col-span-full text-center py-8">
+          <p className="text-muted-foreground">Нет активных курсов</p>
         </div>
       </div>
     )
   }
 
-  if (isError) {
-    return (
-      <div>
-        <h2 className="mb-4 text-2xl font-bold">Активные курсы</h2>
-        <div className="text-center py-8 text-muted-foreground">
-          Не удалось загрузить активные курсы
-        </div>
-      </div>
-    )
-  }
+  const subjectsForCard = enrolledSubjects.map(subject => {
+    const totalLessons = subject.topics?.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) || 0
+    const completedLessons = progressData?.filter(p => 
+      p.isCompleted &&
+      subject.topics?.some(topic => 
+        topic.lessons?.some(lesson => lesson.id === p.lessonId)
+      )
+    ).length || 0
+    
+    const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
 
-  // Теперь enrolledSubjects - это массив курсов (Subject[])
-  const subjectsForCard = enrolledSubjects && Array.isArray(enrolledSubjects) ? enrolledSubjects.map(subject => ({
-    id: subject.id || '',
-    title: subject.title || '',
-    description: subject.description || 'Описание отсутствует',
-    progress: 0, // Пока что ставим заглушку, т.к. поля progress нет в типе
-    lessons: 0, // Пока что ставим заглушку
-    category: 'Курс'
-  })) : []
+    return {
+      id: subject.id || '',
+      title: subject.title || '',
+      description: subject.description || 'Описание отсутствует',
+      progress: progress,
+      lessons: totalLessons,
+      category: 'Курс',
+      isEnrolled: true,
+    }
+  })
 
   return (
     <div>
       <h2 className="mb-4 text-2xl font-bold">Активные курсы</h2>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {subjectsForCard.length > 0 ? (
-          subjectsForCard.map(subject => (
-            <SubjectCard key={subject.id} subject={subject} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-8">
-            <p className="text-muted-foreground">Нет активных курсов</p>
-          </div>
-        )}
+        {subjectsForCard.map(subject => (
+          <SubjectCard key={subject.id} subject={subject} />
+        ))}
       </div>
     </div>
   )

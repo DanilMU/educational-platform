@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from '@/src/hooks/useAuth'
-import { useGetEnrolledSubjectsQuery, useGetSubjectsQuery } from '@/src/api/hooks'
+import { useGetEnrolledSubjectsQuery, useGetSubjectsQuery, useGetUserProgressQuery } from '@/src/api/hooks'
 import { BookOpen, Clock, CheckCircle, Users, Star } from 'lucide-react'
 import { Button } from '@/src/components/ui/button'
 import Link from 'next/link'
@@ -16,15 +16,16 @@ export function MyCoursesEnhanced() {
   const { user } = useAuth()
   const { data: enrolledSubjects = [], isLoading: enrolledLoading, isError: enrolledError } = useGetEnrolledSubjectsQuery(user?.id || '')
   const { data: allSubjectsData, isLoading: allLoading, isError: allError } = useGetSubjectsQuery()
+  const { data: progressData, isLoading: progressLoading, isError: progressError } = useGetUserProgressQuery();
   const [activeTab, setActiveTab] = useState('enrolled')
 
   const allSubjects = allSubjectsData?.data || []
 
   // Определяем, какие курсы уже записаны (для отображения статуса)
   const enrolledSubjectIds = new Set(enrolledSubjects.map(subject => subject.id))
-
-  // Функция для вычисления прогресса по курсу не используется в этом компоненте
-  // Она будет реализована в соответствующем компоненте отображения курса
+  
+  const isLoading = enrolledLoading || allLoading || progressLoading;
+  const isError = enrolledError || allError || progressError;
 
   return (
     <div className="space-y-8">
@@ -59,10 +60,9 @@ export function MyCoursesEnhanced() {
           ) : enrolledSubjects && enrolledSubjects.length > 0 ? (
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
               {enrolledSubjects.map((subject) => {
-              	// Вычисляем прогресс как соотношение тем с завершенными уроками
               	const totalLessons = subject.topics?.reduce((acc, topic) => acc + (topic.lessons?.length || 0), 0) || 0
-              	// В реальном приложении здесь будет вычисление на основе данных прогресса пользователя
-              	const progress = 0 // Заглушка - в реальном приложении будет вычислено из прогресса пользователя
+              	const completedLessons = progressData?.filter(p => p.isCompleted && subject.topics?.some(topic => topic.lessons?.some(lesson => lesson.id === p.lessonId))).length || 0
+              	const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
               	return (
                   <Card key={subject.id} className="overflow-hidden">
                     <CardHeader className="pb-2">

@@ -2,11 +2,18 @@
 
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useGetRecommendationsQuery } from '@/src/api/hooks/useGetRecommendationsQuery'
+import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks'
+import { useAuth } from '@/src/hooks/useAuth'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { BookOpen } from 'lucide-react'
 
 export function RecommendationsSection() {
-    const { data: recommendationsData, isLoading, isError } = useGetRecommendationsQuery()
+    const { user } = useAuth()
+    const { data: recommendationsData, isLoading: isLoadingRecommendations, isError: isRecommendationsError } = useGetRecommendationsQuery()
+    const { data: enrolledSubjects = [], isLoading: isLoadingEnrolled, isError: isEnrolledError } = useGetEnrolledSubjectsQuery(user?.id || '', { enabled: !!user?.id });
+
+    const isLoading = isLoadingRecommendations || isLoadingEnrolled;
+    const isError = isRecommendationsError || isEnrolledError;
 
     if (isLoading) {
         return (
@@ -35,6 +42,7 @@ export function RecommendationsSection() {
     }
 
     const recommendations = recommendationsData?.recommendations || []
+    const enrolledSubjectIds = new Set(enrolledSubjects.map(s => s.id));
 
     return (
         <div>
@@ -50,20 +58,23 @@ export function RecommendationsSection() {
                                 r.topic === rec.topic
                             )
                         )
-                        .map((rec, index) => (
-                        <SubjectCard
-                            key={`${rec.id}-${index}`}
-                            subject={{
-                                id: rec.id as string,
-                                title: rec.title as string,
-                                description: rec.reason as string,
-                                // Assuming these are not directly available in RecommendationsDtoRecommendationsItem and might need to be fetched or derived
-                                lessons: 0, // Placeholder
-                                progress: 0, // Placeholder
-                                category: rec.subject // Using subject as category
-                            }}
-                        />
-                    ))
+                        .map((rec, index) => {
+                            const isEnrolled = enrolledSubjectIds.has(rec.id as string);
+                            return (
+                                <SubjectCard
+                                    key={`${rec.id}-${index}`}
+                                    subject={{
+                                        id: rec.id as string,
+                                        title: rec.title as string,
+                                        description: rec.reason as string,
+                                        lessons: 0,
+                                        progress: 0,
+                                        category: rec.subject,
+                                        isEnrolled: isEnrolled,
+                                    }}
+                                />
+                            );
+                        })
                 ) : (
                     <div className="col-span-full text-center py-8">
                         <BookOpen className="mx-auto mb-4 h-12 w-12 text-gray-300" />
