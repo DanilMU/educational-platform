@@ -40,7 +40,8 @@ export function SubjectForm({ subject, onSuccess }: SubjectFormProps) {
     if (subject) {
       updateSubjectMutation.mutate({ id: subject.id, data: data as UpdateSubjectDto }, { onSuccess });
     } else {
-      createSubjectMutation.mutate(data as CreateSubjectDto, { onSuccess });
+      // При создании нового курса устанавливаем статус PUBLISHED по умолчанию
+      createSubjectMutation.mutate({ ...values, status: 'PUBLISHED' } as CreateSubjectDto, { onSuccess });
     }
   };
 

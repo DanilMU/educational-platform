@@ -40,6 +40,7 @@ export function CoursesTable() {
   const courses = data?.subjects;
   const totalCourses = data?.total || 0;
   const deleteSubjectMutation = useDeleteAdminCourseMutation();
+  const updateCourseStatusMutation = useUpdateAdminCourseMutation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
 
@@ -57,6 +58,13 @@ export function CoursesTable() {
 
   const handleDelete = (id: string) => {
     deleteSubjectMutation.mutate(id);
+  };
+
+  const handleStatusChange = (id: string, newStatus: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED') => {
+    updateCourseStatusMutation.mutate({
+      id,
+      courseData: { status: newStatus }
+    });
   };
 
   const getPaginationItems = () => {
@@ -149,6 +157,24 @@ export function CoursesTable() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleEdit(course)}>
                         Редактировать
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange(course.id, 'PUBLISHED')}
+                        disabled={course.status === 'PUBLISHED'}
+                      >
+                        Опубликовать
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange(course.id, 'DRAFT')}
+                        disabled={course.status === 'DRAFT'}
+                      >
+                        В черновик
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange(course.id, 'ARCHIVED')}
+                        disabled={course.status === 'ARCHIVED'}
+                      >
+                        В архив
                       </DropdownMenuItem>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>

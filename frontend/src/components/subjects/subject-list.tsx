@@ -1,10 +1,15 @@
 'use client'
 
-import { useGetSubjectsQuery } from '@/src/api/hooks/useGetSubjectsQuery'
+import { useGetSubjectsQuery, useGetEnrolledSubjectsQuery, useGetMeQuery } from '@/src/api/hooks'
 import { SubjectCard, SubjectCardSkeleton } from './subject-card'
 
 export function SubjectList() {
-	const { data: paginatedData, isLoading, isError } = useGetSubjectsQuery()
+	const { data: paginatedData, isLoading: isSubjectsLoading, isError: isSubjectsError } = useGetSubjectsQuery()
+	const { data: user } = useGetMeQuery();
+	const { data: enrolledSubjects = [], isLoading: isEnrolledLoading, isError: isEnrolledError } = useGetEnrolledSubjectsQuery(user?.id || '')
+
+	const isLoading = isSubjectsLoading || isEnrolledLoading;
+	const isError = isSubjectsError || isEnrolledError;
 
 	if (isLoading) {
 		return (
@@ -40,9 +45,15 @@ export function SubjectList() {
 
 	return (
 		<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-			{subjects.map((subject) => (
-				<SubjectCard key={subject.id} subject={subject} />
-			))}
+			{subjects.map((subject) => {
+				// Проверяем, записан ли пользователь на этот курс
+				const isEnrolled = enrolledSubjects.some(enrolledSubject => enrolledSubject.id === subject.id);
+				// Создаем обновленный объект subject с информацией о записи
+				const subjectWithEnrollmentStatus = { ...subject, isEnrolled };
+				return (
+					<SubjectCard key={subject.id} subject={subjectWithEnrollmentStatus} />
+				);
+			})}
 		</div>
 	)
 }

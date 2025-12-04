@@ -38,6 +38,8 @@ export function useCreateAdminCourseMutation() {
       // Инвалидируем кэш курсов после создания
       queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
       queryClient.invalidateQueries({ queryKey: ['admin-courses-extended'] });
+      // Также инвалидируем кэш для пользовательской страницы курсов
+      queryClient.invalidateQueries({ queryKey: ['get all subjects'] });
     },
   });
 }
@@ -53,6 +55,8 @@ export function useUpdateAdminCourseMutation() {
       queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
       queryClient.invalidateQueries({ queryKey: ['admin-course'] });
       queryClient.invalidateQueries({ queryKey: ['admin-courses-extended'] });
+      // Также инвалидируем кэш для пользовательской страницы курсов
+      queryClient.invalidateQueries({ queryKey: ['get all subjects'] });
     },
   });
 }
@@ -66,6 +70,8 @@ export function useDeleteAdminCourseMutation() {
       // Инвалидируем кэш курсов после удаления
       queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
       queryClient.invalidateQueries({ queryKey: ['admin-courses-extended'] });
+      // Также инвалидируем кэш для пользовательской страницы курсов
+      queryClient.invalidateQueries({ queryKey: ['get all subjects'] });
     },
   });
 }

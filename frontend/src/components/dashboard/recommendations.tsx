@@ -41,9 +41,18 @@ export function RecommendationsSection() {
             <h2 className="mb-4 text-2xl font-bold">Рекомендации для вас</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {recommendations.length > 0 ? (
-                    recommendations.map(rec => (
+                    recommendations
+                        .filter((rec, index, self) =>
+                            index === self.findIndex(r =>
+                                r.id === rec.id &&
+                                r.title === rec.title &&
+                                r.subject === rec.subject &&
+                                r.topic === rec.topic
+                            )
+                        )
+                        .map((rec, index) => (
                         <SubjectCard
-                            key={rec.id as string}
+                            key={`${rec.id}-${index}`}
                             subject={{
                                 id: rec.id as string,
                                 title: rec.title as string,

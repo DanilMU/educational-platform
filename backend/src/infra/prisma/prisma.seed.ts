@@ -8,6 +8,7 @@ async function main() {
 	console.log(`Start seeding ...`);
 
 	// Удаляем старые данные, чтобы избежать дубликатов
+	await prisma.enrollment.deleteMany();
 	await prisma.lesson.deleteMany();
 	await prisma.topic.deleteMany();
 	await prisma.subject.deleteMany();
@@ -16,7 +17,8 @@ async function main() {
 	const subject = await prisma.subject.create({
 		data: {
 			title: occupationalSafetyData.title,
-			description: occupationalSafetyData.description
+			description: occupationalSafetyData.description,
+			status: occupationalSafetyData.status as any,
 		}
 	});
 	console.log(`Created subject: ${subject.title}`);

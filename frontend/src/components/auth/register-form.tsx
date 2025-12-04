@@ -40,6 +40,7 @@ export function RegisterForm() {
 	const { mutate, isPending } = useRegisterMutation({
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['profile'] })
+			queryClient.invalidateQueries({ queryKey: ['me'] }) // Инвалидируем кэш пользователя для обновления состояния аутентификации
 			router.push('/dashboard')
 		},
 	})

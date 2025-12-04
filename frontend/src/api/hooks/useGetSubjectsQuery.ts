@@ -1,6 +1,6 @@
 import { type UseQueryOptions, useQuery } from '@tanstack/react-query'
 
-import { getAllSubjects } from '../requests/subjects'
+import { getAllSubjects } from '../requests/subject'
 import type { PaginatedSubjectsDto } from '../types/paginatedSubjectsDto'
 
 export function useGetSubjectsQuery(
@@ -9,10 +9,10 @@ export function useGetSubjectsQuery(
 	return useQuery({
 		queryKey: ['get all subjects'],
 		queryFn: async () => {
-			const response = await getAllSubjects('0', '10'); // Default pagination
+			const response = await getAllSubjects('0', '1000'); // Увеличиваем лимит, чтобы получить все курсы
 			// Преобразуем ответ к формату PaginatedSubjectsDto
 			return {
-				data: response.subjects,
+				data: response.data,
 				total: response.total
 			};
 		},

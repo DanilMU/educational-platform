@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -26,9 +27,7 @@ export function SiteHeader() {
 						</span>
 					</Link>
 					<nav className="flex items-center space-x-6 text-sm font-medium">
-						<Link href={isAuthorized ? "/my-courses" : "/subjects"} className="transition-colors hover:text-foreground/80 text-foreground/60">
-							Курсы
-						</Link>
+						<CoursesNavLink isAuthorized={isAuthorized} />
 					</nav>
 				</div>
 
@@ -50,4 +49,29 @@ export function SiteHeader() {
 			</div>
 		</header>
 	)
+}
+
+function CoursesNavLink({ isAuthorized }: { isAuthorized: boolean }) {
+  // Используем состояние, чтобы избежать гидрации
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsClient(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isClient) {
+    // Возвращаем заглушку во время гидрации
+    return (
+      <Link href="/subjects" className="transition-colors hover:text-foreground/80 text-foreground/60">
+        Курсы
+      </Link>
+    );
+  }
+
+  return (
+    <Link href={isAuthorized ? "/my-courses" : "/subjects"} className="transition-colors hover:text-foreground/80 text-foreground/60">
+      Курсы
+    </Link>
+  );
 }

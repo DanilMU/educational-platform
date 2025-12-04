@@ -166,17 +166,19 @@ export class SubjectsService {
 	}
 
 	async findByUserId(userId: string): Promise<Subject[]> {
-		// Находим курсы, на которые пользователь записан через прогресс
-		const progress = await this.prisma.userProgress.findMany({
-			where: {
-				userId: userId
-			},
+		// Находим курсы, на которые пользователь записан через таблицу enrollments
+		const enrollments = await this.prisma.enrollment.findMany({
+			where: { userId: userId },
 			include: {
-				lesson: {
+				subject: {
 					include: {
-						topic: {
+						topics: {
 							include: {
-								subject: true
+								lessons: {
+									include: {
+										quiz: true
+									}
+								}
 							}
 						}
 					}
@@ -184,71 +186,18 @@ export class SubjectsService {
 			}
 		});
 
-		// Получаем уникальные ID курсов из прогресса пользователя
-		const subjectIdsFromProgress = Array.from(
-			new Set(
-				progress
-					.filter(
-						item =>
-							item.lesson.topic.subject &&
-							item.lesson.topic.subject.status === 'PUBLISHED'
-					)
-					.map(item => item.lesson.topic.subject.id)
-			)
-		);
-
-		// Также находим курсы, для которых у пользователя есть сертификаты
-		const certificates = await this.prisma.certificate.findMany({
-			where: {
-				userId: userId
-			}
-		});
-
-		const subjectIdsFromCertificates = certificates.map(
-			cert => cert.subjectId
-		);
-
-		// Объединяем ID курсов из прогресса и сертификатов
-		const allSubjectIds = Array.from(
-			new Set([...subjectIdsFromProgress, ...subjectIdsFromCertificates])
-		);
-
-		// Возвращаем все опубликованные курсы, на которые пользователь имеет доступ
-		if (allSubjectIds.length === 0) {
-			return []; // Если нет прогресса и сертификатов, возвращаем пустой массив
-		}
-
-		// Загружаем полные данные курсов с темами и уроками
-		return await this.prisma.subject.findMany({
-			where: {
-				id: { in: allSubjectIds },
-				status: 'PUBLISHED'
-			},
-			include: {
-				topics: {
-					include: {
-						lessons: {
-							include: {
-								quiz: true
-							}
-						}
-					}
-				}
-			}
-		});
+		// Отбираем только опубликованные курсы
+		const enrolledSubjects = enrollments
+			.map(enrollment => enrollment.subject)
+			.filter(subject => subject.status === 'PUBLISHED');
+		
+		return enrolledSubjects;
 	}
 
 	async enrollUserInSubject(userId: string, subjectId: string) {
 		// Проверяем, существует ли курс
 		const subject = await this.prisma.subject.findUnique({
-			where: { id: subjectId },
-			include: {
-				topics: {
-					include: {
-						lessons: true
-					}
-				}
-			}
+			where: { id: subjectId }
 		});
 
 		if (!subject) {
@@ -261,48 +210,41 @@ export class SubjectsService {
 			throw new ConflictException('Subject is not published');
 		}
 
-		// Находим первый урок в курсе
-		const firstTopic = subject.topics.sort(
-			(a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-		)[0];
-
-		if (firstTopic && firstTopic.lessons.length > 0) {
-			const firstLesson = firstTopic.lessons.sort(
-				(a, b) =>
-					(a.order || 0) - (b.order || 0) ||
-					a.createdAt.getTime() - b.createdAt.getTime()
-			)[0];
-
-			if (firstLesson) {
-				// Проверяем, есть ли уже прогресс по первому уроку
-				const existingProgress =
-					await this.prisma.userProgress.findFirst({
-						where: {
-							userId: userId,
-							lessonId: firstLesson.id
-						}
-					});
-
-				// Создаем запись прогресса для первого урока, если её нет
-				if (!existingProgress) {
-					await this.prisma.userProgress.create({
-						data: {
-							userId: userId,
-							lessonId: firstLesson.id,
-							isCompleted: false,
-							score: null,
-							timeSpent: 0
-						}
-					});
+		// Проверяем, не записан ли уже пользователь на этот курс
+		const existingEnrollment = await this.prisma.enrollment.findUnique({
+			where: {
+				userId_subjectId: {
+					userId,
+					subjectId
 				}
 			}
-		} else {
-			// Если у курса нет уроков, мы не можем создать запись прогресса
-			// В этом случае пользователь все равно считается записанным на курс
-			// так как enrollUserInSubject был вызван успешно
-			// Метод findByUserId учитывает сертификаты, которые могут быть
-			// использованы для отслеживания участия в курсах без уроков
+		});
+
+		if (existingEnrollment) {
+			// Если уже записан, просто возвращаем курс
+			return this.prisma.subject.findUnique({
+				where: { id: subjectId },
+				include: {
+					topics: {
+						include: {
+							lessons: {
+								include: {
+									quiz: true,
+								},
+							},
+						},
+					},
+				},
+			});
 		}
+
+		// Создаем запись в таблице Enrollment
+		await this.prisma.enrollment.create({
+			data: {
+				userId,
+				subjectId,
+			},
+		});
 
 		// Возвращаем обновленный курс
 		return await this.prisma.subject.findUnique({
@@ -312,12 +254,12 @@ export class SubjectsService {
 					include: {
 						lessons: {
 							include: {
-								quiz: true
-							}
-						}
-					}
-				}
-			}
+								quiz: true,
+							},
+						},
+					},
+				},
+			},
 		});
 	}
 }

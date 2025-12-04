@@ -21,6 +21,7 @@ model User {
   certificates         Certificate[]
   notifications        Notification[]
   progress             UserProgress[]
+  enrollments          Enrollment[]
 }
 
 model Subject {
@@ -32,6 +33,7 @@ model Subject {
   status       SubjectStatus @default(PUBLISHED)
   certificates Certificate[]
   topics       Topic[]
+  enrollments  Enrollment[]
 
   @@map("subjects")
 }
@@ -176,4 +178,17 @@ enum SubjectStatus {
 enum QuestionType {
   SINGLE_CHOICE
   MULTIPLE_CHOICE
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  subjectId  String
+  enrolledAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectId])
+  @@map("enrollments")
 }

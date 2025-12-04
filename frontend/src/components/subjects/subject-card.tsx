@@ -1,7 +1,10 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import Link from 'next/link'
+import {
+	useEnrollInSubjectMutation
+} from '@/src/api/hooks'
 import {
 	Card,
 	CardContent,
@@ -16,8 +19,8 @@ import {
 	Clock,
 	Users,
 	Star,
-	BookOpen,
 	PlayCircle,
+	BookOpen,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Progress } from '@/src/components/ui/progress'
@@ -45,6 +48,14 @@ interface SubjectCardProps {
 }
 
 const SubjectCard = memo(({ subject }: SubjectCardProps) => {
+	const enrollMutation = useEnrollInSubjectMutation();
+	const [isHovered] = useState(false);
+
+	const handleEnroll = async (e: React.MouseEvent) => {
+		e.preventDefault(); // Предотвращаем переход по ссылке
+		enrollMutation.mutate(subject.id);
+	};
+
 	const getCategoryColor = (category: string) => {
 		switch (category) {
 			case 'programming':
@@ -132,22 +143,41 @@ const SubjectCard = memo(({ subject }: SubjectCardProps) => {
 				)}
 			</CardContent>
 
-			<CardFooter>
-				<Button className='w-full' asChild size='sm'>
-					<Link href={`/subjects/${subject.id}`}>
-						{subject.isEnrolled ? (
-							<>
-								<PlayCircle className='w-4 h-4 mr-2' />
-								Продолжить обучение
-							</>
-						) : (
-							<>
-								<BookOpen className='w-4 h-4 mr-2' />
-								Перейти к курсу
-							</>
-						)}
-					</Link>
-				</Button>
+			<CardFooter className="flex flex-col gap-2">
+				{subject.isEnrolled ? (
+					<Button className='w-full' asChild size='sm'>
+						<Link href={`/subjects/${subject.id}`}>
+							<PlayCircle className='w-4 h-4 mr-2' />
+							Продолжить обучение
+						</Link>
+					</Button>
+				) : (
+					<>
+						<Button
+							onClick={handleEnroll}
+							disabled={enrollMutation.isPending}
+							className='w-full'
+							size='sm'
+						>
+							{enrollMutation.isPending ? (
+								<>
+									<div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+									Записываем...
+								</>
+							) : (
+								<>
+									<BookOpen className='w-4 h-4 mr-2' />
+									Записаться на курс
+								</>
+							)}
+						</Button>
+						<Button className='w-full' variant="outline" asChild size='sm'>
+							<Link href={`/subjects/${subject.id}`}>
+								Просмотреть
+							</Link>
+						</Button>
+					</>
+				)}
 			</CardFooter>
 		</MagicCard>
 	)
