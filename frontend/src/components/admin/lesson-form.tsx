@@ -51,13 +51,13 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
       title: lesson?.title ?? '',
       content: lesson?.content ?? '',
       topicId: lesson?.topicId ?? '',
-      estimatedTime: lesson?.estimatedTime !== undefined ? lesson.estimatedTime.toString() : '',
-      difficulty: lesson?.difficulty !== undefined ? lesson.difficulty.toString() : '',
+      estimatedTime: lesson?.estimatedTime?.toString() ?? '',
+      difficulty: lesson?.difficulty?.toString() ?? '',
       learningObjectives: lesson?.learningObjectives ?? '',
       prerequisites: lesson?.prerequisites ?? '',
       videoUrl: lesson?.videoUrl ?? '',
       attachments: lesson?.attachments ? lesson.attachments.join(', ') : '', // Convert array to comma-separated string
-      order: lesson?.order !== undefined ? lesson.order.toString() : '',
+      order: lesson?.order?.toString() ?? '',
     },
   });
 
