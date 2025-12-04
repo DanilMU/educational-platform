@@ -42,7 +42,7 @@ interface LessonFormProps {
 export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
   const createLessonMutation = useCreateAdminLessonMutation();
   const updateLessonMutation = useUpdateAdminLessonMutation();
-  const { data: topicsData, isLoading: isLoadingTopics } = useAdminTopicsQuery({ skip: 0, take: 10 }); // Fetch all topics for dropdown
+  const { data: topicsData, isLoading: isLoadingTopics } = useAdminTopicsQuery({ skip: 0, take: 100 }); // Fetch more topics for dropdown
   const topics = topicsData?.data || [];
 
   const form = useForm<LessonFormValues>({
@@ -51,13 +51,13 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
       title: lesson?.title ?? '',
       content: lesson?.content ?? '',
       topicId: lesson?.topicId ?? '',
-      estimatedTime: lesson?.estimatedTime?.toString() ?? '',
-      difficulty: lesson?.difficulty?.toString() ?? '',
+      estimatedTime: lesson?.estimatedTime !== undefined ? lesson.estimatedTime.toString() : '',
+      difficulty: lesson?.difficulty !== undefined ? lesson.difficulty.toString() : '',
       learningObjectives: lesson?.learningObjectives ?? '',
       prerequisites: lesson?.prerequisites ?? '',
       videoUrl: lesson?.videoUrl ?? '',
-      attachments: lesson?.attachments?.join(', ') ?? '', // Convert array to comma-separated string
-      order: lesson?.order?.toString() ?? '',
+      attachments: lesson?.attachments ? lesson.attachments.join(', ') : '', // Convert array to comma-separated string
+      order: lesson?.order !== undefined ? lesson.order.toString() : '',
     },
   });
 
@@ -66,13 +66,13 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
       title: values.title,
       content: values.content,
       topicId: values.topicId,
-      estimatedTime: values.estimatedTime ? Number(values.estimatedTime) : undefined,
-      difficulty: values.difficulty ? Number(values.difficulty) : undefined,
+      estimatedTime: values.estimatedTime && values.estimatedTime.trim() !== '' ? Number(values.estimatedTime) : undefined,
+      difficulty: values.difficulty && values.difficulty.trim() !== '' ? Number(values.difficulty) : undefined,
       learningObjectives: values.learningObjectives || undefined,
       prerequisites: values.prerequisites || undefined,
       videoUrl: values.videoUrl || undefined,
       attachments: values.attachments ? values.attachments.split(',').map(s => s.trim()) : undefined,
-      order: values.order ? Number(values.order) : undefined,
+      order: values.order && values.order.trim() !== '' ? Number(values.order) : undefined,
     };
     
     if (lesson) {
@@ -117,7 +117,7 @@ export function LessonForm({ lesson, onSuccess }: LessonFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Тема</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Выберите тему" />

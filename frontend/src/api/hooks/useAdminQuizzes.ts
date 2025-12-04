@@ -24,8 +24,13 @@ export function useCreateAdminQuizMutation() {
 
 	return useMutation({
 		mutationFn: (quizData: CreateQuizDto) => adminQuizzesApi.create(quizData),
-		onSuccess: () => {
+		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['admin-quizzes'] })
+			// Инвалидируем кэш для проверки наличия теста и получения теста по ID урока
+			if (data.lessonId) {
+				queryClient.invalidateQueries({ queryKey: ['quiz-exists', data.lessonId] })
+				queryClient.invalidateQueries({ queryKey: ['get quiz by lesson id', data.lessonId] })
+			}
 		},
 	})
 }
@@ -36,9 +41,14 @@ export function useUpdateAdminQuizMutation() {
 	return useMutation({
 		mutationFn: (variables: { id: string; quizData: UpdateQuizDto }) =>
 			adminQuizzesApi.update(variables.id, variables.quizData),
-		onSuccess: (_, variables) => {
+		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: ['admin-quizzes'] })
 			queryClient.invalidateQueries({ queryKey: ['admin-quiz', variables.id] })
+			// Инвалидируем кэш для проверки наличия теста и получения теста по ID урока
+			if (data.lessonId) {
+				queryClient.invalidateQueries({ queryKey: ['quiz-exists', data.lessonId] })
+				queryClient.invalidateQueries({ queryKey: ['get quiz by lesson id', data.lessonId] })
+			}
 		},
 	})
 }
@@ -47,9 +57,19 @@ export function useDeleteAdminQuizMutation() {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: (id: string) => adminQuizzesApi.delete(id),
-		onSuccess: () => {
+		mutationFn: async (id: string) => {
+			// Получаем информацию о тесте перед удалением, чтобы знать lessonId
+			const quiz = await adminQuizzesApi.getById(id);
+			const result = await adminQuizzesApi.delete(id);
+			return { ...result, lessonId: quiz.lessonId };
+		},
+		onSuccess: (data, id) => {
 			queryClient.invalidateQueries({ queryKey: ['admin-quizzes'] })
+			// Инвалидируем кэш для проверки наличия теста и получения теста по ID урока
+			if (data.lessonId) {
+				queryClient.invalidateQueries({ queryKey: ['quiz-exists', data.lessonId] })
+				queryClient.invalidateQueries({ queryKey: ['get quiz by lesson id', data.lessonId] })
+			}
 		},
 	})
 }

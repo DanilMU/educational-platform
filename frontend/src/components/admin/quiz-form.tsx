@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
 import z from 'zod'
 import { Button } from '@/src/components/ui/button'
 import {
@@ -27,9 +27,10 @@ import {
 } from '@/src/api/hooks/useAdminQuizzes'
 import { useAdminLessonsQuery } from '@/src/api/hooks/useAdminLessons'
 import type { Quiz, CreateQuizDto, UpdateQuizDto } from '@/src/api/types'
-import { QuestionType } from '@/src/api/types'
+import { QuestionType as ApiQuestionType } from '@/src/api/types'
 import { Trash } from 'lucide-react'
 import { Checkbox } from '../ui/checkbox'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 
 const answerSchema = z.object({
 	id: z.string().optional(),
@@ -40,7 +41,7 @@ const answerSchema = z.object({
 const questionSchema = z.object({
 	id: z.string().optional(),
 	text: z.string().min(1, 'Текст вопроса обязателен'),
-	type: z.nativeEnum(QuestionType),
+	type: z.nativeEnum(ApiQuestionType),
 	answers: z.array(answerSchema).min(2, 'Минимум два ответа'),
 })
 
@@ -50,7 +51,7 @@ const quizSchema = z.object({
 	questions: z.array(questionSchema).min(1, 'Минимум один вопрос'),
 })
 
-type QuizFormValues = z.infer<typeof quizSchema>
+// Убрали определение типа QuizFormValues, так как используем z.infer<typeof quizSchema> напрямую
 
 interface QuizFormProps {
 	quiz: Quiz | null
@@ -63,7 +64,7 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 	const { data: lessonsData, isLoading: isLoadingLessons } =
 		useAdminLessonsQuery({})
 
-	const form = useForm<QuizFormValues>({
+	const form = useForm({
 		resolver: zodResolver(quizSchema),
 		defaultValues: {
 			title: quiz?.title ?? '',
@@ -71,6 +72,17 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 			questions: quiz?.questions ?? [],
 		},
 	})
+
+	const onSubmit = (values: z.infer<typeof quizSchema>) => {
+	if (quiz) {
+			updateQuizMutation.mutate(
+				{ id: quiz.id, quizData: values as UpdateQuizDto },
+				{ onSuccess }
+			)
+		} else {
+			createQuizMutation.mutate(values as CreateQuizDto, { onSuccess })
+		}
+	}
 
 	const {
 		fields: questionsFields,
@@ -80,17 +92,6 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 		control: form.control,
 		name: 'questions',
 	})
-
-	const onSubmit = (values: QuizFormValues) => {
-		if (quiz) {
-			updateQuizMutation.mutate(
-				{ id: quiz.id, quizData: values as UpdateQuizDto },
-				{ onSuccess }
-			)
-		} else {
-			createQuizMutation.mutate(values as CreateQuizDto, { onSuccess })
-		}
-	}
 
 	return (
 		<Form {...form}>
@@ -189,10 +190,10 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												<SelectItem value={QuestionType.SINGLE_CHOICE}>
+												<SelectItem value={ApiQuestionType.SINGLE_CHOICE}>
 													Одиночный выбор
 												</SelectItem>
-												<SelectItem value={QuestionType.MULTIPLE_CHOICE}>
+												<SelectItem value={ApiQuestionType.MULTIPLE_CHOICE}>
 													Множественный выбор
 												</SelectItem>
 											</SelectContent>
@@ -210,7 +211,7 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 						onClick={() =>
 							appendQuestion({
 								text: '',
-								type: QuestionType.SINGLE_CHOICE,
+								type: ApiQuestionType.SINGLE_CHOICE,
 								answers: [
 									{ text: '', isCorrect: true },
 									{ text: '', isCorrect: false },
@@ -236,7 +237,11 @@ export function QuizForm({ quiz, onSuccess }: QuizFormProps) {
 }
 
 function AnswersFieldArray({ qIndex }: { qIndex: number }) {
-	const { control } = useFormContext<QuizFormValues>()
+	const { control, setValue } = useFormContext()
+	const questionType = useWatch({
+		control,
+		name: `questions.${qIndex}.type`,
+	})
 	const {
 		fields: answersFields,
 		append: appendAnswer,
@@ -246,47 +251,102 @@ function AnswersFieldArray({ qIndex }: { qIndex: number }) {
 		name: `questions.${qIndex}.answers`,
 	})
 
+	// Отслеживаем изменения всех isCorrect значений для правильного обновления состояния радиогруппы
+	const allAnswers = useWatch({
+		control,
+		name: `questions.${qIndex}.answers`,
+	})
+
+	const correctAnswerIndex = allAnswers ? allAnswers.findIndex((answer: { isCorrect: boolean }) => answer.isCorrect === true).toString() : '';
+
 	return (
 		<div className='ml-4 space-y-3 border-l pl-4'>
 			<h5 className='font-medium'>Ответы</h5>
-			{answersFields.map((answerField, aIndex) => (
-				<div key={answerField.id} className='flex items-start gap-2'>
-					<FormField
-						control={control}
-						name={`questions.${qIndex}.answers.${aIndex}.isCorrect`}
-						render={({ field }) => (
-							<FormItem className='flex items-center pt-2.5'>
-								<FormControl>
-									<Checkbox
-										checked={field.value}
-										onCheckedChange={field.onChange}
-									/>
-								</FormControl>
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={control}
-						name={`questions.${qIndex}.answers.${aIndex}.text`}
-						render={({ field }) => (
-							<FormItem className='flex-1'>
-								<FormControl>
-									<Input placeholder={`Ответ ${aIndex + 1}`} {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button
-						type='button'
-						variant='ghost'
-						size='icon'
-						onClick={() => removeAnswer(aIndex)}
-					>
-						<Trash className='h-4 w-4 text-destructive' />
-					</Button>
-				</div>
-			))}
+			{questionType === ApiQuestionType.SINGLE_CHOICE ? (
+				<RadioGroup
+					value={correctAnswerIndex}
+					onValueChange={(value) => {
+						// Сбрасываем все ответы и устанавливаем только выбранный
+						answersFields.forEach((_, index) => {
+							setValue(`questions.${qIndex}.answers.${index}.isCorrect`, index === parseInt(value))
+						})
+					}}
+					className="space-y-2"
+				>
+					{answersFields.map((answerField, aIndex) => (
+						<div key={answerField.id} className='flex items-center gap-2'>
+							<RadioGroupItem
+								value={aIndex.toString()}
+								id={`questions.${qIndex}.answers.${aIndex}.isCorrect`}
+							/>
+							<FormField
+								control={control}
+								name={`questions.${qIndex}.answers.${aIndex}.text`}
+								render={({ field }) => (
+									<FormItem className='flex-1'>
+										<FormControl>
+											<Input placeholder={`Ответ ${aIndex + 1}`} {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<Button
+								type='button'
+								variant='ghost'
+								size='icon'
+								onClick={() => removeAnswer(aIndex)}
+							>
+								<Trash className='h-4 w-4 text-destructive' />
+							</Button>
+						</div>
+					))}
+				</RadioGroup>
+			) : (
+				// Для множественного выбора используем чекбоксы
+				<>
+					{answersFields.map((answerField, aIndex) => (
+						<div key={answerField.id} className='flex items-start gap-2'>
+							<FormField
+								control={control}
+								name={`questions.${qIndex}.answers.${aIndex}.isCorrect`}
+								render={({ field }) => (
+									<FormItem className='flex items-center pt-2.5'>
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={(checked) => {
+													field.onChange(checked)
+												}}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name={`questions.${qIndex}.answers.${aIndex}.text`}
+								render={({ field }) => (
+									<FormItem className='flex-1'>
+										<FormControl>
+											<Input placeholder={`Ответ ${aIndex + 1}`} {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<Button
+								type='button'
+								variant='ghost'
+								size='icon'
+								onClick={() => removeAnswer(aIndex)}
+							>
+								<Trash className='h-4 w-4 text-destructive' />
+							</Button>
+						</div>
+					))}
+				</>
+			)}
 			<Button
 				type='button'
 				variant='ghost'

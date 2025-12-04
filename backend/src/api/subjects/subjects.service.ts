@@ -4,7 +4,11 @@ import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 import { LearningPathService } from '../learning-path/learning-path.service';
 
-import { CreateSubjectDto, UpdateSubjectDto } from './dto';
+import {
+	CreateSubjectDto,
+	PaginatedSubjectsDto,
+	UpdateSubjectDto
+} from './dto';
 
 @Injectable()
 export class SubjectsService {
@@ -42,8 +46,8 @@ export class SubjectsService {
 		const whereClause = includeDrafts
 			? undefined
 			: {
-					status: 'PUBLISHED' as const,
-			  };
+					status: 'PUBLISHED' as const
+				};
 
 		const [subjects, total] = await this.prisma.$transaction([
 			this.prisma.subject.findMany({
@@ -55,16 +59,16 @@ export class SubjectsService {
 						include: {
 							lessons: {
 								include: {
-									quiz: true,
-								},
-							},
-						},
-					},
-				},
+									quiz: true
+								}
+							}
+						}
+					}
+				}
 			}),
-			this.prisma.subject.count({ where: whereClause }),
-		])
-		return { data: subjects, total }
+			this.prisma.subject.count({ where: whereClause })
+		]);
+		return new PaginatedSubjectsDto(subjects, total);
 	}
 
 	findOne(id: string, includeDraft: boolean = false) {
