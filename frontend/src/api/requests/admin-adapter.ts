@@ -56,7 +56,7 @@ export const adminApiAdapter = {
     // В админ-сервисе возвращается { topics, total }, а не { data, total }
     // Поэтому преобразуем к правильному формату
     return {
-      data: result.topics || result.data,
+      data: result.data,
       total: result.total
     };
  }

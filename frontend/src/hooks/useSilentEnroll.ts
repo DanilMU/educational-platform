@@ -8,7 +8,7 @@ import {
 export function useSilentEnroll(subjectId: string) {
 	const { isAuthorized, user } = useAuth()
 	const { data: enrolledSubjects, isLoading: enrolledLoading } =
-		useGetEnrolledSubjectsQuery(user?.id || '', { enabled: isAuthorized })
+		useGetEnrolledSubjectsQuery(user?.id || '')
 	const { mutate: enroll, isPending } = useEnrollInSubjectMutation({
 		silent: true,
 	})

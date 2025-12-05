@@ -33,11 +33,12 @@ export function ActiveCoursesSection({ enrolledSubjects, progressData }: ActiveC
     const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
 
     return {
+      ...subject,
       id: subject.id || '',
       title: subject.title || '',
-      description: subject.description || 'Описание отсутствует',
+      description: subject.description,
       progress: progress,
-      lessons: totalLessons,
+      lessonsCount: totalLessons,
       category: 'Курс',
       isEnrolled: true,
     }

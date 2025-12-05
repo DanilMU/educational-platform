@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Progress } from '../ui/progress'
+import { Subject } from '@/src/api/types'
 
 export function MyCoursesEnhanced() {
   const { user } = useAuth()
@@ -19,7 +20,7 @@ export function MyCoursesEnhanced() {
   const { data: progressData, isLoading: progressLoading, isError: progressError } = useGetUserProgressQuery();
   const [activeTab, setActiveTab] = useState('enrolled')
 
-  const allSubjects = allSubjectsData?.data || []
+  const allSubjects = (allSubjectsData?.data || []) as unknown as Subject[]
 
   // Определяем, какие курсы уже записаны (для отображения статуса)
   const enrolledSubjectIds = new Set(enrolledSubjects.map(subject => subject.id))

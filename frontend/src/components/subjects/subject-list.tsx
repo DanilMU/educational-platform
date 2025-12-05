@@ -1,6 +1,7 @@
 'use client'
 
 import { useGetSubjectsQuery, useGetEnrolledSubjectsQuery, useGetMeQuery } from '@/src/api/hooks'
+import { Subject } from '@/src/api/types';
 import { SubjectCard, SubjectCardSkeleton } from './subject-card'
 
 export function SubjectList() {
@@ -31,7 +32,7 @@ export function SubjectList() {
 		)
 	}
 
-	const subjects = paginatedData?.data || [];
+	const subjects = (paginatedData?.data || []) as unknown as Subject[];
 
 	if (!subjects || subjects.length === 0) {
 		return (

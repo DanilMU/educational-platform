@@ -3,6 +3,7 @@
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useGetRecommendationsQuery } from '@/src/api/hooks/useGetRecommendationsQuery'
 import { useGetEnrolledSubjectsQuery } from '@/src/api/hooks'
+import { SubjectStatus } from '@/src/api/types'
 import { useAuth } from '@/src/hooks/useAuth'
 import { Skeleton } from '@/src/components/ui/skeleton'
 import { BookOpen } from 'lucide-react'
@@ -10,7 +11,7 @@ import { BookOpen } from 'lucide-react'
 export function RecommendationsSection() {
     const { user } = useAuth()
     const { data: recommendationsData, isLoading: isLoadingRecommendations, isError: isRecommendationsError } = useGetRecommendationsQuery()
-    const { data: enrolledSubjects = [], isLoading: isLoadingEnrolled, isError: isEnrolledError } = useGetEnrolledSubjectsQuery(user?.id || '', { enabled: !!user?.id });
+    const { data: enrolledSubjects = [], isLoading: isLoadingEnrolled, isError: isEnrolledError } = useGetEnrolledSubjectsQuery(user?.id || '');
 
     const isLoading = isLoadingRecommendations || isLoadingEnrolled;
     const isError = isRecommendationsError || isEnrolledError;
@@ -66,11 +67,16 @@ export function RecommendationsSection() {
                                     subject={{
                                         id: rec.id as string,
                                         title: rec.title as string,
-                                        description: rec.reason as string,
-                                        lessons: 0,
+                                        description: rec.reason as any,
+                                        lessonsCount: 0,
                                         progress: 0,
                                         category: rec.subject,
                                         isEnrolled: isEnrolled,
+                                        // Fake properties to satisfy ApiSubject
+                                        status: SubjectStatus.PUBLISHED,
+                                        topics: [],
+                                        createdAt: new Date().toISOString(),
+                                        updatedAt: new Date().toISOString(),
                                     }}
                                 />
                             );

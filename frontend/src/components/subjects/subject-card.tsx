@@ -35,6 +35,7 @@ type Subject = ApiSubject & {
 	studentCount?: number
 	rating?: number
 	isEnrolled?: boolean
+	category?: string
 }
 
 interface SubjectCardProps {

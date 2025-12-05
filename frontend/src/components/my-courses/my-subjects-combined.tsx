@@ -9,13 +9,14 @@ import { EnrolledSubjectCard } from './enrolled-subject-card'
 import { SubjectCard } from '@/src/components/subjects/subject-card'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Subject } from '@/src/api/types'
 
 export function MySubjectsCombined() {
   const { user } = useAuth()
   const { data: enrolledSubjects = [], isLoading: enrolledLoading, isError: enrolledError } = useGetEnrolledSubjectsQuery(user?.id || '')
   const { data: allSubjectsData, isLoading: allLoading, isError: allError } = useGetSubjectsQuery()
 
-  const allSubjects = allSubjectsData?.data || []
+  const allSubjects = (allSubjectsData?.data || []) as unknown as Subject[]
 
   // Определяем, какие курсы уже записаны (для отображения статуса)
   const enrolledSubjectIds = new Set(enrolledSubjects.map(subject => subject.id))

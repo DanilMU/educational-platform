@@ -27,7 +27,17 @@ import {
 import { useAdminCoursesQuery } from '@/src/api/hooks/useAdminCourses'
 import { useAdminTopicsQuery } from '@/src/api/hooks/useAdminTopics'
 import { MultiFileUpload } from '../ui/multi-file-upload'
-import { uploadFile } from '@/src/api/requests/file'
+import { uploadFile as originalUploadFile } from '@/src/api/requests/file'
+import { Topic, CreateTopicDto, UpdateTopicDto } from '@/src/api/types'
+
+// Wrapper to ensure the returned filePath is a non-nullable string
+const uploadFile = async (file: File): Promise<{ filePath: string }> => {
+	const result = await originalUploadFile(file)
+	if (!result.filePath) {
+		throw new Error('File upload failed: No file path returned.')
+	}
+	return { filePath: result.filePath }
+}
 
 const topicSchema = z.object({
 	title: z.string().min(1, 'Название обязательно'),
@@ -59,8 +69,8 @@ export function TopicForm({ topic, onSuccess }: TopicFormProps) {
 		defaultValues: {
 			title: topic?.title ?? '',
 			subjectId: topic?.subjectId ?? '',
-			parentId: topic?.parentId || undefined,
-			attachments: topic?.attachments ?? [],
+			parentId: (topic?.parentId as any)?.id || undefined,
+			attachments: (topic as any)?.attachments ?? [],
 		},
 	})
 

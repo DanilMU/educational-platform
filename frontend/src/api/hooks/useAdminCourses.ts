@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminCoursesApi } from '../requests/admin-wrapper';
 import { Subject, PaginatedSubjectsDto, UpdateSubjectDto } from '../types';
 import { adminApiAdapter } from '../requests/admin-adapter';
+import { AdminSubject } from '../types/admin-paginated-dto';
 
 interface GetAdminCoursesQueryProps {
   skip?: number;
@@ -9,7 +10,7 @@ interface GetAdminCoursesQueryProps {
 }
 
 export function useAdminCoursesQuery({ skip, take }: GetAdminCoursesQueryProps) {
-  return useQuery<PaginatedSubjectsDto>({
+  return useQuery<{ data: AdminSubject[]; total: number }>({
     queryKey: ['admin-courses', skip, take],
     queryFn: async () => {
       return await adminApiAdapter.getAllCourses({ skip: skip?.toString(), take: take?.toString() });

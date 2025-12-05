@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Card3D } from '@/src/components/parallax/3d-card'
 import { GlassCard } from '@/src/components/ui/glass-card'
 import { SubjectCard } from '@/src/components/subjects/subject-card'
+import { SubjectStatus } from '@/src/api/types'
 
 const courses = [
   {
@@ -70,7 +71,20 @@ export function FeaturedCourses() {
             >
               <Card3D className="h-full">
                 <GlassCard className="h-full">
-                  <SubjectCard subject={course} />
+                  <SubjectCard subject={{
+                    ...course,
+                    id: course.id,
+                    title: course.title,
+                    description: course.description as any,
+                    lessonsCount: course.lessons,
+                    progress: course.progress,
+                    category: course.category,
+                    // Fake properties
+                    status: SubjectStatus.PUBLISHED,
+                    topics: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                  }} />
                 </GlassCard>
               </Card3D>
             </motion.div>

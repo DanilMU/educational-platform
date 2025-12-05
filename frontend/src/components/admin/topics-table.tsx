@@ -68,8 +68,9 @@ export function TopicsTable() {
 
 		// Populate children and identify top-level topics
 		topics.forEach(topic => {
-			if (topic.parentId && topicMap[topic.parentId]) {
-				topicMap[topic.parentId].children.push(topicMap[topic.id])
+			const parentId = (topic.parentId as any)?.id
+			if (parentId && topicMap[parentId]) {
+				topicMap[parentId].children.push(topicMap[topic.id])
 			} else {
 				topLevelTopics.push(topicMap[topic.id])
 			}
@@ -148,7 +149,7 @@ export function TopicsTable() {
 									<TableCell className='font-semibold'>
 										{topic.title}
 									</TableCell>
-									<TableCell>{topic.subject.title}</TableCell>
+									<TableCell>{topic.subjectId}</TableCell>
 									<TableCell className='text-right'>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
@@ -209,7 +210,7 @@ export function TopicsTable() {
 										<TableCell className='pl-8'>
 											{child.title}
 										</TableCell>
-										<TableCell>{child.subject.title}</TableCell>
+										<TableCell>{child.subjectId}</TableCell>
 										<TableCell className='text-right'>
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>

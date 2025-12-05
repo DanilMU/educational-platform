@@ -26,15 +26,9 @@ export function EnrolledSubjectCard({ subject }: EnrolledSubjectCardProps) {
 					</CardTitle>
 					<CardDescription className='text-blue-100'>
 						{subject.description
-							? (typeof subject.description === 'string'
-								? (subject.description.length > 100
-									? subject.description.substring(0, 100) + '...'
-									: subject.description)
-								: typeof subject.description === 'object' && subject.description !== null
-									? JSON.stringify(subject.description).length > 100
-										? JSON.stringify(subject.description).substring(0, 100) + '...'
-										: JSON.stringify(subject.description)
-									: 'Описание курса')
+							? (JSON.stringify(subject.description).length > 100
+								? JSON.stringify(subject.description).substring(0, 100) + '...'
+								: JSON.stringify(subject.description))
 							: 'Описание отсутствует'}
 					</CardDescription>
 				</CardHeader>

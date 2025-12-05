@@ -103,7 +103,7 @@ export default function DashboardPage() {
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.5, delay: 0.4 }}
              >
-               <ActiveCoursesSection enrolledSubjects={enrolledSubjects} progressData={progressData} />
+               <ActiveCoursesSection enrolledSubjects={enrolledSubjects || []} progressData={progressData} />
              </motion.div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
