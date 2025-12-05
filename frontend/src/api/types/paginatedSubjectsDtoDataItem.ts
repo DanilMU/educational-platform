@@ -5,4 +5,5 @@
  * OpenAPI spec version: 0.0.1
  */
 
-export type PaginatedSubjectsDtoDataItem = { [key: string]: unknown };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PaginatedSubjectsDtoDataItem = any;
