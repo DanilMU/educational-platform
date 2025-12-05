@@ -1,31 +1,19 @@
-  Overload 2 of 3, '(options: UndefinedInitialDataOptions<PaginatedSubjectsDto, Error, PaginatedSubjectsDto, readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryResult<...>', gave the following error.
-    Type '() => Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'unique symbol | QueryFunction<PaginatedSubjectsDto, readonly unknown[], never> | undefined'.
-      Type '() => Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'QueryFunction<PaginatedSubjectsDto, readonly unknown[], never>'.
-        Type 'Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'PaginatedSubjectsDto | Promise<PaginatedSubjectsDto>'.
-          Type 'Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'Promise<PaginatedSubjectsDto>'.
-            Type '{ data: AdminSubject[]; total: number; }' is not assignable to type 'PaginatedSubjectsDto'.
-              Types of property 'data' are incompatible.
-                Type 'AdminSubject[]' is not assignable to type 'PaginatedSubjectsDtoDataItem[]'.
-                  Type 'AdminSubject' is not assignable to type 'PaginatedSubjectsDtoDataItem'.
-                    Index signature for type 'string' is missing in type 'AdminSubject'.
-  Overload 3 of 3, '(options: UseQueryOptions<PaginatedSubjectsDto, Error, PaginatedSubjectsDto, readonly unknown[]>, queryClient?: QueryClient | undefined): UseQueryResult<...>', gave the following error.
-    Type '() => Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'unique symbol | QueryFunction<PaginatedSubjectsDto, readonly unknown[], never> | undefined'.
-      Type '() => Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'QueryFunction<PaginatedSubjectsDto, readonly unknown[], never>'.
-        Type 'Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'PaginatedSubjectsDto | Promise<PaginatedSubjectsDto>'.
-          Type 'Promise<{ data: AdminSubject[]; total: number; }>' is not assignable to type 'Promise<PaginatedSubjectsDto>'.
-            Type '{ data: AdminSubject[]; total: number; }' is not assignable to type 'PaginatedSubjectsDto'.
-              Types of property 'data' are incompatible.
-                Type 'AdminSubject[]' is not assignable to type 'PaginatedSubjectsDtoDataItem[]'.
-                  Type 'AdminSubject' is not assignable to type 'PaginatedSubjectsDtoDataItem'.
-                    Index signature for type 'string' is missing in type 'AdminSubject'.
-                     return useQuery<PaginatedSubjectsDto>({
-  13 |     queryKey: ['admin-courses', skip, take],
-> 14 |     queryFn: async () => {
-     |     ^
-  15 |       return await adminApiAdapter.getAllCourses({ skip: skip?.toString(), take: take?.toString() });
-  16 |     },
-  17 |     staleTime: 5 * 60 * 1000, // 5 минут
-Next.js build worker exited with code: 1 and signal: null
-error Command failed with exit code 1.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-Error: Command "yarn build" exited with 1
+HTTP_PORT=10000
+HTTP_HOST=0.0.0.0
+HTTP_CORS=http://localhost:3000
+
+JWT_SECRET=e7fd8823d4d285cd31582931e280c0d444634c7e3e151f5264fdf4beaf9c49e9fdc7cccc25c
+JWT_ACCESS_TOKEN_TTL=15m
+JWT_REFRESH_TOKEN_TTL=7d
+
+COOKIES_SECRET=63f80c69da8a313762ebc4fd632ed5bf51c54a64db0ab62a5be662ed3ed3b04dc1520bc6825c71b435f11f1a1
+COOKIES_DOMAIN=localhost
+
+POSTGRES_USER=educational-portal-postgres
+POSTGRES_PASSWORD=123456
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433
+POSTGRES_DATABASE=educational-portal
+POSTGRES_URI=postgresql://educational-portal-postgres:123456@localhost:5433/educational-portal
+
+DATABASE_URL=postgresql://educational_platform_db_2dmd_user:aQ7qPYjbC3S50Cv7ebsiCm40UUQd4oun7je5dus73cjho2g-a/educational_platform_db_2dmd

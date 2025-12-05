@@ -9,6 +9,9 @@ import { CreateSubjectDto, UpdateSubjectDto } from '../subjects/dto';
 import { CreateTopicDto, UpdateTopicDto } from '../topics/dto';
 import { CreateUserDto, UpdateUserDto } from '../users/dto';
 
+import { AdminPaginatedSubjectsDto } from './dto/admin-paginated-subjects.dto';
+import { AdminSubject } from './entities/admin-subject.entity';
+
 @Injectable()
 export class AdminService {
 	constructor(
@@ -162,7 +165,10 @@ export class AdminService {
 	}
 
 	// CRUD для курсов
-	async getAllCourses(skip: number = 0, take: number = 10) {
+	async getAllCourses(
+		skip: number = 0,
+		take: number = 10
+	): Promise<AdminPaginatedSubjectsDto> {
 		const limitedTake = Math.min(take, 100); // Максимум 100 записей за раз
 
 		// Сначала получаем курсы с полной информацией о темах и уроках
@@ -207,11 +213,11 @@ export class AdminService {
 					...subject,
 					topicsCount,
 					lessonsCount
-				};
+				} as AdminSubject; // Explicitly cast to AdminSubject
 			})
 		);
 
-		return { subjects: subjectsWithStats, total };
+		return new AdminPaginatedSubjectsDto(subjectsWithStats, total);
 	}
 
 	async getCourseById(id: string) {

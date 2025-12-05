@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Subject } from '@prisma/client';
-
 import { PaginatedResponseDto } from '../../../common/dto/paginated-response.dto';
+import { Subject } from '../entities/subject.entity';
 
-export class PaginatedSubjectsDto extends PaginatedResponseDto<Subject> {}
+export class PaginatedSubjectsDto extends PaginatedResponseDto<Subject> {
+	@ApiProperty({ type: [Subject] })
+	declare data: Subject[];
+}

@@ -38,6 +38,7 @@ import { CreateUserDto, UpdateUserDto } from '../users/dto';
 import { User } from '../users/entities/user.entity';
 
 import { AdminService } from './admin.service';
+import { AdminPaginatedSubjectsDto } from './dto/admin-paginated-subjects.dto';
 
 @ApiTags('Admin')
 @Controller('admin')
@@ -122,7 +123,10 @@ export class AdminController {
 	@Get('courses')
 	@ApiOperation({ summary: 'Получить список курсов админки' })
 	@ApiBearerAuth()
-	@ApiOkResponse({ description: 'Список курсов', type: [Subject] })
+	@ApiOkResponse({
+		description: 'Список курсов',
+		type: AdminPaginatedSubjectsDto
+	})
 	@ApiQuery({
 		name: 'skip',
 		required: false,
@@ -135,7 +139,10 @@ export class AdminController {
 		type: String,
 		description: 'Количество возвращаемых элементов'
 	})
-	async getCourses(@Query('skip') skip: string, @Query('take') take: string) {
+	async getCourses(
+		@Query('skip') skip: string,
+		@Query('take') take: string
+	): Promise<AdminPaginatedSubjectsDto> {
 		return this.adminService.getAllCourses(+skip, +take);
 	}
 

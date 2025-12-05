@@ -5,7 +5,7 @@ dotenv.config()
 
 export default defineConfig({
     client: {
-        input: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'}/openapi.json`,
+        input: './openapi.local.json',
         output: {
             target: './src/api/client.ts',
             schemas: './src/api/types',

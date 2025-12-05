@@ -44,8 +44,8 @@ export class SubjectsService {
 	): Promise<PaginatedSubjectsDto> {
 		const whereClause = {
 			NOT: {
-				status: 'ARCHIVED' as const,
-			},
+				status: 'ARCHIVED' as const
+			}
 		};
 
 		const [subjects, total] = await this.prisma.$transaction([
@@ -56,15 +56,15 @@ export class SubjectsService {
 				include: {
 					topics: {
 						include: {
-							lessons: true,
-						},
-					},
-				},
+							lessons: true
+						}
+					}
+				}
 			}),
-			this.prisma.subject.count({ where: whereClause }),
+			this.prisma.subject.count({ where: whereClause })
 		]);
 
-		return new PaginatedSubjectsDto(subjects, total);
+		return new PaginatedSubjectsDto(subjects as any, total);
 	}
 
 	findOne(id: string, includeDraft: boolean = false) {
